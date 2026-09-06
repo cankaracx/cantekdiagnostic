@@ -26,5 +26,10 @@ export async function isStaffSession(): Promise<boolean> {
 }
 
 export async function isAdminSession(): Promise<boolean> {
-  return (await getStaffAuth())?.role === "admin";
+  const role = (await getStaffAuth())?.role;
+  return role === "admin" || role === "super_admin";
+}
+
+export async function isSuperAdminSession(): Promise<boolean> {
+  return (await getStaffAuth())?.role === "super_admin";
 }

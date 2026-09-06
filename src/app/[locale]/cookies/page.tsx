@@ -19,13 +19,14 @@ export default async function CookiesPage({
     <LegalDocument
       eyebrow="Effective 6 September 2026"
       title="Cookie Notice"
-      summary="Cantek Diagnostics currently uses only cookies and similar storage that are necessary for language selection, security, and authorized staff sessions."
+      summary="Cantek Diagnostics uses only cookies and similar storage needed for language selection, first-visit preferences, account sessions, security, and authorized staff access."
       sections={[
         {
           title: "Cookies in use",
           items: [
             "NEXT_LOCALE remembers your language preference for up to 12 months.",
-            "Authentication cookies maintain an authorized staff session, refresh it securely, and prevent access to protected tools. Their duration depends on the session configuration and sign-out.",
+            "cantek-access-choice is local browser storage that remembers whether you chose an account or guest access, so the first-visit screen is not shown repeatedly. It remains until you clear site data or sign out.",
+            "Authentication cookies maintain verified customer or authorized staff sessions, refresh them securely, and protect restricted tools. Their duration depends on the session configuration and sign-out.",
             "Hosting and security infrastructure may set short-lived identifiers needed for traffic management, abuse prevention, or service integrity.",
           ],
         },
@@ -38,7 +39,7 @@ export default async function CookiesPage({
         {
           title: "Managing cookies",
           paragraphs: [
-            "You can block or delete cookies through your browser. Blocking necessary cookies may prevent language preferences from being remembered and will prevent staff sign-in from working correctly.",
+            "You can block or delete cookies and local storage through your browser. Blocking necessary storage may prevent preferences from being remembered and can prevent account or staff sign-in from working correctly.",
           ],
         },
         {

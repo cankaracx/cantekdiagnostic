@@ -7,12 +7,14 @@
     "diagnostics": "Arıza tanı",
     "technician": "Teknisyen",
     "admin": "Yönetim",
-    "language": "Dil"
+    "language": "Dil",
+    "menu": "Menü"
   },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Sorunu anlatın. Cantek kılavuzlarındaki prosedürü alın.",
     "subhead": "Yetkili Cantek onarım belgelerindeki ilgili rehberi bulun. Güvenlik açısından kritik ve tehlikeli işler yetkin personel tarafından yapılmalıdır.",
+    "workspaceTitle": "Arıza tanı çalışma alanı",
     "placeholder": "Örnek: soğuk oda düşmüyor, yaz öğleden sonra HP alarmı, Octosense kontrolör…",
     "send": "Sor",
     "thinking": "Kılavuzlar aranıyor…",
@@ -25,6 +27,34 @@
     "you": "Siz",
     "assistant": "Cantek asistan",
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın."
+  },
+  "account": {
+    "kicker": "Müşteri erişimi",
+    "welcomeKicker": "Cantek Group",
+    "welcomeTitle": "Yetkili servis belgelerine dayalı endüstriyel arıza tanı.",
+    "welcomeBody": "Hesabınızla giriş yapın veya misafir olarak doğrudan devam edin.",
+    "signInTitle": "Giriş yapın",
+    "signUpTitle": "Hesabınızı oluşturun",
+    "signIn": "Giriş",
+    "signOut": "Çıkış",
+    "createAccount": "Hesap oluştur",
+    "email": "E-posta adresi",
+    "password": "Şifre",
+    "verificationNote": "Bu adrese bir doğrulama bağlantısı göndereceğiz.",
+    "checkEmail": "Giriş yapmadan önce gelen kutunuzu kontrol edip e-postanızı doğrulayın.",
+    "continueGuest": "Hesap olmadan devam et",
+    "working": "Lütfen bekleyin…",
+    "error": "İşlem tamamlanamadı. Bilgilerinizi ve e-posta doğrulamasını kontrol edin."
+  },
+  "adminAuth": {
+    "kicker": "Kısıtlı erişim",
+    "title": "Süper yönetici",
+    "intro": "Bu alan yalnızca yetkili Cantek süper yöneticisine açıktır.",
+    "username": "Kullanıcı adı",
+    "password": "Şifre",
+    "signIn": "Güvenli giriş",
+    "working": "Doğrulanıyor…",
+    "invalid": "Kullanıcı adı, şifre veya hesap yetkisi geçersiz."
   },
   "tech": {
     "title": "Teknisyen masası",

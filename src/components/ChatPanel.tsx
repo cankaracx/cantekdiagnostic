@@ -21,15 +21,16 @@ export function ChatPanel(props: {
 }) {
   const t = useTranslations();
   const locale = useLocale();
+  const { onTranscriptChange } = props;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
 
   useEffect(() => {
-    props.onTranscriptChange?.(
+    onTranscriptChange?.(
       messages.map(({ role, content }) => ({ role, content })),
     );
-  }, [messages, props.onTranscriptChange]);
+  }, [messages, onTranscriptChange]);
 
   async function send() {
     const text = input.trim();
@@ -71,40 +72,51 @@ export function ChatPanel(props: {
   }
 
   return (
-    <div className="flex min-h-[32rem] flex-col rounded-md border border-navy/10 bg-white shadow-sm">
+    <div className="flex min-h-[34rem] flex-col border border-cantek-border bg-white shadow-[0_10px_28px_rgb(50_62_72_/_8%)]">
+      <div className="flex items-center justify-between border-b-4 border-cantek-cyan bg-cantek-dark px-5 py-4 text-white">
+        <div>
+          <p className="cantek-kicker text-cantek-cyan">Cantek Group</p>
+          <h3 className="mt-1 text-lg font-bold">{t("home.workspaceTitle")}</h3>
+        </div>
+        <span className="hidden border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/70 sm:inline">
+          {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
+        </span>
+      </div>
       <div
-        className="flex-1 space-y-4 overflow-y-auto p-5"
+        className="flex-1 space-y-4 overflow-y-auto bg-cantek-light/50 p-4 sm:p-6"
         aria-live="polite"
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <p className="text-sm leading-6 text-navy/70">{t("home.empty")}</p>
+          <div className="border-s-4 border-cantek-cyan bg-white px-5 py-4">
+            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
+          </div>
         )}
         {messages.map((m, i) => (
           <article
             key={i}
             className={
               m.role === "user"
-                ? "ml-8 rounded-md bg-paper px-4 py-3 text-sm"
-                : "mr-4 rounded-md border border-navy/10 px-4 py-3 text-sm leading-6"
+                ? "ms-5 border-s-4 border-cantek-dark bg-white px-4 py-3 text-sm sm:ms-12"
+                : "me-2 border-s-4 border-cantek-cyan bg-white px-4 py-3 text-sm leading-6 sm:me-8"
             }
           >
-            <p className="mb-1 text-[11px] uppercase tracking-wider text-ice-dim">
+            <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-cantek-muted">
               {m.role === "user" ? t("chat.you") : t("chat.assistant")}
             </p>
             {m.emergency && (
-              <p className="mb-2 rounded-sm bg-danger px-3 py-2 text-xs font-semibold text-white">
+              <p className="mb-2 bg-danger px-3 py-2 text-xs font-semibold text-white">
                 {t("danger.emergency")}
               </p>
             )}
             {m.hazard && (
-              <p className="mb-2 rounded-sm bg-warn px-3 py-2 text-xs font-semibold text-white">
+              <p className="mb-2 bg-warn px-3 py-2 text-xs font-semibold text-white">
                 {t("danger.title")}: {t("danger.body")}
               </p>
             )}
             <div className="whitespace-pre-wrap">{m.content}</div>
             {m.citations && m.citations.length > 0 && (
-              <ul className="mt-3 space-y-1 border-t border-navy/10 pt-2 text-xs text-navy/60">
+              <ul className="mt-3 space-y-1 border-t border-cantek-border pt-2 text-xs text-cantek-muted">
                 <li className="font-medium uppercase tracking-wider">
                   {t("home.sources")}
                 </li>
@@ -118,17 +130,17 @@ export function ChatPanel(props: {
             )}
           </article>
         ))}
-        {busy && <p className="text-sm text-ice-dim">{t("home.thinking")}</p>}
+        {busy && <p className="text-sm font-semibold text-cantek-cyan">{t("home.thinking")}</p>}
       </div>
       <form
-        className="flex gap-2 border-t border-navy/10 p-3"
+        className="flex flex-col gap-3 border-t border-cantek-border bg-white p-4 sm:flex-row"
         onSubmit={(e) => {
           e.preventDefault();
           void send();
         }}
       >
         <textarea
-          className="h-20 flex-1 resize-none rounded-sm border border-navy/15 px-3 py-2 text-sm outline-none focus:border-ice"
+          className="h-24 flex-1 resize-none border border-cantek-border px-3 py-2 text-sm outline-none focus:border-cantek-cyan focus:ring-1 focus:ring-cantek-cyan"
           placeholder={t("home.placeholder")}
           value={input}
           maxLength={4_000}
@@ -144,7 +156,7 @@ export function ChatPanel(props: {
         <button
           type="submit"
           disabled={busy}
-          className="self-end rounded-sm bg-navy px-4 py-2 text-sm font-medium text-white hover:bg-navy-2 disabled:opacity-50"
+          className="cantek-button w-full self-end sm:w-auto"
         >
           {t("home.send")}
         </button>

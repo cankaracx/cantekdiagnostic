@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Roboto_Condensed } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
@@ -8,6 +9,12 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { RTL_LOCALES } from "@/lib/geo/locales";
 import type { AppLocale } from "@/i18n/routing";
+
+const corporateFont = Roboto_Condensed({
+  subsets: ["latin", "cyrillic"],
+  display: "swap",
+  variable: "--font-corporate",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -37,24 +44,44 @@ export default async function LocaleLayout({
   const dir = RTL_LOCALES.has(locale as AppLocale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className="h-full">
+    <html lang={locale} dir={dir} className={`h-full ${corporateFont.variable}`}>
       <body className="flex min-h-full flex-col antialiased">
         <NextIntlClientProvider messages={messages}>
           <AppHeader />
           <div className="flex-1">{children}</div>
-          <footer className="border-t border-navy/10 bg-white px-4 py-6 text-xs text-navy/60">
-            <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 sm:flex-row">
-              <p>© 2026 Cantek Soğutma A.Ş. · Antalya, Türkiye</p>
-              <nav aria-label="Legal" className="flex flex-wrap justify-center gap-x-4 gap-y-2">
-                <Link href="/terms" className="hover:text-navy">Terms</Link>
-                <Link href="/privacy" className="hover:text-navy">Privacy & KVKK</Link>
-                <Link href="/cookies" className="hover:text-navy">Cookies</Link>
-                <Link href="/safety" className="hover:text-navy">Safety</Link>
-                <Link href="/accessibility" className="hover:text-navy">Accessibility</Link>
+          <footer className="border-t-4 border-cantek-cyan bg-cantek-dark text-white">
+            <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3">
+              <div>
+                <p className="text-lg font-bold uppercase tracking-[0.12em]">
+                  Cantek Diagnostics
+                </p>
+                <p className="mt-3 max-w-xs text-sm leading-6 text-white/65">
+                  Industrial cold-chain diagnostic support from authorized Cantek service documents.
+                </p>
+              </div>
+              <div>
+                <p className="cantek-kicker text-cantek-cyan">Service</p>
+                <div className="mt-3 grid gap-2 text-sm text-white/75">
+                  <a href="tel:+902422581700" className="hover:text-white">+90 242 258 17 00</a>
+                  <a href="tel:+905497438721" className="hover:text-white">+90 549 743 87 21</a>
+                  <a href="mailto:info@cantekgroup.com" className="hover:text-white">info@cantekgroup.com</a>
+                </div>
+              </div>
+              <nav aria-label="Legal">
+                <p className="cantek-kicker text-cantek-cyan">Corporate</p>
+                <div className="mt-3 grid grid-cols-2 gap-x-5 gap-y-2 text-sm text-white/75">
+                  <Link href="/terms" className="hover:text-white">Terms</Link>
+                  <Link href="/privacy" className="hover:text-white">Privacy & KVKK</Link>
+                  <Link href="/cookies" className="hover:text-white">Cookies</Link>
+                  <Link href="/safety" className="hover:text-white">Safety</Link>
+                  <Link href="/accessibility" className="hover:text-white">Accessibility</Link>
+                </div>
               </nav>
-              <a href="mailto:info@cantekgroup.com" className="hover:text-navy">
-                info@cantekgroup.com
-              </a>
+            </div>
+            <div className="border-t border-white/10 px-4 py-4">
+              <p className="mx-auto max-w-6xl text-xs text-white/50">
+                © 2026 Cantek Soğutma A.Ş. · Antalya, Türkiye
+              </p>
             </div>
           </footer>
         </NextIntlClientProvider>

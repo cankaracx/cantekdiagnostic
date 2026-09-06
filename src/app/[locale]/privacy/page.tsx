@@ -25,7 +25,7 @@ export default async function PrivacyPage({
           title: "Data we process",
           items: [
             "Diagnostic questions, equipment details, serial numbers, dispatch notes, and any content you choose to submit.",
-            "Staff account identifiers, authorization role, sign-in events, and security records.",
+            "Verified customer and staff account identifiers, email confirmation state, staff authorization role, sign-in events, and security records.",
             "Technical data such as IP address, browser type, request time, error logs, locale, and necessary cookie identifiers.",
             "Documents uploaded by authorized staff and metadata assigned to those documents.",
           ],
@@ -54,7 +54,7 @@ export default async function PrivacyPage({
         {
           title: "Retention",
           items: [
-            "Staff authentication data is retained while the account is active and as needed for security and legal obligations.",
+            "Customer and staff authentication data is retained while the account is active and as needed for security and legal obligations.",
             "Handoff records are normally retained for up to 24 months, unless a service contract, warranty, dispute, or law requires longer.",
             "Security and operational logs are normally retained for up to 90 days, subject to provider settings and incident needs.",
             "Uploaded technical documents remain until replaced or deleted by authorized staff under Cantek records policy.",

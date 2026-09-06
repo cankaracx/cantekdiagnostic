@@ -7,12 +7,14 @@
     "diagnostics": "Diagnostic",
     "technician": "Technicien",
     "admin": "Admin",
-    "language": "Langue"
+    "language": "Langue",
+    "menu": "Menu"
   },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Décrivez le problème. Obtenez la procédure des manuels Cantek.",
     "subhead": "Retrouvez les consignes pertinentes dans les documents de réparation Cantek autorisés. Les travaux dangereux ou critiques doivent être confiés à du personnel qualifié.",
+    "workspaceTitle": "Espace de diagnostic",
     "placeholder": "Exemple : chambre qui ne descend pas, alarme HP un après-midi d’été, régulateur Octosense…",
     "send": "Demander",
     "thinking": "Recherche dans les manuels…",
@@ -25,6 +27,34 @@
     "you": "Vous",
     "assistant": "Assistant Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage."
+  },
+  "account": {
+    "kicker": "Accès client",
+    "welcomeKicker": "Cantek Group",
+    "welcomeTitle": "Diagnostic industriel fondé sur des documents de service autorisés.",
+    "welcomeBody": "Connectez-vous avec un compte ou continuez directement comme invité.",
+    "signInTitle": "Connexion",
+    "signUpTitle": "Créer votre compte",
+    "signIn": "Se connecter",
+    "signOut": "Déconnexion",
+    "createAccount": "Créer un compte",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "verificationNote": "Un lien de vérification sera envoyé à cette adresse.",
+    "checkEmail": "Consultez votre messagerie et vérifiez votre adresse avant de vous connecter.",
+    "continueGuest": "Continuer sans compte",
+    "working": "Veuillez patienter…",
+    "error": "La demande n’a pas abouti. Vérifiez vos informations et la validation de l’e-mail."
+  },
+  "adminAuth": {
+    "kicker": "Accès restreint",
+    "title": "Super administrateur",
+    "intro": "Cette zone est réservée au super administrateur Cantek autorisé.",
+    "username": "Nom d’utilisateur",
+    "password": "Mot de passe",
+    "signIn": "Connexion sécurisée",
+    "working": "Vérification…",
+    "invalid": "Le nom d’utilisateur, le mot de passe ou l’autorisation du compte est incorrect."
   },
   "tech": {
     "title": "Bureau technicien",

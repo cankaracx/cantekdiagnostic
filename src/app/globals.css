@@ -1,21 +1,41 @@
 @import "tailwindcss";
 
 :root {
-  --navy: #0b1f3a;
-  --navy-2: #122a4a;
-  --ice: #7ec8e3;
-  --ice-dim: #3d7a92;
-  --paper: #eef3f7;
-  --ink: #102033;
-  --danger: #9b2c2c;
-  --warn: #b45309;
+  --cantek-dark: #323e48;
+  --cantek-dark-deep: #27323a;
+  --cantek-cyan: #00a0dd;
+  --cantek-text: #212529;
+  --cantek-muted: #65717a;
+  --cantek-light: #f3f5f6;
+  --cantek-border: #d8dde1;
+  --cantek-red: #b3202e;
+  --navy: var(--cantek-dark);
+  --navy-2: var(--cantek-dark-deep);
+  --ice: var(--cantek-cyan);
+  --ice-dim: #007eae;
+  --paper: var(--cantek-light);
+  --ink: var(--cantek-text);
+  --danger: var(--cantek-red);
+  --warn: #b86300;
 }
 
 @theme inline {
   --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
   --color-ice: var(--ice);
+  --color-ice-dim: var(--ice-dim);
   --color-paper: var(--paper);
-  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --color-danger: var(--danger);
+  --color-warn: var(--warn);
+  --color-cantek-dark: var(--cantek-dark);
+  --color-cantek-dark-deep: var(--cantek-dark-deep);
+  --color-cantek-cyan: var(--cantek-cyan);
+  --color-cantek-text: var(--cantek-text);
+  --color-cantek-muted: var(--cantek-muted);
+  --color-cantek-light: var(--cantek-light);
+  --color-cantek-border: var(--cantek-border);
+  --color-cantek-red: var(--cantek-red);
+  --font-sans: var(--font-corporate), "Arial Narrow", Arial, sans-serif;
   --font-arabic: Tahoma, Arial, sans-serif;
 }
 
@@ -25,11 +45,127 @@ body {
 }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
-  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  background: #fff;
+  color: var(--cantek-text);
+  font-family: var(--font-corporate), "Arial Narrow", Arial, sans-serif;
+  font-size: 16px;
 }
 
 html[dir="rtl"] body {
   font-family: Tahoma, Arial, sans-serif;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--cantek-cyan) 25%, white);
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--cantek-cyan) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.cantek-kicker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.cantek-button {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  background: var(--cantek-cyan);
+  padding: 0.65rem 1.25rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.cantek-button:hover {
+  background: var(--cantek-dark);
+}
+
+.cantek-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cantek-form {
+  border: 1px solid var(--cantek-border);
+  background: #fff;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  box-shadow: 0 14px 30px rgb(50 62 72 / 8%);
+}
+
+.cantek-form input,
+.cantek-form select,
+.cantek-form textarea {
+  min-height: 2.75rem;
+  border: 1px solid var(--cantek-border);
+  border-radius: 0;
+  background: #fff;
+  padding: 0.65rem 0.75rem;
+  color: var(--cantek-text);
+  outline: none;
+}
+
+.cantek-form input:focus,
+.cantek-form select:focus,
+.cantek-form textarea:focus {
+  border-color: var(--cantek-cyan);
+  box-shadow: 0 0 0 1px var(--cantek-cyan);
+}
+
+.auth-tab,
+.auth-tab-active {
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.auth-tab {
+  background: #fff;
+  color: var(--cantek-muted);
+}
+
+.auth-tab:hover {
+  color: var(--cantek-cyan);
+}
+
+.auth-tab-active {
+  background: var(--cantek-dark);
+  color: #fff;
+}
+
+.utility-link {
+  color: var(--cantek-dark);
+  transition: color 150ms ease;
+}
+
+.utility-link:hover {
+  color: var(--cantek-cyan);
+}
+
+.cantek-hero {
+  border-bottom: 5px solid var(--cantek-cyan);
+  background: var(--cantek-light);
+}
+
+.cantek-hero-image {
+  background-image: url("/cantek-hero.jpg");
+  background-position: center;
+  background-size: cover;
+}
+
+.auth-gate-visual {
+  background:
+    linear-gradient(180deg, rgb(39 50 58 / 10%), rgb(39 50 58 / 96%)),
+    url("/cantek-hero.jpg") center / cover;
 }

@@ -46,14 +46,14 @@ export function AdminPanel() {
   }
 
   async function signOut() {
-    await fetch("/api/staff-login", { method: "DELETE" });
+    await fetch("/api/admin-login", { method: "DELETE" });
     window.location.reload();
   }
 
   return (
     <div className="space-y-8">
-      <form onSubmit={onUpload} className="grid gap-4 rounded-md border border-navy/10 bg-white p-5">
-        <label className="grid gap-1 text-sm">
+      <form onSubmit={onUpload} className="cantek-form grid gap-4">
+        <label className="grid gap-2 text-sm font-semibold">
           {t("file")}
           <input
             name="file"
@@ -62,36 +62,36 @@ export function AdminPanel() {
             required
           />
         </label>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-2 text-sm font-semibold">
           {t("titleLabel")}
-          <input name="title" className="rounded-sm border border-navy/15 px-3 py-2" />
+          <input name="title" />
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-1 text-sm">
+          <label className="grid gap-2 text-sm font-semibold">
             {t("visibility")}
-            <select name="visibility" className="rounded-sm border border-navy/15 px-3 py-2" defaultValue="repair">
+            <select name="visibility" defaultValue="repair">
               <option value="repair">{t("repair")}</option>
               <option value="internal">{t("internal")}</option>
             </select>
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className="grid gap-2 text-sm font-semibold">
             {t("language")}
-            <input name="language" defaultValue="en" className="rounded-sm border border-navy/15 px-3 py-2" />
+            <input name="language" defaultValue="en" />
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className="grid gap-2 text-sm font-semibold">
             {t("equipment")}
-            <input name="equipment" className="rounded-sm border border-navy/15 px-3 py-2" />
+            <input name="equipment" />
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className="grid gap-2 text-sm font-semibold">
             {t("refrigerant")}
-            <input name="refrigerant" className="rounded-sm border border-navy/15 px-3 py-2" />
+            <input name="refrigerant" />
           </label>
         </div>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-2 text-sm font-semibold">
           {t("version")}
-          <input name="version" className="rounded-sm border border-navy/15 px-3 py-2" />
+          <input name="version" />
         </label>
-        <button className="justify-self-start rounded-sm bg-navy px-4 py-2 text-sm text-white">
+        <button className="cantek-button justify-self-start">
           {t("upload")}
         </button>
       </form>
@@ -99,24 +99,24 @@ export function AdminPanel() {
         <button
           type="button"
           onClick={() => void refresh()}
-          className="text-sm text-ice-dim underline"
+          className="text-sm font-semibold text-cantek-muted underline hover:text-cantek-cyan"
         >
           {t("indexed")}
         </button>
         <button
           type="button"
           onClick={() => void signOut()}
-          className="text-sm text-navy/70 underline"
+          className="text-sm font-semibold text-cantek-muted underline hover:text-cantek-cyan"
         >
           {tech("signOut")}
         </button>
-        {status && <span className="text-sm text-navy/60">{status}</span>}
+        {status && <span className="text-sm text-cantek-muted">{status}</span>}
       </div>
-      <ul className="divide-y divide-navy/10 rounded-md border border-navy/10 bg-white">
+      <ul className="divide-y divide-cantek-border border border-cantek-border bg-white">
         {docs.map((d) => (
           <li key={d.id} className="flex justify-between px-4 py-3 text-sm">
             <span>{d.title}</span>
-            <span className="text-navy/50">
+            <span className="text-cantek-muted">
               {d.visibility} · {d.language}
             </span>
           </li>

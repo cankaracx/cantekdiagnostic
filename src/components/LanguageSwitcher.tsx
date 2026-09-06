@@ -12,10 +12,10 @@ export function LanguageSwitcher() {
   const pathname = usePathname();
 
   return (
-    <label className="flex items-center gap-2 text-xs uppercase tracking-wider text-ice-dim">
+    <label className="flex items-center gap-2 text-xs uppercase tracking-wider text-cantek-muted">
       <span className="sr-only">{t("language")}</span>
       <select
-        className="rounded-sm border border-navy/20 bg-white px-2 py-1 text-sm text-navy"
+        className="border border-cantek-border bg-white px-2 py-1 text-xs font-semibold text-cantek-dark"
         value={locale}
         onChange={(e) => {
           const next = e.target.value as AppLocale;

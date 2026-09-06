@@ -27,11 +27,13 @@ export async function createServerSupabase() {
   );
 }
 
-export type StaffRole = "technician" | "admin";
+export type StaffRole = "technician" | "admin" | "super_admin";
 
 export function roleFromJwt(appMetadata: unknown): StaffRole | null {
   if (!appMetadata || typeof appMetadata !== "object") return null;
   const role = (appMetadata as { role?: string }).role;
-  if (role === "technician" || role === "admin") return role;
+  if (role === "technician" || role === "admin" || role === "super_admin") {
+    return role;
+  }
   return null;
 }

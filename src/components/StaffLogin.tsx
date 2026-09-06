@@ -33,35 +33,36 @@ export function StaffLogin() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="mx-auto max-w-sm space-y-4 rounded-md border border-navy/10 bg-white p-6">
-      <h2 className="text-lg font-semibold text-navy">{t("signIn")}</h2>
-      <p className="text-sm text-navy/60">{t("authorizedOnly")}</p>
-      <label className="grid gap-1 text-sm">
+    <form onSubmit={onSubmit} className="cantek-form mx-auto max-w-md space-y-4">
+      <div className="border-s-4 border-cantek-cyan ps-4">
+        <p className="cantek-kicker text-cantek-cyan">{t("title")}</p>
+        <h2 className="mt-1 text-2xl font-bold text-cantek-text">{t("signIn")}</h2>
+      </div>
+      <p className="text-sm text-cantek-muted">{t("authorizedOnly")}</p>
+      <label className="grid gap-2 text-sm font-semibold text-cantek-text">
         {t("email")}
         <input
           type="email"
           autoComplete="username"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-sm border border-navy/15 px-3 py-2"
           required
         />
       </label>
-      <label className="grid gap-1 text-sm">
+      <label className="grid gap-2 text-sm font-semibold text-cantek-text">
         {t("password")}
         <input
           type="password"
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-sm border border-navy/15 px-3 py-2"
           required
         />
       </label>
-      {error && <p className="text-sm text-danger">{t("invalidCredentials")}</p>}
+      {error && <p className="border-s-4 border-danger bg-red-50 px-3 py-2 text-sm text-red-800">{t("invalidCredentials")}</p>}
       <button
         disabled={busy}
-        className="rounded-sm bg-navy px-4 py-2 text-sm text-white disabled:opacity-50"
+        className="cantek-button w-full"
       >
         {t("signIn")}
       </button>

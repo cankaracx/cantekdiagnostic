@@ -35,35 +35,33 @@ export function TechDesk() {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 rounded-md border border-navy/10 bg-white p-5 md:grid-cols-2">
-        <label className="grid gap-1 text-sm">
+      <div className="cantek-form grid gap-4 md:grid-cols-2">
+        <label className="grid gap-2 text-sm font-semibold">
           {t("serial")}
           <input
             value={serial}
             onChange={(e) => setSerial(e.target.value)}
-            className="rounded-sm border border-navy/15 px-3 py-2"
           />
         </label>
-        <label className="grid gap-1 text-sm">
+        <label className="grid gap-2 text-sm font-semibold">
           {t("notes")}
           <input
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="rounded-sm border border-navy/15 px-3 py-2"
           />
         </label>
         <div className="flex gap-3 md:col-span-2">
           <button
             type="button"
             onClick={() => void handoff()}
-            className="rounded-sm bg-navy px-4 py-2 text-sm text-white"
+            className="cantek-button"
           >
             {t("handoff")}
           </button>
-          <button type="button" onClick={() => void signOut()} className="text-sm underline">
+          <button type="button" onClick={() => void signOut()} className="text-sm font-semibold text-cantek-muted underline hover:text-cantek-cyan">
             {t("signOut")}
           </button>
-          {status && <span className="text-sm text-navy/60">{status}</span>}
+          {status && <span className="text-sm text-cantek-muted">{status}</span>}
         </div>
       </div>
       <ChatPanel

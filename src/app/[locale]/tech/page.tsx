@@ -21,10 +21,15 @@ export default async function TechPage({
   const staff = await isStaffSession();
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-10">
-      <h1 className="text-3xl font-semibold text-navy">{t("title")}</h1>
-      <p className="mt-3 max-w-2xl text-sm leading-6 text-navy/70">{t("intro")}</p>
-      <div className="mt-8">{staff ? <TechDesk /> : <StaffLogin />}</div>
+    <main className="bg-cantek-light px-4 py-12 sm:py-16">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="border-s-4 border-cantek-cyan ps-5">
+          <p className="cantek-kicker text-cantek-cyan">Cantek Service</p>
+          <h1 className="mt-2 text-3xl font-bold text-cantek-text">{t("title")}</h1>
+        </div>
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-cantek-muted">{t("intro")}</p>
+        <div className="mt-8">{staff ? <TechDesk /> : <StaffLogin />}</div>
+      </div>
     </main>
   );
 }

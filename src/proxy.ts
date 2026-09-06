@@ -21,10 +21,26 @@ function withLocaleCookie(request: NextRequest, locale: string): NextRequest {
 
 export async function proxy(request: NextRequest) {
   const isApi = request.nextUrl.pathname.startsWith("/api/");
+  const isRootAdmin = request.nextUrl.pathname === "/admin";
   let response: NextResponse;
 
   if (isApi) {
     response = NextResponse.next();
+  } else if (isRootAdmin) {
+    const existing = request.cookies.get(localeCookieName)?.value;
+    const detected = detectLocale(request.headers, existing);
+    const destination = request.nextUrl.clone();
+    destination.pathname = `/${detected}/admin`;
+    response = NextResponse.rewrite(destination);
+
+    if (!existing) {
+      response.cookies.set(localeCookieName, detected, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
+      });
+    }
   } else {
     const existing = request.cookies.get(localeCookieName)?.value;
     const detected = detectLocale(request.headers, existing);

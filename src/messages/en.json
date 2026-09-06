@@ -7,12 +7,14 @@
     "diagnostics": "Diagnostics",
     "technician": "Technician",
     "admin": "Admin",
-    "language": "Language"
+    "language": "Language",
+    "menu": "Menu"
   },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Describe the problem. Get the procedure from Cantek manuals.",
     "subhead": "Find relevant guidance from authorized Cantek repair documents. Safety-critical and hazardous work must be handled by qualified personnel.",
+    "workspaceTitle": "Diagnostic workspace",
     "placeholder": "Example: cold room not pulling down, HP alarm on a summer afternoon, Octosense controller…",
     "send": "Ask",
     "thinking": "Searching manuals…",
@@ -25,6 +27,34 @@
     "you": "You",
     "assistant": "Cantek assistant",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring."
+  },
+  "account": {
+    "kicker": "Customer access",
+    "welcomeKicker": "Cantek Group",
+    "welcomeTitle": "Industrial diagnostics backed by authorized service documents.",
+    "welcomeBody": "Sign in for an account session, or continue directly as a guest.",
+    "signInTitle": "Sign in",
+    "signUpTitle": "Create your account",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "createAccount": "Create account",
+    "email": "Email address",
+    "password": "Password",
+    "verificationNote": "We will send a verification link to this email address.",
+    "checkEmail": "Check your inbox and verify your email before signing in.",
+    "continueGuest": "Continue without an account",
+    "working": "Please wait…",
+    "error": "We could not complete that request. Check your details and email verification."
+  },
+  "adminAuth": {
+    "kicker": "Restricted access",
+    "title": "Super administrator",
+    "intro": "This area is restricted to the authorized Cantek super administrator.",
+    "username": "Username",
+    "password": "Password",
+    "signIn": "Sign in securely",
+    "working": "Verifying…",
+    "invalid": "The username, password, or account authorization is invalid."
   },
   "tech": {
     "title": "Technician desk",

@@ -20,6 +20,9 @@ Staff access uses Supabase Auth. Authorization is read only from server-controll
 
 - `technician` can use the technician desk and create handoff records.
 - `admin` can also upload and manage documents.
+- `super_admin` inherits administrator permissions and is the only role accepted by the username-only `/admin` sign-in.
+
+Verified customer accounts are optional and receive no staff role. Diagnostics remain available to guests.
 
 There is no development bypass or shared administrative cookie. Database row-level security independently enforces document visibility and staff permissions.
 
@@ -29,11 +32,24 @@ Never commit environment files, credentials, private manuals, generated indexes,
 
 1. Install dependencies with `npm install`.
 2. Copy `.env.example` to `.env.local`.
-3. Add the project URL and browser-safe publishable key.
+3. Add the project URL, browser-safe publishable key, and `NEXT_PUBLIC_SITE_URL`.
 4. Add optional response-provider credentials if needed.
 5. Start the app with `npm run dev`.
 
-An authorized account must have `app_metadata.role` set to `technician` or `admin`. Role metadata must be assigned by a trusted server-side administrator, never by the browser or user-editable metadata.
+An authorized staff account must have `app_metadata.role` set to `technician`, `admin`, or `super_admin`. Role metadata must be assigned through the supported Auth administration interface or Admin API, never by the browser, user-editable metadata, or a direct write to the Auth schema.
+
+## One-time super administrator setup
+
+1. In the hosted Auth dashboard, create an undisclosed email identity for the super administrator. Mark the email as confirmed and use a temporary strong password.
+2. In the same trusted administration interface, set the user's application metadata to `{ "role": "super_admin" }`.
+3. Store that undisclosed email only in the deployment secret `SUPER_ADMIN_EMAIL`; never put it in source control or client-visible variables.
+4. Sign in at `/admin` with username `admin`, then rotate the temporary password immediately.
+
+For customer verification, keep email confirmation enabled. Configure the production Site URL and allow both the production and local `/auth/confirm` redirect URLs. The confirmation email link should use:
+
+`{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email`
+
+Use Cantek-branded copy in the email template and do not expose infrastructure identifiers.
 
 ## Checks
 

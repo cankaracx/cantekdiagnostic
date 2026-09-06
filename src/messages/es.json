@@ -7,12 +7,14 @@
     "diagnostics": "Diagnóstico",
     "technician": "Técnico",
     "admin": "Admin",
-    "language": "Idioma"
+    "language": "Idioma",
+    "menu": "Menú"
   },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Describa el problema. Obtenga el procedimiento de los manuales Cantek.",
     "subhead": "Encuentre orientación pertinente en documentos de reparación Cantek autorizados. El trabajo peligroso o crítico para la seguridad debe realizarlo personal cualificado.",
+    "workspaceTitle": "Espacio de diagnóstico",
     "placeholder": "Ejemplo: la cámara no baja, alarma HP en una tarde de verano, controlador Octosense…",
     "send": "Preguntar",
     "thinking": "Buscando en los manuales…",
@@ -25,6 +27,34 @@
     "you": "Usted",
     "assistant": "Asistente Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado."
+  },
+  "account": {
+    "kicker": "Acceso de clientes",
+    "welcomeKicker": "Cantek Group",
+    "welcomeTitle": "Diagnóstico industrial respaldado por documentos de servicio autorizados.",
+    "welcomeBody": "Inicie sesión con una cuenta o continúe directamente como invitado.",
+    "signInTitle": "Iniciar sesión",
+    "signUpTitle": "Crear su cuenta",
+    "signIn": "Entrar",
+    "signOut": "Salir",
+    "createAccount": "Crear cuenta",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "verificationNote": "Enviaremos un enlace de verificación a este correo.",
+    "checkEmail": "Revise su correo y verifique la dirección antes de iniciar sesión.",
+    "continueGuest": "Continuar sin cuenta",
+    "working": "Espere…",
+    "error": "No se pudo completar la solicitud. Revise sus datos y la verificación del correo."
+  },
+  "adminAuth": {
+    "kicker": "Acceso restringido",
+    "title": "Superadministrador",
+    "intro": "Esta zona está reservada al superadministrador autorizado de Cantek.",
+    "username": "Usuario",
+    "password": "Contraseña",
+    "signIn": "Acceso seguro",
+    "working": "Verificando…",
+    "invalid": "El usuario, la contraseña o la autorización de la cuenta no son válidos."
   },
   "tech": {
     "title": "Mesa del técnico",
