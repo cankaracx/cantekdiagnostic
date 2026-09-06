@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Diagnostics Cantek",
+    "description": "Diagnostic et réparation d’entrepôts frigorifiques à partir des manuels Cantek."
+  },
+  "nav": {
+    "diagnostics": "Diagnostic",
+    "technician": "Technicien",
+    "admin": "Admin",
+    "language": "Langue"
+  },
+  "home": {
+    "kicker": "Cantek Group · Antalya",
+    "headline": "Décrivez le problème. Obtenez la procédure des manuels Cantek.",
+    "subhead": "Retrouvez les consignes pertinentes dans les documents de réparation Cantek autorisés. Les travaux dangereux ou critiques doivent être confiés à du personnel qualifié.",
+    "placeholder": "Exemple : chambre qui ne descend pas, alarme HP un après-midi d’été, régulateur Octosense…",
+    "send": "Demander",
+    "thinking": "Recherche dans les manuels…",
+    "empty": "Parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
+    "sources": "Sources",
+    "service": "Service Cantek",
+    "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
+  },
+  "chat": {
+    "you": "Vous",
+    "assistant": "Assistant Cantek",
+    "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage."
+  },
+  "tech": {
+    "title": "Bureau technicien",
+    "intro": "Les mêmes manuels de réparation que le public, plus le transfert dispatch et le n° de série.",
+    "serial": "Modèle / série",
+    "notes": "Notes dispatch",
+    "handoff": "Créer le dossier de transfert",
+    "handoffDone": "Transfert enregistré",
+    "signIn": "Connexion",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "signOut": "Déconnexion",
+    "authorizedOnly": "Réservé aux comptes autorisés du personnel Cantek.",
+    "invalidCredentials": "L’adresse e-mail, le mot de passe ou l’autorisation du compte est incorrect."
+  },
+  "admin": {
+    "title": "Manuels",
+    "intro": "Chargez un PDF ou DOCX. Indiquez visibilité, équipement et fluide, puis indexez pour que le chatbot cite le fichier.",
+    "file": "Fichier",
+    "titleLabel": "Titre",
+    "visibility": "Visibilité",
+    "repair": "Réparation (tout le monde)",
+    "internal": "Interne (personnel)",
+    "equipment": "Famille d’équipement",
+    "refrigerant": "Fluide",
+    "language": "Langue du document",
+    "version": "Version",
+    "upload": "Charger et indexer",
+    "indexed": "Documents indexés"
+  },
+  "danger": {
+    "title": "Danger",
+    "body": "Arrêtez le travail. Toute intervention dangereuse exige un technicien autorisé et dûment certifié utilisant la procédure propre au site.",
+    "emergency": "Éloignez-vous du danger, évacuez et appelez les secours locaux ainsi que l’équipe d’urgence du site."
+  }
+}

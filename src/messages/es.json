@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Diagnóstico Cantek",
+    "description": "Diagnóstico y reparación de cámaras frigoríficas a partir de los manuales Cantek."
+  },
+  "nav": {
+    "diagnostics": "Diagnóstico",
+    "technician": "Técnico",
+    "admin": "Admin",
+    "language": "Idioma"
+  },
+  "home": {
+    "kicker": "Cantek Group · Antalya",
+    "headline": "Describa el problema. Obtenga el procedimiento de los manuales Cantek.",
+    "subhead": "Encuentre orientación pertinente en documentos de reparación Cantek autorizados. El trabajo peligroso o crítico para la seguridad debe realizarlo personal cualificado.",
+    "placeholder": "Ejemplo: la cámara no baja, alarma HP en una tarde de verano, controlador Octosense…",
+    "send": "Preguntar",
+    "thinking": "Buscando en los manuales…",
+    "empty": "Pregunte por temperatura, alarmas, hielo, compresores, amoníaco o controladores.",
+    "sources": "Fuentes",
+    "service": "Servicio Cantek",
+    "disclaimer": "La guía proviene de documentos Cantek. No sustituye a un técnico frigorista certificado. Siga primero las normas locales de emergencia."
+  },
+  "chat": {
+    "you": "Usted",
+    "assistant": "Asistente Cantek",
+    "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado."
+  },
+  "tech": {
+    "title": "Mesa del técnico",
+    "intro": "Los mismos manuales de reparación, más el paquete de traspaso y el número de serie.",
+    "serial": "Modelo / serie",
+    "notes": "Notas de despacho",
+    "handoff": "Crear paquete de traspaso",
+    "handoffDone": "Traspaso guardado",
+    "signIn": "Entrar",
+    "email": "Correo",
+    "password": "Contraseña",
+    "signOut": "Salir",
+    "authorizedOnly": "Solo para cuentas autorizadas del personal de Cantek.",
+    "invalidCredentials": "El correo, la contraseña o la autorización de la cuenta no son válidos."
+  },
+  "admin": {
+    "title": "Manuales",
+    "intro": "Suba PDF o DOCX. Marque visibilidad, equipo y refrigerante; indexe para que el chat cite el archivo.",
+    "file": "Archivo",
+    "titleLabel": "Título",
+    "visibility": "Visibilidad",
+    "repair": "Reparación (todos)",
+    "internal": "Interno (solo personal)",
+    "equipment": "Familia de equipo",
+    "refrigerant": "Refrigerante",
+    "language": "Idioma del documento",
+    "version": "Versión",
+    "upload": "Subir e indexar",
+    "indexed": "Documentos indexados"
+  },
+  "danger": {
+    "title": "Peligro",
+    "body": "Detenga el trabajo. El servicio peligroso requiere un técnico autorizado y debidamente certificado que use el procedimiento específico del sitio.",
+    "emergency": "Aléjese del peligro, evacúe y llame a los servicios de emergencia locales y al equipo de emergencia del sitio."
+  }
+}

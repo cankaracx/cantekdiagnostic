@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #0b1f3a;
+  --navy-2: #122a4a;
+  --ice: #7ec8e3;
+  --ice-dim: #3d7a92;
+  --paper: #eef3f7;
+  --ink: #102033;
+  --danger: #9b2c2c;
+  --warn: #b45309;
+}
+
+@theme inline {
+  --color-navy: var(--navy);
+  --color-ice: var(--ice);
+  --color-paper: var(--paper);
+  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-arabic: Tahoma, Arial, sans-serif;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+}
+
+html[dir="rtl"] body {
+  font-family: Tahoma, Arial, sans-serif;
+}

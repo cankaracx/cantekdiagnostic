@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Cantek Arıza Tanı",
+    "description": "Cantek kılavuzlarına dayalı soğuk depo arıza tanı ve onarım rehberi."
+  },
+  "nav": {
+    "diagnostics": "Arıza tanı",
+    "technician": "Teknisyen",
+    "admin": "Yönetim",
+    "language": "Dil"
+  },
+  "home": {
+    "kicker": "Cantek Group · Antalya",
+    "headline": "Sorunu anlatın. Cantek kılavuzlarındaki prosedürü alın.",
+    "subhead": "Yetkili Cantek onarım belgelerindeki ilgili rehberi bulun. Güvenlik açısından kritik ve tehlikeli işler yetkin personel tarafından yapılmalıdır.",
+    "placeholder": "Örnek: soğuk oda düşmüyor, yaz öğleden sonra HP alarmı, Octosense kontrolör…",
+    "send": "Sor",
+    "thinking": "Kılavuzlar aranıyor…",
+    "empty": "Sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
+    "sources": "Kaynaklar",
+    "service": "Cantek servis",
+    "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
+  },
+  "chat": {
+    "you": "Siz",
+    "assistant": "Cantek asistan",
+    "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın."
+  },
+  "tech": {
+    "title": "Teknisyen masası",
+    "intro": "Herkesle aynı onarım kılavuzları; artı sevk paketi ve seri kaydı.",
+    "serial": "Model / seri",
+    "notes": "Sevk notları",
+    "handoff": "Sevk paketi oluştur",
+    "handoffDone": "Sevk kaydedildi",
+    "signIn": "Giriş",
+    "email": "E-posta",
+    "password": "Şifre",
+    "signOut": "Çıkış",
+    "authorizedOnly": "Yalnızca yetkili Cantek personel hesapları.",
+    "invalidCredentials": "E-posta, şifre veya hesap yetkisi geçersiz."
+  },
+  "admin": {
+    "title": "Kılavuzlar",
+    "intro": "PDF veya DOCX yükleyin. Görünürlük, ekipman ve soğutucu işaretleyin; sohbetin alıntı yapması için indeksleyin.",
+    "file": "Dosya",
+    "titleLabel": "Başlık",
+    "visibility": "Görünürlük",
+    "repair": "Onarım (herkes)",
+    "internal": "İç (yalnız personel)",
+    "equipment": "Ekipman ailesi",
+    "refrigerant": "Soğutucu",
+    "language": "Belge dili",
+    "version": "Sürüm",
+    "upload": "Yükle ve indeksle",
+    "indexed": "İndekslenmiş belgeler"
+  },
+  "danger": {
+    "title": "Tehlike",
+    "body": "Çalışmayı durdurun. Tehlikeli servis işleri, sahaya özel prosedürü kullanan yetkili ve uygun sertifikalı bir teknisyen gerektirir.",
+    "emergency": "Tehlikeden uzaklaşın, alanı tahliye edin ve yerel acil servislerle tesis acil durum ekibini arayın."
+  }
+}

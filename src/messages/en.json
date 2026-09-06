@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Cantek Diagnostics",
+    "description": "Cold storage diagnostics and repair guidance from Cantek manuals."
+  },
+  "nav": {
+    "diagnostics": "Diagnostics",
+    "technician": "Technician",
+    "admin": "Admin",
+    "language": "Language"
+  },
+  "home": {
+    "kicker": "Cantek Group · Antalya",
+    "headline": "Describe the problem. Get the procedure from Cantek manuals.",
+    "subhead": "Find relevant guidance from authorized Cantek repair documents. Safety-critical and hazardous work must be handled by qualified personnel.",
+    "placeholder": "Example: cold room not pulling down, HP alarm on a summer afternoon, Octosense controller…",
+    "send": "Ask",
+    "thinking": "Searching manuals…",
+    "empty": "Ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
+    "sources": "Sources",
+    "service": "Cantek service",
+    "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
+  },
+  "chat": {
+    "you": "You",
+    "assistant": "Cantek assistant",
+    "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring."
+  },
+  "tech": {
+    "title": "Technician desk",
+    "intro": "Same repair manuals as the public assistant, plus dispatch handoff and serial logging.",
+    "serial": "Model / serial",
+    "notes": "Dispatch notes",
+    "handoff": "Create handoff packet",
+    "handoffDone": "Handoff saved",
+    "signIn": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "signOut": "Sign out",
+    "authorizedOnly": "Authorized Cantek staff accounts only.",
+    "invalidCredentials": "The email, password, or account authorization is invalid."
+  },
+  "admin": {
+    "title": "Manuals",
+    "intro": "Upload PDF or DOCX. Tag visibility, equipment, and refrigerant, then re-index so the chatbot can cite the file.",
+    "file": "File",
+    "titleLabel": "Title",
+    "visibility": "Visibility",
+    "repair": "Repair (everyone)",
+    "internal": "Internal (staff only)",
+    "equipment": "Equipment family",
+    "refrigerant": "Refrigerant",
+    "language": "Document language",
+    "version": "Version",
+    "upload": "Upload and index",
+    "indexed": "Indexed documents"
+  },
+  "danger": {
+    "title": "Danger",
+    "body": "Stop work. Hazardous service requires an authorized, appropriately certified technician using the site-specific procedure.",
+    "emergency": "Move away from the hazard, evacuate, and call local emergency services and the site emergency team."
+  }
+}
