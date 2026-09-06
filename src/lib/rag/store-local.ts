@@ -36,7 +36,14 @@ export function upsertDocument(
   index: LocalIndex,
   doc: Omit<DocumentRecord, "id" | "createdAt"> & { id?: string },
 ): DocumentRecord {
-  const existing = doc.id ? index.documents.find((d) => d.id === doc.id) : undefined;
+  const existing = doc.id
+    ? index.documents.find((d) => d.id === doc.id)
+    : index.documents.find(
+        (d) =>
+          Boolean(doc.filePath) &&
+          d.filePath === doc.filePath &&
+          d.title === doc.title,
+      );
   const record: DocumentRecord = {
     id: existing?.id ?? doc.id ?? randomUUID(),
     title: doc.title,

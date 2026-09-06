@@ -9,6 +9,11 @@ import {
   wrapHazardAnswer,
 } from "@/lib/chat/hazards";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
+import {
+  looksLikeAnthropicKey,
+  maskAnthropicKey,
+} from "@/lib/chat/anthropic";
+import { localEmbedding } from "@/lib/rag/embed";
 
 describe("hazard policy", () => {
   it("detects ammonia and welding as hazardous", () => {
@@ -37,6 +42,10 @@ describe("grounding", () => {
     expect(body).not.toMatch(/\b\d+\s*Nm\b/);
     expect(body).toMatch(/do not invent|not list|Contact Cantek|not contain/i);
   });
+
+  it("uses database-compatible fallback embedding dimensions", () => {
+    expect(localEmbedding("HP alarm on compressor rack")).toHaveLength(1536);
+  });
 });
 
 describe("system prompt", () => {
@@ -45,5 +54,15 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/SAFETY BOUNDARY/);
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
+  });
+});
+
+describe("Anthropic configuration", () => {
+  it("validates and masks keys without exposing the full value", () => {
+    const key = "sk-ant-api03-example-secret-value-1234";
+    expect(looksLikeAnthropicKey(key)).toBe(true);
+    expect(maskAnthropicKey(key)).toBe("sk-ant-…1234");
+    expect(maskAnthropicKey(key)).not.toContain("example-secret");
+    expect(looksLikeAnthropicKey("not-an-anthropic-key")).toBe(false);
   });
 });

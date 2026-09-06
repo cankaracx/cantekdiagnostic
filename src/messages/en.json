@@ -10,6 +10,16 @@
     "language": "Language",
     "menu": "Menu"
   },
+  "footer": {
+    "description": "Industrial cold-chain diagnostic support from authorized Cantek service documents.",
+    "service": "Service",
+    "corporate": "Corporate",
+    "terms": "Terms",
+    "privacy": "Privacy & KVKK",
+    "cookies": "Cookies",
+    "safety": "Safety",
+    "accessibility": "Accessibility"
+  },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Describe the problem. Get the procedure from Cantek manuals.",
@@ -26,7 +36,8 @@
   "chat": {
     "you": "You",
     "assistant": "Cantek assistant",
-    "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring."
+    "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
+    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
   },
   "account": {
     "kicker": "Customer access",
@@ -63,6 +74,8 @@
     "notes": "Dispatch notes",
     "handoff": "Create handoff packet",
     "handoffDone": "Handoff saved",
+    "working": "Saving…",
+    "error": "The handoff could not be saved. Please try again.",
     "signIn": "Sign in",
     "email": "Email",
     "password": "Password",
@@ -73,17 +86,65 @@
   "admin": {
     "title": "Manuals",
     "intro": "Upload PDF or DOCX. Tag visibility, equipment, and refrigerant, then re-index so the chatbot can cite the file.",
+    "securityNote": "Restricted workspace · Files and API credentials are available only to authorized administrators.",
+    "uploadKicker": "RAG knowledge base",
+    "uploadTitle": "Upload a service document",
+    "uploadHelp": "The document will be parsed, split into searchable sections, embedded, and made available to the Cantek assistant.",
     "file": "File",
+    "dropTitle": "Drop a manual here or browse",
+    "dropHelp": "PDF, DOCX, Markdown, or TXT · Maximum 20 MB",
+    "readyToIndex": "Ready to index",
     "titleLabel": "Title",
+    "titlePlaceholder": "Use the official document title",
     "visibility": "Visibility",
     "repair": "Repair (everyone)",
+    "repairShort": "Repair",
+    "repairHelp": "Available to customers, guests, and staff.",
     "internal": "Internal (staff only)",
+    "internalShort": "Internal",
+    "internalHelp": "Available only in the authorized technician workspace.",
     "equipment": "Equipment family",
+    "equipmentPlaceholder": "e.g. Octosense, cold room",
     "refrigerant": "Refrigerant",
+    "refrigerantPlaceholder": "e.g. R744, R717",
     "language": "Document language",
     "version": "Version",
+    "versionPlaceholder": "e.g. 2026.1",
     "upload": "Upload and index",
-    "indexed": "Indexed documents"
+    "indexing": "Parsing and indexing…",
+    "uploadSuccess": "{title} indexed into {count} searchable sections.",
+    "indexed": "Indexed documents",
+    "libraryKicker": "Knowledge library",
+    "refresh": "Refresh",
+    "loading": "Loading…",
+    "emptyTitle": "No manuals indexed yet",
+    "emptyHelp": "Upload the first approved service document to activate grounded answers.",
+    "document": "Document",
+    "sections": "Sections",
+    "unclassified": "No equipment tags",
+    "errors": {
+      "fileRequired": "Choose a document before indexing.",
+      "fileTooLarge": "The document must be smaller than 20 MB.",
+      "unsupportedFile": "Use a PDF, DOCX, Markdown, or TXT document.",
+      "noExtractableText": "No readable text was found in this document.",
+      "unauthorized": "Your administrator session has expired. Sign in again.",
+      "ingestFailed": "The document could not be indexed. Check the file and try again.",
+      "documentsUnavailable": "The document library could not be loaded."
+    },
+    "ai": {
+      "kicker": "Claude RAG",
+      "title": "Anthropic connection",
+      "description": "Claude Sonnet 5 answers from the indexed Cantek manuals. The API key is encrypted in transit, stored in the private database schema, and never returned to the browser.",
+      "connected": "Connected",
+      "notConfigured": "Not configured",
+      "statusUnavailable": "Connection status is unavailable.",
+      "keyLabel": "Anthropic API key",
+      "save": "Test and save key",
+      "testing": "Testing connection…",
+      "saved": "Claude Sonnet 5 is connected and ready for RAG chat.",
+      "invalid": "Anthropic rejected this key. Check it and try again.",
+      "saveFailed": "The key could not be saved securely."
+    }
   },
   "danger": {
     "title": "Danger",

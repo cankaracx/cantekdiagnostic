@@ -17,15 +17,42 @@ export type IngestMeta = {
   filePath?: string;
 };
 
+export type IngestResult = DocumentRecord & {
+  chunkCount: number;
+  pageCount: number;
+  characterCount: number;
+};
+
 export async function ingestParsedPages(
   pages: { page: number; text: string }[],
   meta: IngestMeta,
   database?: SupabaseClient | null,
-): Promise<DocumentRecord> {
-  const pieces = pages.length ? chunkPages(pages) : chunkText("");
+): Promise<IngestResult> {
+  const usablePages = pages
+    .map((page) => ({ ...page, text: page.text.trim() }))
+    .filter((page) => page.text.length > 0);
+  const pieces = usablePages.length ? chunkPages(usablePages) : chunkText("");
+  if (!pieces.length) {
+    throw new Error("no_extractable_text");
+  }
+
   const embeddings = await embedTexts(pieces.map((p) => p.content));
+  const supabase = database ?? createServiceSupabase();
   const index = loadLocalIndex();
-  const doc = upsertDocument(index, meta);
+  let existingId: string | undefined;
+
+  if (supabase && meta.filePath) {
+    const { data: existing, error: lookupError } = await supabase
+      .from("documents")
+      .select("id")
+      .eq("file_path", meta.filePath)
+      .eq("title", meta.title)
+      .maybeSingle();
+    if (lookupError) throw lookupError;
+    existingId = existing?.id;
+  }
+
+  const doc = upsertDocument(index, { ...meta, id: existingId });
 
   const chunks: ChunkRecord[] = pieces.map((piece, i) => ({
     id: randomUUID(),
@@ -43,9 +70,7 @@ export async function ingestParsedPages(
   }));
 
   addChunks(index, chunks);
-  saveLocalIndex(index);
 
-  const supabase = database ?? createServiceSupabase();
   if (supabase) {
     const { error: documentError } = await supabase.from("documents").upsert({
       id: doc.id,
@@ -79,9 +104,24 @@ export async function ingestParsedPages(
       );
       if (chunkError) throw chunkError;
     }
+
+    // Supabase is the source of truth in production; a failed local cache
+    // write must not make an otherwise successful indexing request fail.
+    try {
+      saveLocalIndex(index);
+    } catch {
+      // The cache is optional when the database is available.
+    }
+  } else {
+    saveLocalIndex(index);
   }
 
-  return doc;
+  return {
+    ...doc,
+    chunkCount: chunks.length,
+    pageCount: usablePages.length,
+    characterCount: usablePages.reduce((sum, page) => sum + page.text.length, 0),
+  };
 }
 
 export async function ingestFile(

@@ -55,4 +55,5 @@ export type AnswerResult = {
   hazard: boolean;
   emergency: boolean;
   missingManual: boolean;
+  provider: "anthropic" | "openai" | "extractive" | "safety";
 };

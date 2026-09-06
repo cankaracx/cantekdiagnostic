@@ -5,9 +5,9 @@
   --cantek-dark-deep: #27323a;
   --cantek-cyan: #00a0dd;
   --cantek-text: #212529;
-  --cantek-muted: #65717a;
-  --cantek-light: #f3f5f6;
-  --cantek-border: #d8dde1;
+  --cantek-muted: #6c757d;
+  --cantek-light: #f8f9fa;
+  --cantek-border: #dee2e6;
   --cantek-red: #b3202e;
   --navy: var(--cantek-dark);
   --navy-2: var(--cantek-dark-deep);
@@ -49,10 +49,18 @@ body {
   color: var(--cantek-text);
   font-family: var(--font-corporate), "Arial Narrow", Arial, sans-serif;
   font-size: 16px;
+  line-height: 1.5;
 }
 
 html[dir="rtl"] body {
   font-family: Tahoma, Arial, sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 ::selection {
@@ -65,10 +73,9 @@ html[dir="rtl"] body {
 }
 
 .cantek-kicker {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  letter-spacing: 0.02em;
 }
 
 .cantek-button {
@@ -76,18 +83,20 @@ html[dir="rtl"] body {
   min-height: 2.75rem;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--cantek-cyan);
   background: var(--cantek-cyan);
   padding: 0.65rem 1.25rem;
   color: #fff;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.015em;
   transition:
+    border-color 160ms ease,
     background-color 160ms ease,
     color 160ms ease;
 }
 
 .cantek-button:hover {
+  border-color: var(--cantek-dark);
   background: var(--cantek-dark);
 }
 
@@ -100,10 +109,10 @@ html[dir="rtl"] body {
   border: 1px solid var(--cantek-border);
   background: #fff;
   padding: clamp(1.25rem, 4vw, 2rem);
-  box-shadow: 0 14px 30px rgb(50 62 72 / 8%);
+  box-shadow: 0 8px 24px rgb(50 62 72 / 7%);
 }
 
-.cantek-form input,
+.cantek-form input:not([type="radio"]):not([type="checkbox"]),
 .cantek-form select,
 .cantek-form textarea {
   min-height: 2.75rem;
@@ -115,11 +124,34 @@ html[dir="rtl"] body {
   outline: none;
 }
 
-.cantek-form input:focus,
+.cantek-form input:not([type="radio"]):not([type="checkbox"]):focus,
 .cantek-form select:focus,
 .cantek-form textarea:focus {
   border-color: var(--cantek-cyan);
   box-shadow: 0 0 0 1px var(--cantek-cyan);
+}
+
+.cantek-form input::placeholder,
+.cantek-form textarea::placeholder {
+  color: color-mix(in srgb, var(--cantek-muted) 78%, white);
+}
+
+.cantek-form input[type="file"]::file-selector-button {
+  min-height: 2.7rem;
+  margin: -0.65rem 0.75rem -0.65rem -0.75rem;
+  border: 0;
+  border-inline-end: 1px solid var(--cantek-border);
+  background: var(--cantek-light);
+  padding: 0.65rem 1rem;
+  color: var(--cantek-dark);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cantek-form input[type="file"]::file-selector-button:hover {
+  background: color-mix(in srgb, var(--cantek-cyan) 10%, white);
+  color: var(--cantek-cyan);
 }
 
 .auth-tab,

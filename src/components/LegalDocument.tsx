@@ -31,7 +31,7 @@ export function LegalDocument(props: {
               </p>
             ))}
             {section.items && (
-              <ul className="mt-3 list-square space-y-2 ps-5 text-sm leading-7 text-cantek-muted marker:text-cantek-cyan">
+              <ul className="mt-3 list-disc space-y-2 ps-5 text-sm leading-7 text-cantek-muted marker:text-cantek-cyan">
                 {section.items.map((item) => <li key={item}>{item}</li>)}
               </ul>
             )}

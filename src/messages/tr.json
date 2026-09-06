@@ -10,6 +10,16 @@
     "language": "Dil",
     "menu": "Menü"
   },
+  "footer": {
+    "description": "Yetkili Cantek servis belgelerine dayalı endüstriyel soğuk zincir arıza tanı desteği.",
+    "service": "Servis",
+    "corporate": "Kurumsal",
+    "terms": "Kullanım koşulları",
+    "privacy": "Gizlilik ve KVKK",
+    "cookies": "Çerezler",
+    "safety": "Güvenlik",
+    "accessibility": "Erişilebilirlik"
+  },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Sorunu anlatın. Cantek kılavuzlarındaki prosedürü alın.",
@@ -26,7 +36,8 @@
   "chat": {
     "you": "Siz",
     "assistant": "Cantek asistan",
-    "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın."
+    "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
+    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
   },
   "account": {
     "kicker": "Müşteri erişimi",
@@ -63,6 +74,8 @@
     "notes": "Sevk notları",
     "handoff": "Sevk paketi oluştur",
     "handoffDone": "Sevk kaydedildi",
+    "working": "Kaydediliyor…",
+    "error": "Sevk kaydedilemedi. Lütfen yeniden deneyin.",
     "signIn": "Giriş",
     "email": "E-posta",
     "password": "Şifre",
@@ -73,17 +86,65 @@
   "admin": {
     "title": "Kılavuzlar",
     "intro": "PDF veya DOCX yükleyin. Görünürlük, ekipman ve soğutucu işaretleyin; sohbetin alıntı yapması için indeksleyin.",
+    "securityNote": "Kısıtlı çalışma alanı · Dosyalar ve API kimlik bilgileri yalnızca yetkili yöneticilere açıktır.",
+    "uploadKicker": "RAG bilgi tabanı",
+    "uploadTitle": "Servis belgesi yükleyin",
+    "uploadHelp": "Belge ayrıştırılır, aranabilir bölümlere ayrılır, gömülür ve Cantek asistanına sunulur.",
     "file": "Dosya",
+    "dropTitle": "Kılavuzu buraya bırakın veya seçin",
+    "dropHelp": "PDF, DOCX, Markdown veya TXT · En fazla 20 MB",
+    "readyToIndex": "İndekslemeye hazır",
     "titleLabel": "Başlık",
+    "titlePlaceholder": "Resmî belge başlığını kullanın",
     "visibility": "Görünürlük",
     "repair": "Onarım (herkes)",
+    "repairShort": "Onarım",
+    "repairHelp": "Müşteriler, misafirler ve personel kullanabilir.",
     "internal": "İç (yalnız personel)",
+    "internalShort": "İç",
+    "internalHelp": "Yalnızca yetkili teknisyen çalışma alanında kullanılabilir.",
     "equipment": "Ekipman ailesi",
+    "equipmentPlaceholder": "örn. Octosense, soğuk oda",
     "refrigerant": "Soğutucu",
+    "refrigerantPlaceholder": "örn. R744, R717",
     "language": "Belge dili",
     "version": "Sürüm",
+    "versionPlaceholder": "örn. 2026.1",
     "upload": "Yükle ve indeksle",
-    "indexed": "İndekslenmiş belgeler"
+    "indexing": "Ayrıştırılıyor ve indeksleniyor…",
+    "uploadSuccess": "{title}, {count} aranabilir bölüm olarak indekslendi.",
+    "indexed": "İndekslenmiş belgeler",
+    "libraryKicker": "Bilgi kütüphanesi",
+    "refresh": "Yenile",
+    "loading": "Yükleniyor…",
+    "emptyTitle": "Henüz kılavuz indekslenmedi",
+    "emptyHelp": "Belgelere dayalı yanıtları etkinleştirmek için ilk onaylı servis belgesini yükleyin.",
+    "document": "Belge",
+    "sections": "Bölümler",
+    "unclassified": "Ekipman etiketi yok",
+    "errors": {
+      "fileRequired": "İndekslemeden önce bir belge seçin.",
+      "fileTooLarge": "Belge 20 MB'den küçük olmalıdır.",
+      "unsupportedFile": "PDF, DOCX, Markdown veya TXT belgesi kullanın.",
+      "noExtractableText": "Bu belgede okunabilir metin bulunamadı.",
+      "unauthorized": "Yönetici oturumunuz sona erdi. Yeniden giriş yapın.",
+      "ingestFailed": "Belge indekslenemedi. Dosyayı kontrol edip yeniden deneyin.",
+      "documentsUnavailable": "Belge kütüphanesi yüklenemedi."
+    },
+    "ai": {
+      "kicker": "Claude RAG",
+      "title": "Anthropic bağlantısı",
+      "description": "Claude Sonnet 5, indekslenmiş Cantek kılavuzlarından yanıt verir. API anahtarı aktarım sırasında şifrelenir, özel veritabanı şemasında saklanır ve tarayıcıya geri gönderilmez.",
+      "connected": "Bağlı",
+      "notConfigured": "Yapılandırılmadı",
+      "statusUnavailable": "Bağlantı durumu alınamıyor.",
+      "keyLabel": "Anthropic API anahtarı",
+      "save": "Anahtarı test et ve kaydet",
+      "testing": "Bağlantı test ediliyor…",
+      "saved": "Claude Sonnet 5 bağlı ve RAG sohbetine hazır.",
+      "invalid": "Anthropic bu anahtarı reddetti. Kontrol edip yeniden deneyin.",
+      "saveFailed": "Anahtar güvenli şekilde kaydedilemedi."
+    }
   },
   "danger": {
     "title": "Tehlike",

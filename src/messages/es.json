@@ -10,6 +10,16 @@
     "language": "Idioma",
     "menu": "Menú"
   },
+  "footer": {
+    "description": "Asistencia de diagnóstico de la cadena de frío industrial basada en documentos de servicio autorizados de Cantek.",
+    "service": "Servicio",
+    "corporate": "Empresa",
+    "terms": "Términos",
+    "privacy": "Privacidad y KVKK",
+    "cookies": "Cookies",
+    "safety": "Seguridad",
+    "accessibility": "Accesibilidad"
+  },
   "home": {
     "kicker": "Cantek Group · Antalya",
     "headline": "Describa el problema. Obtenga el procedimiento de los manuales Cantek.",
@@ -26,7 +36,8 @@
   "chat": {
     "you": "Usted",
     "assistant": "Asistente Cantek",
-    "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado."
+    "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
+    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
   },
   "account": {
     "kicker": "Acceso de clientes",
@@ -63,6 +74,8 @@
     "notes": "Notas de despacho",
     "handoff": "Crear paquete de traspaso",
     "handoffDone": "Traspaso guardado",
+    "working": "Guardando…",
+    "error": "No se pudo guardar el traspaso. Inténtelo de nuevo.",
     "signIn": "Entrar",
     "email": "Correo",
     "password": "Contraseña",
@@ -73,17 +86,65 @@
   "admin": {
     "title": "Manuales",
     "intro": "Suba PDF o DOCX. Marque visibilidad, equipo y refrigerante; indexe para que el chat cite el archivo.",
+    "securityNote": "Espacio restringido · Los archivos y credenciales API solo están disponibles para administradores autorizados.",
+    "uploadKicker": "Base de conocimiento RAG",
+    "uploadTitle": "Subir un documento de servicio",
+    "uploadHelp": "El documento se analizará, dividirá en secciones consultables, vectorizará y pondrá a disposición del asistente Cantek.",
     "file": "Archivo",
+    "dropTitle": "Suelte un manual aquí o selecciónelo",
+    "dropHelp": "PDF, DOCX, Markdown o TXT · Máximo 20 MB",
+    "readyToIndex": "Listo para indexar",
     "titleLabel": "Título",
+    "titlePlaceholder": "Use el título oficial del documento",
     "visibility": "Visibilidad",
     "repair": "Reparación (todos)",
+    "repairShort": "Reparación",
+    "repairHelp": "Disponible para clientes, invitados y personal.",
     "internal": "Interno (solo personal)",
+    "internalShort": "Interno",
+    "internalHelp": "Disponible solo en el espacio de técnicos autorizados.",
     "equipment": "Familia de equipo",
+    "equipmentPlaceholder": "p. ej., Octosense, cámara frigorífica",
     "refrigerant": "Refrigerante",
+    "refrigerantPlaceholder": "p. ej., R744, R717",
     "language": "Idioma del documento",
     "version": "Versión",
+    "versionPlaceholder": "p. ej., 2026.1",
     "upload": "Subir e indexar",
-    "indexed": "Documentos indexados"
+    "indexing": "Analizando e indexando…",
+    "uploadSuccess": "{title} se indexó en {count} secciones consultables.",
+    "indexed": "Documentos indexados",
+    "libraryKicker": "Biblioteca de conocimiento",
+    "refresh": "Actualizar",
+    "loading": "Cargando…",
+    "emptyTitle": "Aún no hay manuales indexados",
+    "emptyHelp": "Suba el primer documento de servicio aprobado para activar respuestas fundamentadas.",
+    "document": "Documento",
+    "sections": "Secciones",
+    "unclassified": "Sin etiquetas de equipo",
+    "errors": {
+      "fileRequired": "Seleccione un documento antes de indexar.",
+      "fileTooLarge": "El documento debe pesar menos de 20 MB.",
+      "unsupportedFile": "Use un documento PDF, DOCX, Markdown o TXT.",
+      "noExtractableText": "No se encontró texto legible en este documento.",
+      "unauthorized": "Su sesión de administrador ha caducado. Inicie sesión de nuevo.",
+      "ingestFailed": "No se pudo indexar el documento. Revise el archivo e inténtelo de nuevo.",
+      "documentsUnavailable": "No se pudo cargar la biblioteca de documentos."
+    },
+    "ai": {
+      "kicker": "Claude RAG",
+      "title": "Conexión de Anthropic",
+      "description": "Claude Sonnet 5 responde desde los manuales Cantek indexados. La clave API se cifra en tránsito, se almacena en el esquema privado y nunca vuelve al navegador.",
+      "connected": "Conectado",
+      "notConfigured": "Sin configurar",
+      "statusUnavailable": "El estado de conexión no está disponible.",
+      "keyLabel": "Clave API de Anthropic",
+      "save": "Probar y guardar clave",
+      "testing": "Probando conexión…",
+      "saved": "Claude Sonnet 5 está conectado y listo para el chat RAG.",
+      "invalid": "Anthropic rechazó esta clave. Revísela e inténtelo de nuevo.",
+      "saveFailed": "No se pudo guardar la clave de forma segura."
+    }
   },
   "danger": {
     "title": "Peligro",

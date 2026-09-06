@@ -7,6 +7,10 @@ import {
   wrapHazardAnswer,
   SERVICE_CLOSE,
 } from "@/lib/chat/hazards";
+import {
+  anthropicModel,
+  readAnthropicApiKey,
+} from "@/lib/chat/anthropic";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
 import { searchManuals } from "@/lib/rag/search";
 import type { AnswerResult, ChatMessage, Citation, RetrievedChunk } from "@/lib/rag/types";
@@ -66,37 +70,50 @@ async function generateWithModel(
   staffMode: boolean,
   messages: ChatMessage[],
   passages: string,
-): Promise<{ text: string; model: string } | null> {
+): Promise<{
+  text: string;
+  model: string;
+  provider: "anthropic" | "openai";
+} | null> {
   const system = `${buildSystemPrompt({ locale, staffMode })}\n\nRETRIEVED PASSAGES:\n${passages}`;
+  const anthropicApiKey = await readAnthropicApiKey();
 
-  if (process.env.ANTHROPIC_API_KEY) {
-    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-    const model = process.env.ANTHROPIC_CHAT_MODEL ?? "claude-sonnet-4-6";
-    const response = await client.messages.create({
-      model,
-      max_tokens: 2400,
-      system,
-      messages: messages.map((m) => ({
-        role: m.role,
-        content: m.content,
-      })),
-    });
-    const text = response.content
-      .map((block) => (block.type === "text" ? block.text : ""))
-      .join("\n")
-      .trim();
-    return { text, model };
+  if (anthropicApiKey) {
+    try {
+      const client = new Anthropic({ apiKey: anthropicApiKey });
+      const model = anthropicModel();
+      const response = await client.messages.create({
+        model,
+        max_tokens: 2400,
+        system,
+        messages: messages.map((m) => ({
+          role: m.role,
+          content: m.content,
+        })),
+      });
+      const text = response.content
+        .map((block) => (block.type === "text" ? block.text : ""))
+        .join("\n")
+        .trim();
+      if (text) return { text, model, provider: "anthropic" };
+    } catch {
+      // Continue to the configured fallback provider or extractive RAG.
+    }
   }
 
   if (process.env.OPENAI_API_KEY) {
-    const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const model = process.env.OPENAI_CHAT_MODEL ?? "gpt-4o";
-    const response = await client.chat.completions.create({
-      model,
-      messages: [{ role: "system", content: system }, ...messages],
-    });
-    const text = response.choices[0]?.message?.content?.trim();
-    if (text) return { text, model };
+    try {
+      const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+      const model = process.env.OPENAI_CHAT_MODEL ?? "gpt-4o";
+      const response = await client.chat.completions.create({
+        model,
+        messages: [{ role: "system", content: system }, ...messages],
+      });
+      const text = response.choices[0]?.message?.content?.trim();
+      if (text) return { text, model, provider: "openai" };
+    } catch {
+      // Extractive RAG remains available when a provider is unavailable.
+    }
   }
 
   return null;
@@ -117,16 +134,20 @@ export async function answerQuestion(opts: {
 
   const hazard = isHazardous(lastUser);
   const emergency = isEmergency(lastUser);
-  const citations = hazard || emergency ? [] : citationsFrom(retrieved);
+  const hasGrounding = Boolean(
+    retrieved.length && retrieved[0].score >= MIN_SCORE,
+  );
+  const grounded = hasGrounding ? retrieved : [];
+  const citations = hazard || emergency ? [] : citationsFrom(grounded);
   const extractive = composeExtractiveAnswer(lastUser, retrieved);
 
-  const generated = hazard || emergency
+  const generated = hazard || emergency || !hasGrounding
     ? null
     : await generateWithModel(
         opts.locale,
         opts.staffMode,
         opts.messages,
-        formatPassages(retrieved),
+        formatPassages(grounded),
       );
 
   let answer: string;
@@ -148,5 +169,8 @@ export async function answerQuestion(opts: {
     hazard,
     emergency,
     missingManual,
+    provider: hazard || emergency
+      ? "safety"
+      : generated?.provider ?? "extractive",
   };
 }

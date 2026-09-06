@@ -12,20 +12,28 @@ export function TechDesk() {
   const [notes, setNotes] = useState("");
   const [transcript, setTranscript] = useState<Line[]>([]);
   const [status, setStatus] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   async function handoff() {
-    setStatus("…");
-    const res = await fetch("/api/handoff", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        modelSerial: serial,
-        notes,
-        transcript,
-      }),
-    });
-    const data = await res.json();
-    setStatus(data.id ? `${t("handoffDone")}: ${data.id}` : data.error);
+    setBusy(true);
+    setStatus(null);
+    try {
+      const res = await fetch("/api/handoff", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          modelSerial: serial,
+          notes,
+          transcript,
+        }),
+      });
+      const data = await res.json();
+      setStatus(res.ok && data.id ? `${t("handoffDone")}: ${data.id}` : t("error"));
+    } catch {
+      setStatus(t("error"));
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function signOut() {
@@ -54,9 +62,10 @@ export function TechDesk() {
           <button
             type="button"
             onClick={() => void handoff()}
+            disabled={busy}
             className="cantek-button"
           >
-            {t("handoff")}
+            {busy ? t("working") : t("handoff")}
           </button>
           <button type="button" onClick={() => void signOut()} className="text-sm font-semibold text-cantek-muted underline hover:text-cantek-cyan">
             {t("signOut")}

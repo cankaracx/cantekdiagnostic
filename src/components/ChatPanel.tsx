@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Citation } from "@/lib/rag/types";
 
 type UiMessage = {
@@ -25,12 +25,17 @@ export function ChatPanel(props: {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onTranscriptChange?.(
       messages.map(({ role, content }) => ({ role, content })),
     );
   }, [messages, onTranscriptChange]);
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [messages, busy]);
 
   async function send() {
     const text = input.trim();
@@ -51,6 +56,9 @@ export function ChatPanel(props: {
         }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error ?? "chat_failed");
+      }
       setMessages([
         ...next,
         {
@@ -64,7 +72,7 @@ export function ChatPanel(props: {
     } catch {
       setMessages([
         ...next,
-        { role: "assistant", content: t("chat.noDocs") },
+        { role: "assistant", content: t("chat.error") },
       ]);
     } finally {
       setBusy(false);
@@ -131,6 +139,7 @@ export function ChatPanel(props: {
           </article>
         ))}
         {busy && <p className="text-sm font-semibold text-cantek-cyan">{t("home.thinking")}</p>}
+        <div ref={endRef} aria-hidden="true" />
       </div>
       <form
         className="flex flex-col gap-3 border-t border-cantek-border bg-white p-4 sm:flex-row"
@@ -147,7 +156,11 @@ export function ChatPanel(props: {
           aria-label={t("home.placeholder")}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
+            if (
+              e.key === "Enter" &&
+              !e.shiftKey &&
+              !e.nativeEvent.isComposing
+            ) {
               e.preventDefault();
               void send();
             }

@@ -32,9 +32,13 @@ Never commit environment files, credentials, private manuals, generated indexes,
 
 1. Install dependencies with `npm install`.
 2. Copy `.env.example` to `.env.local`.
-3. Add the project URL, browser-safe publishable key, and `NEXT_PUBLIC_SITE_URL`.
-4. Add optional response-provider credentials if needed.
-5. Start the app with `npm run dev`.
+3. Add the project URL, browser-safe publishable key, server-only service-role key, and `NEXT_PUBLIC_SITE_URL`.
+4. Start the app with `npm run dev`.
+5. Sign in as the super administrator and add the Anthropic key in the protected Admin panel. For local-only development, `ANTHROPIC_API_KEY` remains available as a server-side fallback.
+
+Never expose `SUPABASE_SERVICE_ROLE_KEY` or an Anthropic key through a
+`NEXT_PUBLIC_` variable. The Admin panel stores the Anthropic key in the
+private database schema and only returns a masked status to the browser.
 
 An authorized staff account must have `app_metadata.role` set to `technician`, `admin`, or `super_admin`. Role metadata must be assigned through the supported Auth administration interface or Admin API, never by the browser, user-editable metadata, or a direct write to the Auth schema.
 

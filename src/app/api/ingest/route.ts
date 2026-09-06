@@ -55,7 +55,10 @@ export async function POST(request: Request) {
     }, supabase);
 
     return NextResponse.json(doc);
-  } catch {
+  } catch (error) {
+    if (error instanceof Error && error.message === "no_extractable_text") {
+      return NextResponse.json({ error: "no_extractable_text" }, { status: 422 });
+    }
     return NextResponse.json({ error: "ingest_failed" }, { status: 500 });
   }
 }

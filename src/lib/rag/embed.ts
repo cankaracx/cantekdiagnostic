@@ -1,6 +1,8 @@
 import OpenAI from "openai";
 
-const LOCAL_DIM = 256;
+// Match the pgvector column dimension so the no-OpenAI fallback can be
+// persisted and queried in Supabase without a dimension mismatch.
+const LOCAL_DIM = 1536;
 
 export function hasOpenAIEmbeddings(): boolean {
   return Boolean(process.env.OPENAI_API_KEY);
