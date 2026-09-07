@@ -12,6 +12,68 @@ type UiMessage = {
   emergency?: boolean;
 };
 
+function SendIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="m5 12 14-7-4.5 14-3-5.5L5 12Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function WarningIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="mt-0.5 shrink-0"
+    >
+      <path
+        d="M12 3.5 21.5 20h-19L12 3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M12 9.5V14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="17.2" r="0.9" fill="currentColor" />
+    </svg>
+  );
+}
+
+function DocumentIcon() {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <path
+        d="M6 3h9l4 4v14H6V3Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+      <path d="M14 3v5h5" stroke="currentColor" strokeWidth="1.6" />
+    </svg>
+  );
+}
+
 export function ChatPanel(props: {
   mode: "public" | "technician";
   serial?: string;
@@ -26,6 +88,7 @@ export function ChatPanel(props: {
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -76,80 +139,154 @@ export function ChatPanel(props: {
       ]);
     } finally {
       setBusy(false);
+      textareaRef.current?.focus();
     }
   }
 
   return (
-    <div className="flex min-h-[34rem] flex-col border border-cantek-border bg-white shadow-[0_10px_28px_rgb(50_62_72_/_8%)]">
-      <div className="flex items-center justify-between border-b-4 border-cantek-cyan bg-cantek-dark px-5 py-4 text-white">
-        <div>
-          <p className="cantek-kicker text-cantek-cyan">Cantek Group</p>
-          <h3 className="mt-1 text-lg font-bold">{t("home.workspaceTitle")}</h3>
+    <div className="chat-shell">
+      <div className="chat-shell-header flex items-center justify-between gap-4 px-5 pb-4 pt-5 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <span className="chat-badge" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M5 7.5h14v9H9l-4 3v-12Z"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M8.5 11h7M8.5 13.5h4.5"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+              />
+            </svg>
+          </span>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="cantek-pulse-dot" aria-hidden="true" />
+              <p className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-cantek-cyan">
+                Cantek Group
+              </p>
+            </div>
+            <h3 className="mt-1 truncate text-lg font-bold text-cantek-dark">
+              {t("home.workspaceTitle")}
+            </h3>
+          </div>
         </div>
-        <span className="hidden border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/70 sm:inline">
+        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted sm:inline">
           {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
         </span>
       </div>
       <div
-        className="flex-1 space-y-4 overflow-y-auto bg-cantek-light/50 p-4 sm:p-6"
+        className="chat-scroll space-y-4 p-4 sm:p-6"
         aria-live="polite"
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border-s-4 border-cantek-cyan bg-white px-5 py-4">
+          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
             <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
           </div>
         )}
-        {messages.map((m, i) => (
-          <article
-            key={i}
-            className={
-              m.role === "user"
-                ? "ms-5 border-s-4 border-cantek-dark bg-white px-4 py-3 text-sm sm:ms-12"
-                : "me-2 border-s-4 border-cantek-cyan bg-white px-4 py-3 text-sm leading-6 sm:me-8"
-            }
-          >
-            <p className="mb-1 text-[11px] font-bold uppercase tracking-wider text-cantek-muted">
-              {m.role === "user" ? t("chat.you") : t("chat.assistant")}
-            </p>
-            {m.emergency && (
-              <p className="mb-2 bg-danger px-3 py-2 text-xs font-semibold text-white">
-                {t("danger.emergency")}
-              </p>
-            )}
-            {m.hazard && (
-              <p className="mb-2 bg-warn px-3 py-2 text-xs font-semibold text-white">
-                {t("danger.title")}: {t("danger.body")}
-              </p>
-            )}
-            <div className="whitespace-pre-wrap">{m.content}</div>
-            {m.citations && m.citations.length > 0 && (
-              <ul className="mt-3 space-y-1 border-t border-cantek-border pt-2 text-xs text-cantek-muted">
-                <li className="font-medium uppercase tracking-wider">
-                  {t("home.sources")}
-                </li>
-                {m.citations.map((c) => (
-                  <li key={c.chunkId}>
-                    {c.documentTitle}
-                    {c.page ? ` · p.${c.page}` : ""}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </article>
-        ))}
-        {busy && <p className="text-sm font-semibold text-cantek-cyan">{t("home.thinking")}</p>}
+        {messages.map((message, index) => {
+          const isUser = message.role === "user";
+
+          return (
+            <div
+              key={index}
+              className={`message-row ${isUser ? "flex-row-reverse" : ""}`}
+            >
+              <div
+                className={`message-avatar ${
+                  isUser ? "message-avatar-user" : "message-avatar-assistant"
+                }`}
+                aria-hidden="true"
+              >
+                {isUser ? t("chat.you").slice(0, 1).toUpperCase() : "AI"}
+              </div>
+              <article
+                className={`message-bubble ${
+                  isUser ? "message-bubble-user" : "message-bubble-assistant"
+                }`}
+              >
+                <p className="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                  {isUser ? t("chat.you") : t("chat.assistant")}
+                </p>
+                {message.emergency && (
+                  <div className="alert-card alert-card-danger mb-2">
+                    <WarningIcon />
+                    <span>{t("danger.emergency")}</span>
+                  </div>
+                )}
+                {message.hazard && (
+                  <div className="alert-card alert-card-warning mb-2">
+                    <WarningIcon />
+                    <span>
+                      {t("danger.title")}: {t("danger.body")}
+                    </span>
+                  </div>
+                )}
+                <div className="whitespace-pre-wrap">{message.content}</div>
+                {message.citations && message.citations.length > 0 && (
+                  <div className="mt-3 border-t border-cantek-border pt-2.5">
+                    <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                      {t("home.sources")}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {message.citations.map((citation) => (
+                        <span
+                          key={citation.chunkId}
+                          className="citation-chip"
+                          title={citation.documentTitle}
+                        >
+                          <DocumentIcon />
+                          <span className="truncate">
+                            {citation.documentTitle}
+                            {citation.page ? ` · p.${citation.page}` : ""}
+                          </span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </article>
+            </div>
+          );
+        })}
+        {busy && (
+          <div className="message-row">
+            <div
+              className="message-avatar message-avatar-assistant"
+              aria-hidden="true"
+            >
+              AI
+            </div>
+            <div className="message-bubble message-bubble-assistant flex items-center gap-2 py-3">
+              <span className="typing-dots" aria-hidden="true">
+                <span />
+                <span />
+                <span />
+              </span>
+              <span className="text-xs font-bold text-cantek-muted">
+                {t("home.thinking")}
+              </span>
+            </div>
+          </div>
+        )}
         <div ref={endRef} aria-hidden="true" />
       </div>
       <form
-        className="flex flex-col gap-3 border-t border-cantek-border bg-white p-4 sm:flex-row"
+        className="chat-composer flex items-end gap-3 p-4"
         onSubmit={(e) => {
           e.preventDefault();
           void send();
         }}
       >
         <textarea
-          className="h-24 flex-1 resize-none border border-cantek-border px-3 py-2 text-sm outline-none focus:border-cantek-cyan focus:ring-1 focus:ring-cantek-cyan"
+          ref={textareaRef}
+          rows={3}
+          className="min-h-20 flex-1 resize-none px-3 py-2.5 text-sm text-cantek-text"
           placeholder={t("home.placeholder")}
           value={input}
           maxLength={4_000}
@@ -168,10 +305,12 @@ export function ChatPanel(props: {
         />
         <button
           type="submit"
-          disabled={busy}
-          className="cantek-button w-full self-end sm:w-auto"
+          disabled={busy || !input.trim()}
+          className="send-button"
+          aria-label={t("home.send")}
         >
-          {t("home.send")}
+          <span className="hidden sm:inline">{t("home.send")}</span>
+          <SendIcon />
         </button>
       </form>
     </div>
