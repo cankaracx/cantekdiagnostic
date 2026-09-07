@@ -1,11 +1,21 @@
 import { NextResponse } from "next/server";
 import {
-  maskAnthropicKey,
-  readAnthropicApiKey,
-  storeAnthropicApiKey,
-  testAnthropicApiKey,
-} from "@/lib/chat/anthropic";
+  isAiProviderId,
+  listProviderStatuses,
+  maskProviderKey,
+  removeProviderCredential,
+  storeProviderCredential,
+  testProviderApiKey,
+} from "@/lib/chat/providers";
 import { isSuperAdminSession } from "@/lib/auth/staff";
+import {
+  checkRateLimit,
+  isSameOrigin,
+  rateLimitResponse,
+  readJsonBody,
+  RequestBodyError,
+  sameOriginError,
+} from "@/lib/security/request";
 
 export const runtime = "nodejs";
 export const maxDuration = 30;
@@ -15,53 +25,103 @@ export async function GET() {
     return NextResponse.json({ error: "super_admin_only" }, { status: 403 });
   }
 
-  const key = await readAnthropicApiKey();
-  return NextResponse.json({
-    configured: Boolean(key),
-    hint: key ? maskAnthropicKey(key) : null,
-  });
+  const providers = await listProviderStatuses();
+  return NextResponse.json(
+    {
+      configured: providers.some((provider) => provider.configured),
+      providers,
+    },
+    { headers: { "Cache-Control": "no-store" } },
+  );
 }
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) return sameOriginError();
+  const rateLimit = await checkRateLimit(
+    request,
+    "admin-settings",
+    20,
+    10 * 60_000,
+  );
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter);
+
   if (!(await isSuperAdminSession())) {
     return NextResponse.json({ error: "super_admin_only" }, { status: 403 });
   }
 
-  const contentLength = Number(request.headers.get("content-length") ?? 0);
-  if (contentLength > 8_192) {
-    return NextResponse.json({ error: "request_too_large" }, { status: 413 });
-  }
-
-  let body: { anthropicApiKey?: unknown };
+  let body: { provider?: unknown; apiKey?: unknown };
   try {
-    body = (await request.json()) as typeof body;
-  } catch {
-    return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+    body = await readJsonBody<typeof body>(request, 8_192);
+  } catch (error) {
+    const status = error instanceof RequestBodyError ? error.status : 400;
+    const code = error instanceof Error ? error.message : "invalid_request";
+    return NextResponse.json({ error: code }, { status });
   }
 
-  const key =
-    typeof body.anthropicApiKey === "string"
-      ? body.anthropicApiKey.trim()
-      : "";
+  if (!isAiProviderId(body.provider)) {
+    return NextResponse.json({ error: "unsupported_provider" }, { status: 400 });
+  }
+  const key = typeof body.apiKey === "string" ? body.apiKey.trim() : "";
   if (!key || key.length > 4096) {
-    return NextResponse.json({ error: "invalid_anthropic_key" }, { status: 400 });
+    return NextResponse.json({ error: "invalid_provider_key" }, { status: 400 });
   }
 
   try {
-    await testAnthropicApiKey(key);
-    await storeAnthropicApiKey(key);
+    const model = await testProviderApiKey(body.provider, key);
+    await storeProviderCredential(body.provider, key, model);
     return NextResponse.json({
       configured: true,
-      hint: maskAnthropicKey(key),
+      provider: body.provider,
+      hint: maskProviderKey(key),
+      model,
     });
   } catch (error) {
     const code = error instanceof Error ? error.message : "settings_update_failed";
     const status =
-      code === "invalid_anthropic_key"
+      code === "invalid_provider_key"
         ? 400
-        : code === "anthropic_unavailable"
+        : code === "provider_unavailable"
           ? 502
           : 503;
     return NextResponse.json({ error: code }, { status });
+  }
+}
+
+export async function DELETE(request: Request) {
+  if (!isSameOrigin(request)) return sameOriginError();
+  const rateLimit = await checkRateLimit(
+    request,
+    "admin-settings",
+    20,
+    10 * 60_000,
+  );
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter);
+
+  if (!(await isSuperAdminSession())) {
+    return NextResponse.json({ error: "super_admin_only" }, { status: 403 });
+  }
+
+  let body: { provider?: unknown };
+  try {
+    body = await readJsonBody<typeof body>(request, 1_024);
+  } catch (error) {
+    const status = error instanceof RequestBodyError ? error.status : 400;
+    return NextResponse.json({ error: "invalid_request" }, { status });
+  }
+  if (!isAiProviderId(body.provider)) {
+    return NextResponse.json({ error: "unsupported_provider" }, { status: 400 });
+  }
+
+  try {
+    await removeProviderCredential(body.provider);
+    const status = (await listProviderStatuses()).find(
+      (provider) => provider.id === body.provider,
+    );
+    return NextResponse.json({ provider: status });
+  } catch {
+    return NextResponse.json(
+      { error: "settings_update_failed" },
+      { status: 503 },
+    );
   }
 }

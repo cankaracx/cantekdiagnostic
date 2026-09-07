@@ -2,6 +2,12 @@ import { cosine } from "@/lib/rag/embed";
 import type { ChunkRecord, RetrievedChunk, Visibility } from "@/lib/rag/types";
 
 const ALARM_CODE = /\b(?:E\d{1,3}|HP|LP|HPS|LPS|HT|LT|NH3)\b/gi;
+const DOCUMENT_REQUEST =
+  /(manual|documentation|document|procedure|repair guide|service guide|kılavuz|doküman|belge|prosedür|manuel|procédure|documentación|procedimiento|руководство|документ|процедур|دليل|وثائق|إجراء|handbuch|dokumentation|verfahren|manuale|documentazione|procedura|documentação|procedimento|instrukcja|dokumentacja)/i;
+
+export function isDocumentationRequest(query: string): boolean {
+  return DOCUMENT_REQUEST.test(query);
+}
 
 export function extractAlarmTokens(query: string): string[] {
   return [...new Set((query.match(ALARM_CODE) ?? []).map((t) => t.toUpperCase()))];
@@ -47,10 +53,25 @@ export function hybridRank(
 
   for (const chunk of chunks) {
     if (!allowed.includes(chunk.visibility)) continue;
-    const kw = keywordScore(query, chunk.content);
+    const searchable = [
+      chunk.documentTitle,
+      chunk.equipment,
+      chunk.refrigerant,
+      chunk.heading,
+      chunk.content,
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const kw = keywordScore(query, searchable);
     const vector =
       queryEmbedding && chunk.embedding ? cosine(queryEmbedding, chunk.embedding) : 0;
-    const score = vector * 2.2 + kw.score * 0.35;
+    const titleHits = keywordScore(query, chunk.documentTitle).hits.length;
+    const documentationBoost = isDocumentationRequest(query) ? 0.3 : 0;
+    const score =
+      vector * 2.2 +
+      kw.score * 0.35 +
+      titleHits * 0.45 +
+      documentationBoost;
     if (score <= 0) continue;
     scored.push({ ...chunk, score, keywordHits: kw.hits });
   }

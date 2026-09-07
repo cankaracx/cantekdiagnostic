@@ -35,7 +35,7 @@
   },
   "chat": {
     "you": "Vous",
-    "assistant": "Assistant Cantek",
+    "assistant": "Support Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
     "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
   },
@@ -85,11 +85,11 @@
   },
   "admin": {
     "title": "Manuels",
-    "intro": "Chargez un PDF ou DOCX. Indiquez visibilité, équipement et fluide, puis indexez pour que le chatbot cite le fichier.",
+    "intro": "Chargez un PDF ou DOCX. Indiquez visibilité, équipement et fluide, puis indexez-le pour obtenir des réponses de diagnostic avec sources.",
     "securityNote": "Espace restreint · Les fichiers et identifiants API sont réservés aux administrateurs autorisés.",
-    "uploadKicker": "Base de connaissances RAG",
+    "uploadKicker": "Bibliothèque de documents de service",
     "uploadTitle": "Charger un document de service",
-    "uploadHelp": "Le document sera analysé, découpé en sections consultables, vectorisé et mis à disposition de l’assistant Cantek.",
+    "uploadHelp": "Le document sera vérifié, découpé en sections consultables et ajouté au support de diagnostic Cantek.",
     "file": "Fichier",
     "dropTitle": "Déposez un manuel ici ou parcourez",
     "dropHelp": "PDF, DOCX, Markdown ou TXT · 20 Mo maximum",
@@ -132,18 +132,19 @@
       "documentsUnavailable": "La bibliothèque de documents n’a pas pu être chargée."
     },
     "ai": {
-      "kicker": "Claude RAG",
-      "title": "Connexion Anthropic",
-      "description": "Claude Sonnet 5 répond à partir des manuels Cantek indexés. La clé API est chiffrée en transit, stockée dans le schéma privé et jamais renvoyée au navigateur.",
+      "kicker": "Fournisseurs de réponses",
+      "title": "Connexions fournisseurs",
+      "description": "Configurez un ou plusieurs fournisseurs compatibles. Les clés sont validées avant stockage, conservées dans le schéma privé et jamais renvoyées au navigateur. Si un fournisseur est indisponible, le suivant est utilisé automatiquement.",
       "connected": "Connecté",
       "notConfigured": "Non configuré",
       "statusUnavailable": "L’état de la connexion est indisponible.",
-      "keyLabel": "Clé API Anthropic",
+      "keyLabel": "Clé API du fournisseur",
       "save": "Tester et enregistrer la clé",
       "testing": "Test de la connexion…",
-      "saved": "Claude Sonnet 5 est connecté et prêt pour le chat RAG.",
-      "invalid": "Anthropic a refusé cette clé. Vérifiez-la et réessayez.",
-      "saveFailed": "La clé n’a pas pu être enregistrée de façon sécurisée."
+      "saved": "Le fournisseur est connecté et disponible pour le diagnostic.",
+      "invalid": "Le fournisseur a refusé cette clé. Vérifiez-la et réessayez.",
+      "saveFailed": "La clé n’a pas pu être enregistrée de façon sécurisée.",
+      "remove": "Supprimer la clé enregistrée"
     }
   },
   "danger": {

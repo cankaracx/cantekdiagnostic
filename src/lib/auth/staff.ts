@@ -1,6 +1,7 @@
 import { createServerSupabase, roleFromJwt, type StaffRole } from "@/lib/supabase/server";
 
 export type StaffAuth = {
+  userId: string;
   role: StaffRole;
   email: string | null;
 };
@@ -16,6 +17,7 @@ export async function getStaffAuth(): Promise<StaffAuth | null> {
   if (!role) return null;
 
   return {
+    userId: data.user.id,
     role,
     email: data.user.email ?? null,
   };

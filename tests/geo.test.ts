@@ -8,6 +8,10 @@ describe("geo locales", () => {
     expect(localeFromCountry("ML")).toBe("fr");
     expect(localeFromCountry("KZ")).toBe("ru");
     expect(localeFromCountry("CU")).toBe("es");
+    expect(localeFromCountry("DE")).toBe("de");
+    expect(localeFromCountry("IT")).toBe("it");
+    expect(localeFromCountry("BR")).toBe("pt");
+    expect(localeFromCountry("PL")).toBe("pl");
     expect(localeFromCountry("GB")).toBe("en");
   });
 

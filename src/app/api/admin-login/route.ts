@@ -1,13 +1,31 @@
 import { NextResponse } from "next/server";
 import { isSuperAdminUsername } from "@/lib/auth/admin";
 import { createServerSupabase, roleFromJwt } from "@/lib/supabase/server";
+import {
+  checkRateLimit,
+  isSameOrigin,
+  rateLimitResponse,
+  readJsonBody,
+  RequestBodyError,
+  sameOriginError,
+} from "@/lib/security/request";
 
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) return sameOriginError();
+  const rateLimit = await checkRateLimit(
+    request,
+    "admin-login",
+    8,
+    15 * 60_000,
+  );
+  if (!rateLimit.allowed) return rateLimitResponse(rateLimit.retryAfter);
+
   let body: { username?: string; password?: string };
   try {
-    body = (await request.json()) as typeof body;
-  } catch {
-    return NextResponse.json({ error: "invalid_request" }, { status: 400 });
+    body = await readJsonBody<typeof body>(request, 2_048);
+  } catch (error) {
+    const status = error instanceof RequestBodyError ? error.status : 400;
+    return NextResponse.json({ error: "invalid_request" }, { status });
   }
 
   const password = body.password ?? "";
@@ -44,7 +62,8 @@ export async function POST(request: Request) {
   return NextResponse.json({ ok: true });
 }
 
-export async function DELETE() {
+export async function DELETE(request: Request) {
+  if (!isSameOrigin(request)) return sameOriginError();
   const supabase = await createServerSupabase();
   if (supabase) await supabase.auth.signOut();
   return NextResponse.json({ ok: true });

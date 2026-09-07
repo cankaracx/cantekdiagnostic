@@ -39,7 +39,7 @@
   --color-cantek-surface: var(--cantek-surface);
   --color-cantek-border: var(--cantek-border);
   --color-cantek-red: var(--cantek-red);
-  --font-sans: var(--font-corporate), "Arial Narrow", Arial, sans-serif;
+  --font-sans: "Segoe UI", Arial, Helvetica, sans-serif;
   --font-arabic: Tahoma, Arial, sans-serif;
 }
 
@@ -51,8 +51,9 @@ body {
 body {
   background: #fff;
   color: var(--cantek-text);
-  font-family: var(--font-corporate), "Arial Narrow", Arial, sans-serif;
-  font-size: 16px;
+  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  font-weight: 400;
   line-height: 1.5;
 }
 
@@ -278,44 +279,14 @@ textarea {
   box-shadow: 0 22px 50px rgb(20 27 32 / 28%);
 }
 
-.cantek-hero-panel::before {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background-image:
-    linear-gradient(rgb(255 255 255 / 4%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(255 255 255 / 4%) 1px, transparent 1px);
-  background-size: 34px 34px;
-  content: "";
-}
-
 .cantek-status {
   display: inline-flex;
   align-items: center;
-  gap: 0.55rem;
   color: var(--cantek-cyan);
   font-size: 0.76rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.cantek-pulse-dot {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 999px;
-  background: var(--cantek-cyan);
-  box-shadow: 0 0 0 0 rgb(0 160 221 / 55%);
-  animation: cantek-pulse 2s ease-out infinite;
-}
-
-@keyframes cantek-pulse {
-  70% {
-    box-shadow: 0 0 0 8px rgb(0 160 221 / 0%);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(0 160 221 / 0%);
-  }
 }
 
 .section-heading::after {
@@ -329,7 +300,7 @@ textarea {
 
 .chat-shell {
   display: flex;
-  min-height: 38rem;
+  min-height: 0;
   flex-direction: column;
   overflow: hidden;
   border: 1px solid var(--cantek-border);
@@ -364,6 +335,8 @@ textarea {
 
 .chat-scroll {
   flex: 1;
+  min-height: 12rem;
+  max-height: 30rem;
   overflow-y: auto;
   background:
     linear-gradient(180deg, rgb(0 160 221 / 4%), transparent 9rem),

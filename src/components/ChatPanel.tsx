@@ -12,6 +12,14 @@ type UiMessage = {
   emergency?: boolean;
 };
 
+const PAGE_LABELS: Record<string, string> = {
+  tr: "s.",
+  ar: "ص.",
+  ru: "стр.",
+  de: "S.",
+  pl: "s.",
+};
+
 function SendIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -74,6 +82,13 @@ function DocumentIcon() {
   );
 }
 
+function resizeComposer(textarea: HTMLTextAreaElement) {
+  textarea.style.height = "auto";
+  const nextHeight = Math.min(textarea.scrollHeight, 160);
+  textarea.style.height = `${nextHeight}px`;
+  textarea.style.overflowY = textarea.scrollHeight > 160 ? "auto" : "hidden";
+}
+
 export function ChatPanel(props: {
   mode: "public" | "technician";
   serial?: string;
@@ -106,6 +121,10 @@ export function ChatPanel(props: {
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
     setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.overflowY = "hidden";
+    }
     setBusy(true);
     try {
       const res = await fetch("/api/chat", {
@@ -164,12 +183,9 @@ export function ChatPanel(props: {
             </svg>
           </span>
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="cantek-pulse-dot" aria-hidden="true" />
-              <p className="text-[0.7rem] font-bold uppercase tracking-[0.12em] text-cantek-cyan">
-                Cantek Group
-              </p>
-            </div>
+            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-cantek-cyan">
+              Cantek Group
+            </p>
             <h3 className="mt-1 truncate text-lg font-bold text-cantek-dark">
               {t("home.workspaceTitle")}
             </h3>
@@ -203,7 +219,7 @@ export function ChatPanel(props: {
                 }`}
                 aria-hidden="true"
               >
-                {isUser ? t("chat.you").slice(0, 1).toUpperCase() : "AI"}
+                {isUser ? t("chat.you").slice(0, 1).toUpperCase() : "C"}
               </div>
               <article
                 className={`message-bubble ${
@@ -243,7 +259,9 @@ export function ChatPanel(props: {
                           <DocumentIcon />
                           <span className="truncate">
                             {citation.documentTitle}
-                            {citation.page ? ` · p.${citation.page}` : ""}
+                            {citation.page
+                              ? ` · ${PAGE_LABELS[locale] ?? "p."}${citation.page}`
+                              : ""}
                           </span>
                         </span>
                       ))}
@@ -260,7 +278,7 @@ export function ChatPanel(props: {
               className="message-avatar message-avatar-assistant"
               aria-hidden="true"
             >
-              AI
+              C
             </div>
             <div className="message-bubble message-bubble-assistant flex items-center gap-2 py-3">
               <span className="typing-dots" aria-hidden="true">
@@ -277,7 +295,7 @@ export function ChatPanel(props: {
         <div ref={endRef} aria-hidden="true" />
       </div>
       <form
-        className="chat-composer flex items-end gap-3 p-4"
+        className="chat-composer flex items-end gap-3 p-3 sm:p-4"
         onSubmit={(e) => {
           e.preventDefault();
           void send();
@@ -285,13 +303,16 @@ export function ChatPanel(props: {
       >
         <textarea
           ref={textareaRef}
-          rows={3}
-          className="min-h-20 flex-1 resize-none px-3 py-2.5 text-sm text-cantek-text"
+          rows={1}
+          className="max-h-40 min-h-11 flex-1 resize-none overflow-hidden px-3 py-2.5 text-sm text-cantek-text"
           placeholder={t("home.placeholder")}
           value={input}
           maxLength={4_000}
           aria-label={t("home.placeholder")}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={(e) => {
+            setInput(e.target.value);
+            resizeComposer(e.currentTarget);
+          }}
           onKeyDown={(e) => {
             if (
               e.key === "Enter" &&

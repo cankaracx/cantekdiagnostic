@@ -49,11 +49,22 @@ export type Citation = {
   chunkId: string;
 };
 
+export type AnswerProvider =
+  | "anthropic"
+  | "openai"
+  | "google"
+  | "xai"
+  | "groq"
+  | "mistral"
+  | "openrouter"
+  | "extractive"
+  | "safety";
+
 export type AnswerResult = {
   answer: string;
   citations: Citation[];
   hazard: boolean;
   emergency: boolean;
   missingManual: boolean;
-  provider: "anthropic" | "openai" | "extractive" | "safety";
+  provider: AnswerProvider;
 };

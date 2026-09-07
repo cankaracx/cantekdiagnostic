@@ -1,10 +1,12 @@
+import { localizedChatCopy } from "@/lib/chat/localized";
+
 export const CANTEK_PHONES = "+90 242 258 17 00 / +90 549 743 87 21";
 
 const HAZARD_RE =
-  /\b(ammonia|\bnh3\b|welding|weld|brazing|braze|refrigerant recovery|recover(ing)? refrigerant|electrical isolation|lockout|tagout|loto|live voltage|live electrical|compressor teardown|charged system|confined space|nitrogen purge|hot work)\b/i;
+  /(ammonia|nh3|welding|weld|brazing|braze|refrigerant recovery|recovering refrigerant|electrical isolation|lockout|tagout|loto|live voltage|live electrical|compressor teardown|charged system|confined space|nitrogen purge|hot work|amonyak|kaynak yap|lehim|soğutucu akışkan geri kazan|elektrik izolasyon|canlı gerilim|kompresör sök|basınçlı sistem|kapalı alan|azot purj|sıcak çalışma|ammoniaque|soudage|brasage|récupération de fluide|tension sous charge|amoníaco|soldadura|recuperación de refrigerante|tensión activa|аммиак|свар|хладагент|напряжени|الأمونيا|لحام|استرداد مادة التبريد|جهد كهربائي|ammoniak|schweiß|kältemittelrückgewinnung|spannung|ammoniaca|saldatura|recupero del refrigerante|tensione|amónia|amônia|soldadura|recuperação de refrigerante|tensão|amoniak|spawanie|odzysk czynnika|napięcie)/i;
 
 const EMERGENCY_RE =
-  /\b(leak|leaking|smell of ammonia|ammonia smell|person down|unconscious|fire|evacuate|explosion)\b/i;
+  /(leak|leaking|smell of ammonia|ammonia smell|person down|unconscious|fire|evacuate|explosion|sızıntı|kaçak|amonyak kokusu|bilinçsiz|yangın|tahliye|patlama|fuite|odeur d’ammoniaque|inconscient|incendie|évacuer|explosion|fuga|olor a amoníaco|inconsciente|incendio|evacuar|взрыв|утечк|запах аммиака|без сознания|пожар|эвакуац|تسرب|رائحة الأمونيا|فاقد الوعي|حريق|إخلاء|انفجار|leck|ammoniakgeruch|bewusstlos|brand|evaku|explosion|perdita|odore di ammoniaca|incosciente|incendio|evacu|esplosione|fuga|cheiro de amónia|cheiro de amônia|inconsciente|incêndio|evacuar|explosão|wyciek|zapach amoniaku|nieprzytom|pożar|ewaku|wybuch)/i;
 
 export function isHazardous(text: string): boolean {
   return HAZARD_RE.test(text);
@@ -22,7 +24,26 @@ export const HAZARD_BOUNDARY = `Do not attempt repair, isolation, recovery, char
 
 export const SERVICE_CLOSE = `Cantek service: ${CANTEK_PHONES} · info@cantekgroup.com`;
 
-export function wrapHazardAnswer(_body: string, opts: { hazard: boolean; emergency: boolean }): string {
+export function serviceClose(locale = "en"): string {
+  const copy = localizedChatCopy(locale);
+  return `${copy.service}: ${CANTEK_PHONES} · info@cantekgroup.com`;
+}
+
+export function wrapHazardAnswer(
+  _body: string,
+  opts: { hazard: boolean; emergency: boolean; locale?: string },
+): string {
+  const locale = opts.locale ?? "en";
+  if (locale !== "en") {
+    const copy = localizedChatCopy(locale);
+    const parts: string[] = [];
+    if (opts.emergency) parts.push(copy.emergency);
+    if (opts.hazard) parts.push(`${copy.dangerTitle} — ${copy.dangerBody}`);
+    else parts.push(copy.dangerBody);
+    parts.push(serviceClose(locale));
+    return parts.join("\n\n");
+  }
+
   const parts: string[] = [];
   if (opts.emergency) parts.push(EMERGENCY_BLOCK);
   if (opts.hazard) parts.push(DANGER_BLOCK);

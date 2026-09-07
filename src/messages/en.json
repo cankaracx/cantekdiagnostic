@@ -35,7 +35,7 @@
   },
   "chat": {
     "you": "You",
-    "assistant": "Cantek assistant",
+    "assistant": "Cantek support",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
     "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
   },
@@ -69,7 +69,7 @@
   },
   "tech": {
     "title": "Technician desk",
-    "intro": "Same repair manuals as the public assistant, plus dispatch handoff and serial logging.",
+    "intro": "The same repair manuals as public diagnostics, plus dispatch handoff and serial logging.",
     "serial": "Model / serial",
     "notes": "Dispatch notes",
     "handoff": "Create handoff packet",
@@ -85,11 +85,11 @@
   },
   "admin": {
     "title": "Manuals",
-    "intro": "Upload PDF or DOCX. Tag visibility, equipment, and refrigerant, then re-index so the chatbot can cite the file.",
+    "intro": "Upload PDF or DOCX. Tag visibility, equipment, and refrigerant, then index it for cited diagnostic responses.",
     "securityNote": "Restricted workspace · Files and API credentials are available only to authorized administrators.",
-    "uploadKicker": "RAG knowledge base",
+    "uploadKicker": "Service document library",
     "uploadTitle": "Upload a service document",
-    "uploadHelp": "The document will be parsed, split into searchable sections, embedded, and made available to the Cantek assistant.",
+    "uploadHelp": "The document will be checked, split into searchable sections, and added to Cantek diagnostic support.",
     "file": "File",
     "dropTitle": "Drop a manual here or browse",
     "dropHelp": "PDF, DOCX, Markdown, or TXT · Maximum 20 MB",
@@ -132,18 +132,19 @@
       "documentsUnavailable": "The document library could not be loaded."
     },
     "ai": {
-      "kicker": "Claude RAG",
-      "title": "Anthropic connection",
-      "description": "Claude Sonnet 5 answers from the indexed Cantek manuals. The API key is encrypted in transit, stored in the private database schema, and never returned to the browser.",
+      "kicker": "Response providers",
+      "title": "Provider connections",
+      "description": "Configure one or more supported providers. Keys are validated before storage, kept in the private database schema, and never returned to the browser. If one provider is unavailable, the next configured provider is used automatically.",
       "connected": "Connected",
       "notConfigured": "Not configured",
       "statusUnavailable": "Connection status is unavailable.",
-      "keyLabel": "Anthropic API key",
+      "keyLabel": "Provider API key",
       "save": "Test and save key",
       "testing": "Testing connection…",
-      "saved": "Claude Sonnet 5 is connected and ready for RAG chat.",
-      "invalid": "Anthropic rejected this key. Check it and try again.",
-      "saveFailed": "The key could not be saved securely."
+      "saved": "The provider is connected and available for diagnostics.",
+      "invalid": "The provider rejected this key. Check it and try again.",
+      "saveFailed": "The key could not be saved securely.",
+      "remove": "Remove stored key"
     }
   },
   "danger": {

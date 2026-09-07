@@ -53,10 +53,9 @@ export default async function HomePage({
         <div className="relative z-10 mx-auto flex min-h-[30rem] max-w-[74rem] items-end px-4 py-8 sm:items-center sm:px-6 sm:py-12">
           <div className="cantek-hero-panel">
             <p className="cantek-status">
-              <span className="cantek-pulse-dot" aria-hidden="true" />
               {t("kicker")}
             </p>
-            <h1 className="mt-4 text-4xl font-bold leading-[1.08] sm:text-5xl">
+            <h1 className="mt-4 text-[2rem] font-semibold leading-[1.12] sm:text-[2.65rem]">
               {t("headline")}
             </h1>
             <p className="mt-5 max-w-xl text-base leading-7 text-white/80">
@@ -70,14 +69,14 @@ export default async function HomePage({
         <div className="mx-auto w-full max-w-[74rem] px-4 py-12 sm:px-6 sm:py-16">
           <div className="mx-auto max-w-2xl text-center">
             <p className="cantek-kicker text-cantek-cyan">{t("kicker")}</p>
-            <h2 className="section-heading mt-2 text-3xl font-bold text-cantek-text after:mx-auto sm:text-4xl">
+            <h2 className="section-heading mt-2 text-2xl font-semibold text-cantek-text after:mx-auto sm:text-3xl">
               {t("workspaceTitle")}
             </h2>
           </div>
-          <div className="mt-8 sm:mt-10">
+          <div className="mx-auto mt-8 max-w-4xl sm:mt-10">
             <ChatPanel mode="public" />
           </div>
-          <p className="mt-6 border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-4 py-3 text-xs leading-5 text-cantek-muted">
+          <p className="mx-auto mt-5 max-w-4xl border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-4 py-3 text-xs leading-5 text-cantek-muted">
             {t("disclaimer")}
           </p>
         </div>
