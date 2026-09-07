@@ -8,10 +8,11 @@ Maintainer: [cankaracx](https://github.com/cankaracx)
 
 - Multilingual diagnostic interface with English, Turkish, Arabic, French, Russian, and Spanish support.
 - Document-grounded responses with source title and page references.
+- Starter prompts, one-click copy of the last reply, and a clear-conversation control in the diagnostic workspace.
 - Protected technician and administrator areas.
 - Role-based access to public and internal documents.
 - PDF, DOCX, Markdown, and text ingestion for authorized administrators.
-- Safety boundaries for emergency and hazardous-service requests.
+- Safety boundaries for emergency and hazardous-service requests, including common Turkish, French, Spanish, Russian, and Arabic operator phrasing.
 - Terms, privacy and KVKK notice, cookie notice, safety notice, and accessibility statement.
 
 ## Security model

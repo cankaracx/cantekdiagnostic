@@ -1,17 +1,20 @@
 export const CANTEK_PHONES = "+90 242 258 17 00 / +90 549 743 87 21";
 
 const HAZARD_RE =
-  /\b(ammonia|\bnh3\b|welding|weld|brazing|braze|refrigerant recovery|recover(ing)? refrigerant|electrical isolation|lockout|tagout|loto|live voltage|live electrical|compressor teardown|charged system|confined space|nitrogen purge|hot work)\b/i;
+  /ammonia|amonyak|amoniaco|ammoniac|аммиак|nh3|welding|\bweld\b|kaynak|soldadura|soudure|сварк|brazing|braze|lehim|refrigerant recovery|recover(?:ing)? refrigerant|electrical isolation|lockout|tagout|\bloto\b|live voltage|live electrical|compressor teardown|charged system|confined space|kapal[ıi] alan|espace confin|nitrogen purge|hot work|s[ıi]cak i[sş]/i;
 
 const EMERGENCY_RE =
-  /\b(leak|leaking|smell of ammonia|ammonia smell|person down|unconscious|fire|evacuate|explosion)\b/i;
+  /leaking|\bleak\b|kaçak|kacak|kaçağı|fuite|\bfuga\b|утечк|smell of ammonia|ammonia smell|amonyak kokusu|person down|unconscious|baygın|baygin|\bfire\b|yangın|yangin|incendio|incendie|пожар|evacuate|tahliye|explosion|patlama|explosión/i;
+
+const ARABIC_HAZARD = /أمونيا|لحام/;
+const ARABIC_EMERGENCY = /تسريب|حريق/;
 
 export function isHazardous(text: string): boolean {
-  return HAZARD_RE.test(text);
+  return HAZARD_RE.test(text) || ARABIC_HAZARD.test(text);
 }
 
 export function isEmergency(text: string): boolean {
-  return EMERGENCY_RE.test(text);
+  return EMERGENCY_RE.test(text) || ARABIC_EMERGENCY.test(text);
 }
 
 export const DANGER_BLOCK = `DANGER — Stop work. Ammonia, refrigerant, pressure systems, hot work, and electrical equipment can cause fatal injury, fire, explosion, or major equipment damage.`;

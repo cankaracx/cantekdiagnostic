@@ -37,7 +37,13 @@
     "you": "Vous",
     "assistant": "Assistant Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
-    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek.",
+    "clear": "Effacer",
+    "copy": "Copier la dernière réponse",
+    "copied": "Copié",
+    "suggest1": "La chambre ne descend plus en température",
+    "suggest2": "Alarme HP un après-midi d’été",
+    "suggest3": "Givre sur le serpentin de l’évaporateur"
   },
   "account": {
     "kicker": "Accès client",

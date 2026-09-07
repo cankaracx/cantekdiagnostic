@@ -21,6 +21,15 @@ describe("hazard policy", () => {
     expect(isEmergency("there is an ammonia leak")).toBe(true);
   });
 
+  it("detects the same hazards in operator languages", () => {
+    expect(isHazardous("amonyak hattında kaynak")).toBe(true);
+    expect(isEmergency("amonyak kaçağı var")).toBe(true);
+    expect(isHazardous("soudure sur une ligne ammoniac")).toBe(true);
+    expect(isEmergency("fuite d'ammoniac")).toBe(true);
+    expect(isHazardous("أمونيا")).toBe(true);
+    expect(isEmergency("تسريب")).toBe(true);
+  });
+
   it("replaces procedural content with an emergency safety boundary", () => {
     const wrapped = wrapHazardAnswer("1. Recover NH3 then weld per WPS.", {
       hazard: true,

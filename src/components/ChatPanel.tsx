@@ -24,8 +24,12 @@ export function ChatPanel(props: {
   const { onTranscriptChange } = props;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const endRef = useRef<HTMLDivElement>(null);
+
+  const suggestions = [t("chat.suggest1"), t("chat.suggest2"), t("chat.suggest3")];
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -37,8 +41,8 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
+  async function send(textOverride?: string) {
+    const text = (textOverride ?? input).trim();
     if (!text || busy) return;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
@@ -79,6 +83,17 @@ export function ChatPanel(props: {
     }
   }
 
+  async function copyLastReply() {
+    if (!lastAssistant) return;
+    try {
+      await navigator.clipboard.writeText(lastAssistant.content);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1600);
+    } catch {
+      window.prompt(t("chat.copy"), lastAssistant.content);
+    }
+  }
+
   return (
     <div className="flex min-h-[34rem] flex-col border border-cantek-border bg-white shadow-[0_10px_28px_rgb(50_62_72_/_8%)]">
       <div className="flex items-center justify-between border-b-4 border-cantek-cyan bg-cantek-dark px-5 py-4 text-white">
@@ -86,9 +101,20 @@ export function ChatPanel(props: {
           <p className="cantek-kicker text-cantek-cyan">Cantek Group</p>
           <h3 className="mt-1 text-lg font-bold">{t("home.workspaceTitle")}</h3>
         </div>
-        <span className="hidden border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/70 sm:inline">
-          {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="hidden border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/70 sm:inline">
+            {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
+          </span>
+          {messages.length > 0 && (
+            <button
+              type="button"
+              className="border border-white/25 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white/80 hover:bg-white/10"
+              onClick={() => setMessages([])}
+            >
+              {t("chat.clear")}
+            </button>
+          )}
+        </div>
       </div>
       <div
         className="flex-1 space-y-4 overflow-y-auto bg-cantek-light/50 p-4 sm:p-6"
@@ -96,8 +122,23 @@ export function ChatPanel(props: {
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border-s-4 border-cantek-cyan bg-white px-5 py-4">
-            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
+          <div className="space-y-3">
+            <div className="border-s-4 border-cantek-cyan bg-white px-5 py-4">
+              <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((label) => (
+                <button
+                  key={label}
+                  type="button"
+                  disabled={busy}
+                  className="border border-cantek-border bg-white px-3 py-2 text-left text-xs font-medium text-cantek-text hover:border-cantek-cyan"
+                  onClick={() => void send(label)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
         {messages.map((m, i) => (
@@ -166,13 +207,24 @@ export function ChatPanel(props: {
             }
           }}
         />
-        <button
-          type="submit"
-          disabled={busy}
-          className="cantek-button w-full self-end sm:w-auto"
-        >
-          {t("home.send")}
-        </button>
+        <div className="flex w-full flex-col gap-2 sm:w-auto">
+          <button
+            type="submit"
+            disabled={busy}
+            className="cantek-button w-full self-end sm:w-auto"
+          >
+            {t("home.send")}
+          </button>
+          {lastAssistant && (
+            <button
+              type="button"
+              className="border border-cantek-border px-3 py-2 text-xs font-semibold uppercase tracking-wider text-cantek-muted hover:border-cantek-cyan"
+              onClick={() => void copyLastReply()}
+            >
+              {copied ? t("chat.copied") : t("chat.copy")}
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );

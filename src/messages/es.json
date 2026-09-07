@@ -37,7 +37,13 @@
     "you": "Usted",
     "assistant": "Asistente Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
-    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
+    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek.",
+    "clear": "Borrar",
+    "copy": "Copiar última respuesta",
+    "copied": "Copiado",
+    "suggest1": "La cámara no baja de temperatura",
+    "suggest2": "Alarma HP en una tarde de verano",
+    "suggest3": "Hielo en el serpentín del evaporador"
   },
   "account": {
     "kicker": "Acceso de clientes",

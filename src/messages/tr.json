@@ -37,7 +37,13 @@
     "you": "Siz",
     "assistant": "Cantek asistan",
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
-    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
+    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın.",
+    "clear": "Temizle",
+    "copy": "Son yanıtı kopyala",
+    "copied": "Kopyalandı",
+    "suggest1": "Soğuk oda sıcaklığı düşmüyor",
+    "suggest2": "Yaz öğleden sonra HP alarmı",
+    "suggest3": "Evaporatör serpantininde buz"
   },
   "account": {
     "kicker": "Müşteri erişimi",
