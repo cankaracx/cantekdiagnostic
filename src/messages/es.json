@@ -37,7 +37,13 @@
     "you": "Usted",
     "assistant": "Asistente Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
-    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
+    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek.",
+    "newChat": "Nueva conversación",
+    "download": "Descargar",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "stop": "Detener",
+    "inputHint": "Enter para enviar · Mayús+Enter para una línea nueva"
   },
   "account": {
     "kicker": "Acceso de clientes",

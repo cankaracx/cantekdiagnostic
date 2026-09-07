@@ -352,6 +352,49 @@ textarea {
   content: "";
 }
 
+.chat-header-actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chat-utility-button,
+.copy-answer-button {
+  border: 1px solid var(--cantek-border);
+  background: #fff;
+  color: var(--cantek-muted);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition:
+    border-color 150ms ease,
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.chat-utility-button {
+  min-height: 2rem;
+  padding-inline: 0.65rem;
+}
+
+.copy-answer-button {
+  padding: 0.2rem 0.4rem;
+}
+
+.chat-utility-button:hover:not(:disabled),
+.copy-answer-button:hover {
+  border-color: var(--cantek-cyan);
+  background: color-mix(in srgb, var(--cantek-cyan) 5%, white);
+  color: var(--cantek-cyan);
+}
+
+.chat-utility-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
 .chat-badge {
   display: grid;
   width: 2.75rem;
@@ -523,6 +566,16 @@ textarea {
   outline: none;
 }
 
+.composer-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.35rem;
+  color: var(--cantek-muted);
+  font-size: 0.68rem;
+  line-height: 1.2;
+}
+
 .send-button {
   display: inline-flex;
   min-height: 2.9rem;
@@ -556,6 +609,11 @@ textarea {
   opacity: 0.45;
 }
 
+.stop-button {
+  border-color: var(--cantek-red);
+  background: var(--cantek-red);
+}
+
 @media (max-width: 639px) {
   .cantek-hero-mosaic {
     min-height: 34rem;
@@ -563,6 +621,29 @@ textarea {
 
   .cantek-hero-mosaic::after {
     background: linear-gradient(0deg, rgb(39 50 58 / 74%) 0%, rgb(39 50 58 / 12%) 70%);
+  }
+
+  .chat-shell-header {
+    align-items: flex-start;
+  }
+
+  .chat-header-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .chat-utility-button {
+    min-height: 1.8rem;
+    padding-inline: 0.45rem;
+    font-size: 0.6rem;
+  }
+
+  .composer-meta span:first-child {
+    display: none;
+  }
+
+  .composer-meta {
+    justify-content: flex-end;
   }
 }
 

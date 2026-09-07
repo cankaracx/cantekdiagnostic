@@ -70,6 +70,7 @@ async function generateWithModel(
   staffMode: boolean,
   messages: ChatMessage[],
   passages: string,
+  signal?: AbortSignal,
 ): Promise<{
   text: string;
   model: string;
@@ -90,13 +91,14 @@ async function generateWithModel(
           role: m.role,
           content: m.content,
         })),
-      });
+      }, { signal });
       const text = response.content
         .map((block) => (block.type === "text" ? block.text : ""))
         .join("\n")
         .trim();
       if (text) return { text, model, provider: "anthropic" };
     } catch {
+      if (signal?.aborted) throw new DOMException("Request cancelled", "AbortError");
       // Continue to the configured fallback provider or extractive RAG.
     }
   }
@@ -108,10 +110,11 @@ async function generateWithModel(
       const response = await client.chat.completions.create({
         model,
         messages: [{ role: "system", content: system }, ...messages],
-      });
+      }, { signal });
       const text = response.choices[0]?.message?.content?.trim();
       if (text) return { text, model, provider: "openai" };
     } catch {
+      if (signal?.aborted) throw new DOMException("Request cancelled", "AbortError");
       // Extractive RAG remains available when a provider is unavailable.
     }
   }
@@ -124,13 +127,20 @@ export async function answerQuestion(opts: {
   locale: string;
   staffMode: boolean;
   database?: SupabaseClient | null;
+  signal?: AbortSignal;
 }): Promise<AnswerResult> {
+  if (opts.signal?.aborted) {
+    throw new DOMException("Request cancelled", "AbortError");
+  }
   const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content ?? "";
   const retrieved = await searchManuals(lastUser, {
     includeInternal: opts.staffMode,
     limit: 8,
     database: opts.database,
   });
+  if (opts.signal?.aborted) {
+    throw new DOMException("Request cancelled", "AbortError");
+  }
 
   const hazard = isHazardous(lastUser);
   const emergency = isEmergency(lastUser);
@@ -148,6 +158,7 @@ export async function answerQuestion(opts: {
         opts.staffMode,
         opts.messages,
         formatPassages(grounded),
+        opts.signal,
       );
 
   let answer: string;

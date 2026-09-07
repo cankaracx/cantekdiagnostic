@@ -87,8 +87,10 @@ export function ChatPanel(props: {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const requestRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -103,7 +105,10 @@ export function ChatPanel(props: {
   async function send() {
     const text = input.trim();
     if (!text || busy) return;
+    const previous = messages;
     const next = [...messages, { role: "user" as const, content: text }];
+    const controller = new AbortController();
+    requestRef.current = controller;
     setMessages(next);
     setInput("");
     setBusy(true);
@@ -117,6 +122,7 @@ export function ChatPanel(props: {
           serial: props.serial,
           locale,
         }),
+        signal: controller.signal,
       });
       const data = await res.json();
       if (!res.ok) {
@@ -133,13 +139,67 @@ export function ChatPanel(props: {
         },
       ]);
     } catch {
+      if (controller.signal.aborted) {
+        setMessages(previous);
+        setInput(text);
+        return;
+      }
       setMessages([
         ...next,
         { role: "assistant", content: t("chat.error") },
       ]);
     } finally {
+      if (requestRef.current === controller) requestRef.current = null;
       setBusy(false);
       textareaRef.current?.focus();
+    }
+  }
+
+  function clearConversation() {
+    requestRef.current?.abort();
+    setMessages([]);
+    setInput("");
+    setCopiedIndex(null);
+    textareaRef.current?.focus();
+  }
+
+  function downloadTranscript() {
+    const transcript = messages
+      .map((message) => {
+        const speaker =
+          message.role === "user" ? t("chat.you") : t("chat.assistant");
+        const sources = message.citations?.length
+          ? `\n${t("home.sources")}: ${message.citations
+              .map(
+                (citation) =>
+                  `${citation.documentTitle}${
+                    citation.page ? ` (p.${citation.page})` : ""
+                  }`,
+              )
+              .join(", ")}`
+          : "";
+        return `${speaker}\n${message.content}${sources}`;
+      })
+      .join("\n\n---\n\n");
+    const blob = new Blob([transcript], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `cantek-diagnostic-${new Date().toISOString().slice(0, 10)}.txt`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function copyAnswer(content: string, index: number) {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedIndex(index);
+      window.setTimeout(
+        () => setCopiedIndex((current) => (current === index ? null : current)),
+        1_800,
+      );
+    } catch {
+      setCopiedIndex(null);
     }
   }
 
@@ -175,9 +235,29 @@ export function ChatPanel(props: {
             </h3>
           </div>
         </div>
-        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted sm:inline">
-          {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
-        </span>
+        <div className="chat-header-actions">
+          <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted lg:inline">
+            {props.mode === "technician"
+              ? t("nav.technician")
+              : t("nav.diagnostics")}
+          </span>
+          <button
+            type="button"
+            className="chat-utility-button"
+            disabled={messages.length === 0}
+            onClick={downloadTranscript}
+          >
+            {t("chat.download")}
+          </button>
+          <button
+            type="button"
+            className="chat-utility-button"
+            disabled={messages.length === 0 && !input}
+            onClick={clearConversation}
+          >
+            {t("chat.newChat")}
+          </button>
+        </div>
       </div>
       <div
         className="chat-scroll space-y-4 p-4 sm:p-6"
@@ -210,9 +290,22 @@ export function ChatPanel(props: {
                   isUser ? "message-bubble-user" : "message-bubble-assistant"
                 }`}
               >
-                <p className="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
-                  {isUser ? t("chat.you") : t("chat.assistant")}
-                </p>
+                <div className="mb-1.5 flex items-center justify-between gap-4">
+                  <p className="text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                    {isUser ? t("chat.you") : t("chat.assistant")}
+                  </p>
+                  {!isUser && (
+                    <button
+                      type="button"
+                      className="copy-answer-button"
+                      onClick={() => void copyAnswer(message.content, index)}
+                    >
+                      {copiedIndex === index
+                        ? t("chat.copied")
+                        : t("chat.copy")}
+                    </button>
+                  )}
+                </div>
                 {message.emergency && (
                   <div className="alert-card alert-card-danger mb-2">
                     <WarningIcon />
@@ -283,35 +376,51 @@ export function ChatPanel(props: {
           void send();
         }}
       >
-        <textarea
-          ref={textareaRef}
-          rows={3}
-          className="min-h-20 flex-1 resize-none px-3 py-2.5 text-sm text-cantek-text"
-          placeholder={t("home.placeholder")}
-          value={input}
-          maxLength={4_000}
-          aria-label={t("home.placeholder")}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => {
-            if (
-              e.key === "Enter" &&
-              !e.shiftKey &&
-              !e.nativeEvent.isComposing
-            ) {
-              e.preventDefault();
-              void send();
-            }
-          }}
-        />
-        <button
-          type="submit"
-          disabled={busy || !input.trim()}
-          className="send-button"
-          aria-label={t("home.send")}
-        >
-          <span className="hidden sm:inline">{t("home.send")}</span>
-          <SendIcon />
-        </button>
+        <div className="min-w-0 flex-1">
+          <textarea
+            ref={textareaRef}
+            rows={3}
+            className="min-h-20 w-full resize-none px-3 py-2.5 text-sm text-cantek-text"
+            placeholder={t("home.placeholder")}
+            value={input}
+            maxLength={4_000}
+            aria-label={t("home.placeholder")}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (
+                e.key === "Enter" &&
+                !e.shiftKey &&
+                !e.nativeEvent.isComposing
+              ) {
+                e.preventDefault();
+                void send();
+              }
+            }}
+          />
+          <div className="composer-meta">
+            <span>{t("chat.inputHint")}</span>
+            <span>{input.length.toLocaleString(locale)} / 4,000</span>
+          </div>
+        </div>
+        {busy ? (
+          <button
+            type="button"
+            className="send-button stop-button"
+            onClick={() => requestRef.current?.abort()}
+          >
+            {t("chat.stop")}
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={!input.trim()}
+            className="send-button"
+            aria-label={t("home.send")}
+          >
+            <span className="hidden sm:inline">{t("home.send")}</span>
+            <SendIcon />
+          </button>
+        )}
       </form>
     </div>
   );

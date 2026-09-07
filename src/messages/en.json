@@ -37,7 +37,13 @@
     "you": "You",
     "assistant": "Cantek assistant",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
-    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
+    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service.",
+    "newChat": "New chat",
+    "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied",
+    "stop": "Stop",
+    "inputHint": "Enter to send · Shift+Enter for a new line"
   },
   "account": {
     "kicker": "Customer access",

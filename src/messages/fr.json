@@ -37,7 +37,13 @@
     "you": "Vous",
     "assistant": "Assistant Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
-    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek.",
+    "newChat": "Nouvelle discussion",
+    "download": "Télécharger",
+    "copy": "Copier",
+    "copied": "Copié",
+    "stop": "Arrêter",
+    "inputHint": "Entrée pour envoyer · Maj+Entrée pour une nouvelle ligne"
   },
   "account": {
     "kicker": "Accès client",
