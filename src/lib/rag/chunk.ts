@@ -1,5 +1,7 @@
 const TARGET_TOKENS = 550;
 const OVERLAP_TOKENS = 80;
+const MAX_CHUNK_CHARACTERS = 6_000;
+const TARGET_WORDS = Math.floor(TARGET_TOKENS / 1.3);
 
 export function estimateTokens(text: string): number {
   return Math.max(1, Math.ceil(text.trim().split(/\s+/).length * 1.3));
@@ -12,12 +14,52 @@ export type TextChunk = {
   tokenCount: number;
 };
 
+function splitLongBlock(block: string): string[] {
+  if (
+    block.length <= MAX_CHUNK_CHARACTERS &&
+    estimateTokens(block) <= TARGET_TOKENS
+  ) {
+    return [block];
+  }
+  const words = block.split(/\s+/).filter(Boolean);
+  const sections: string[] = [];
+  let current: string[] = [];
+  let currentCharacters = 0;
+
+  const flush = () => {
+    if (current.length) sections.push(current.join(" "));
+    current = [];
+    currentCharacters = 0;
+  };
+
+  for (const word of words) {
+    if (word.length > MAX_CHUNK_CHARACTERS) {
+      flush();
+      for (let offset = 0; offset < word.length; offset += MAX_CHUNK_CHARACTERS) {
+        sections.push(word.slice(offset, offset + MAX_CHUNK_CHARACTERS));
+      }
+      continue;
+    }
+    if (
+      current.length >= TARGET_WORDS ||
+      currentCharacters + word.length + 1 > MAX_CHUNK_CHARACTERS
+    ) {
+      flush();
+    }
+    current.push(word);
+    currentCharacters += word.length + 1;
+  }
+  flush();
+  return sections;
+}
+
 function splitParagraphs(text: string): string[] {
   return text
     .replace(/\r\n/g, "\n")
     .split(/\n{2,}/)
     .map((p) => p.trim())
-    .filter(Boolean);
+    .filter(Boolean)
+    .flatMap(splitLongBlock);
 }
 
 function headingFrom(block: string): string | null {
@@ -33,6 +75,7 @@ export function chunkText(text: string, page: number | null = null): TextChunk[]
   const chunks: TextChunk[] = [];
   let buffer: string[] = [];
   let tokens = 0;
+  let characters = 0;
   let heading: string | null = null;
 
   const flush = () => {
@@ -50,14 +93,27 @@ export function chunkText(text: string, page: number | null = null): TextChunk[]
     const h = headingFrom(para);
     if (h) heading = h;
     const t = estimateTokens(para);
-    if (tokens + t > TARGET_TOKENS && buffer.length) {
+    if (
+      (tokens + t > TARGET_TOKENS ||
+        characters + para.length + 2 > MAX_CHUNK_CHARACTERS) &&
+      buffer.length
+    ) {
       flush();
-      const overlap = buffer.join("\n\n").split(/\s+/).slice(-OVERLAP_TOKENS).join(" ");
+      let overlap = buffer
+        .join("\n\n")
+        .split(/\s+/)
+        .slice(-OVERLAP_TOKENS)
+        .join(" ");
+      if (overlap.length + para.length + 2 > MAX_CHUNK_CHARACTERS) {
+        overlap = "";
+      }
       buffer = overlap ? [overlap] : [];
       tokens = estimateTokens(buffer.join(" "));
+      characters = overlap.length;
     }
     buffer.push(para);
     tokens += t;
+    characters += para.length + (buffer.length > 1 ? 2 : 0);
   }
   flush();
   return chunks;

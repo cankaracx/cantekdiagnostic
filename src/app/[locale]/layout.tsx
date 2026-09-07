@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
@@ -9,14 +8,6 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { RTL_LOCALES } from "@/lib/geo/locales";
 import type { AppLocale } from "@/i18n/routing";
-
-const corporateFont = localFont({
-  src: "../../fonts/AmsiPro-Bold.otf",
-  weight: "400",
-  style: "normal",
-  display: "swap",
-  variable: "--font-corporate",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -47,7 +38,7 @@ export default async function LocaleLayout({
   const dir = RTL_LOCALES.has(locale as AppLocale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className={`h-full ${corporateFont.variable}`}>
+    <html lang={locale} dir={dir} className="h-full">
       <body className="flex min-h-full flex-col antialiased">
         <NextIntlClientProvider messages={messages}>
           <AppHeader />

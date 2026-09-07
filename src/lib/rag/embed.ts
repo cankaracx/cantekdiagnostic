@@ -1,12 +1,11 @@
 import OpenAI from "openai";
+import { readProviderApiKey } from "@/lib/chat/providers";
 
 // Match the pgvector column dimension so the no-OpenAI fallback can be
 // persisted and queried in Supabase without a dimension mismatch.
 const LOCAL_DIM = 1536;
-
-export function hasOpenAIEmbeddings(): boolean {
-  return Boolean(process.env.OPENAI_API_KEY);
-}
+const EMBEDDING_BATCH_SIZE = 64;
+const EMBEDDING_TIMEOUT_MS = 20_000;
 
 export function embeddingModel(): string {
   return process.env.OPENAI_EMBEDDING_MODEL ?? "text-embedding-3-large";
@@ -41,21 +40,43 @@ export function localEmbedding(text: string): number[] {
 
 export async function embedTexts(texts: string[]): Promise<number[][]> {
   if (!texts.length) return [];
-  if (!hasOpenAIEmbeddings()) {
+  const apiKey = await readProviderApiKey("openai");
+  if (!apiKey) {
     return texts.map(localEmbedding);
   }
 
-  const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  const response = await client.embeddings.create({
-    model: embeddingModel(),
-    input: texts,
-    dimensions: embeddingDimensions(),
+  const client = new OpenAI({
+    apiKey,
+    maxRetries: 0,
+    timeout: EMBEDDING_TIMEOUT_MS,
   });
+  const embeddings: number[][] = [];
 
-  return response.data
-    .slice()
-    .sort((a, b) => a.index - b.index)
-    .map((row) => row.embedding);
+  for (
+    let offset = 0;
+    offset < texts.length;
+    offset += EMBEDDING_BATCH_SIZE
+  ) {
+    const batch = texts.slice(offset, offset + EMBEDDING_BATCH_SIZE);
+    try {
+      const response = await client.embeddings.create({
+        model: embeddingModel(),
+        input: batch,
+        dimensions: embeddingDimensions(),
+      });
+      embeddings.push(
+        ...response.data
+          .slice()
+          .sort((a, b) => a.index - b.index)
+          .map((row) => row.embedding),
+      );
+    } catch {
+      // Keep retrieval available if this bounded provider request fails.
+      embeddings.push(...batch.map(localEmbedding));
+    }
+  }
+
+  return embeddings;
 }
 
 export function cosine(a: number[], b: number[]): number {

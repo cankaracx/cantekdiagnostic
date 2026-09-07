@@ -35,7 +35,7 @@
   },
   "chat": {
     "you": "Usted",
-    "assistant": "Asistente Cantek",
+    "assistant": "Soporte Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
     "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
   },
@@ -87,9 +87,9 @@
     "title": "Manuales",
     "intro": "Suba PDF o DOCX. Marque visibilidad, equipo y refrigerante; indexe para que el chat cite el archivo.",
     "securityNote": "Espacio restringido · Los archivos y credenciales API solo están disponibles para administradores autorizados.",
-    "uploadKicker": "Base de conocimiento RAG",
+    "uploadKicker": "Biblioteca de documentos de servicio",
     "uploadTitle": "Subir un documento de servicio",
-    "uploadHelp": "El documento se analizará, dividirá en secciones consultables, vectorizará y pondrá a disposición del asistente Cantek.",
+    "uploadHelp": "El documento se comprobará, se dividirá en secciones consultables y se añadirá al soporte de diagnóstico de Cantek.",
     "file": "Archivo",
     "dropTitle": "Suelte un manual aquí o selecciónelo",
     "dropHelp": "PDF, DOCX, Markdown o TXT · Máximo 20 MB",
@@ -132,18 +132,19 @@
       "documentsUnavailable": "No se pudo cargar la biblioteca de documentos."
     },
     "ai": {
-      "kicker": "Claude RAG",
-      "title": "Conexión de Anthropic",
-      "description": "Claude Sonnet 5 responde desde los manuales Cantek indexados. La clave API se cifra en tránsito, se almacena en el esquema privado y nunca vuelve al navegador.",
+      "kicker": "Proveedores de respuesta",
+      "title": "Conexiones de proveedores",
+      "description": "Configure uno o varios proveedores compatibles. Las claves se validan antes de guardarse, permanecen en el esquema privado y nunca se devuelven al navegador. Si un proveedor no está disponible, se utiliza automáticamente el siguiente configurado.",
       "connected": "Conectado",
       "notConfigured": "Sin configurar",
       "statusUnavailable": "El estado de conexión no está disponible.",
-      "keyLabel": "Clave API de Anthropic",
+      "keyLabel": "Clave API del proveedor",
       "save": "Probar y guardar clave",
       "testing": "Probando conexión…",
-      "saved": "Claude Sonnet 5 está conectado y listo para el chat RAG.",
-      "invalid": "Anthropic rechazó esta clave. Revísela e inténtelo de nuevo.",
-      "saveFailed": "No se pudo guardar la clave de forma segura."
+      "saved": "El proveedor está conectado y disponible para el diagnóstico.",
+      "invalid": "El proveedor rechazó esta clave. Revísela e inténtelo de nuevo.",
+      "saveFailed": "No se pudo guardar la clave de forma segura.",
+      "remove": "Eliminar clave guardada"
     }
   },
   "danger": {

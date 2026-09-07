@@ -2,8 +2,16 @@
 
 import { localeLabels } from "@/lib/geo/locales";
 import { locales } from "@/i18n/routing";
-import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import type { AiProviderId } from "@/lib/chat/providers";
 
 type DocRow = {
   id: string;
@@ -13,9 +21,20 @@ type DocRow = {
   equipment?: string;
   version?: string;
   chunkCount?: number;
+  updatedAt?: string;
 };
 
 type Notice = { tone: "success" | "error"; message: string } | null;
+type ProviderStatus = {
+  id: AiProviderId;
+  label: string;
+  configured: boolean;
+  hint: string | null;
+  model: string;
+  source: "stored" | "environment" | null;
+  placeholder: string;
+};
+type DocumentSort = "title" | "language" | "sections";
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 const ACCEPTED_EXTENSIONS = [".pdf", ".docx", ".md", ".txt"];
@@ -28,6 +47,7 @@ function formatBytes(bytes: number): string {
 export function AdminPanel() {
   const t = useTranslations("admin");
   const tech = useTranslations("tech");
+  const locale = useLocale();
   const inputRef = useRef<HTMLInputElement>(null);
   const [notice, setNotice] = useState<Notice>(null);
   const [docs, setDocs] = useState<DocRow[]>([]);
@@ -35,11 +55,63 @@ export function AdminPanel() {
   const [dragging, setDragging] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [loadingDocs, setLoadingDocs] = useState(true);
-  const [aiConfigured, setAiConfigured] = useState(false);
-  const [aiHint, setAiHint] = useState<string | null>(null);
+  const [providers, setProviders] = useState<ProviderStatus[]>([]);
+  const [selectedProvider, setSelectedProvider] =
+    useState<AiProviderId>("anthropic");
   const [aiKey, setAiKey] = useState("");
   const [savingKey, setSavingKey] = useState(false);
+  const [removingKey, setRemovingKey] = useState(false);
   const [aiNotice, setAiNotice] = useState<Notice>(null);
+  const [documentQuery, setDocumentQuery] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("all");
+  const [documentSort, setDocumentSort] = useState<DocumentSort>("title");
+  const deferredDocumentQuery = useDeferredValue(documentQuery);
+
+  const selectedProviderStatus = providers.find(
+    (provider) => provider.id === selectedProvider,
+  );
+  const configuredProviderCount = providers.filter(
+    (provider) => provider.configured,
+  ).length;
+  const displayedDocs = useMemo(() => {
+    const query = deferredDocumentQuery.trim().toLocaleLowerCase(locale);
+    const filtered = docs.filter((document) => {
+      const matchesLanguage =
+        languageFilter === "all" || document.language === languageFilter;
+      const searchable = [
+        document.title,
+        document.equipment,
+        document.version,
+        document.visibility,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLocaleLowerCase(locale);
+      return matchesLanguage && (!query || searchable.includes(query));
+    });
+
+    return filtered.toSorted((left, right) => {
+      if (documentSort === "title") {
+        return left.title.localeCompare(right.title, locale);
+      }
+      if (documentSort === "language") {
+        return (
+          left.language.localeCompare(right.language, locale) ||
+          left.title.localeCompare(right.title, locale)
+        );
+      }
+      if (documentSort === "sections") {
+        return (right.chunkCount ?? 0) - (left.chunkCount ?? 0);
+      }
+      return left.title.localeCompare(right.title, locale);
+    });
+  }, [
+    deferredDocumentQuery,
+    docs,
+    documentSort,
+    languageFilter,
+    locale,
+  ]);
 
   const refresh = useCallback(async () => {
     try {
@@ -59,8 +131,7 @@ export function AdminPanel() {
       const res = await fetch("/api/admin-settings", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "settings_unavailable");
-      setAiConfigured(Boolean(data.configured));
-      setAiHint(data.hint ?? null);
+      setProviders(Array.isArray(data.providers) ? data.providers : []);
     } catch {
       setAiNotice({ tone: "error", message: t("ai.statusUnavailable") });
     }
@@ -151,22 +222,48 @@ export function AdminPanel() {
       const res = await fetch("/api/admin-settings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ anthropicApiKey: key }),
+        body: JSON.stringify({ provider: selectedProvider, apiKey: key }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "settings_update_failed");
-      setAiConfigured(true);
-      setAiHint(data.hint ?? null);
+      await refreshAiStatus();
       setAiKey("");
       setAiNotice({ tone: "success", message: t("ai.saved") });
     } catch (error) {
       const message =
-        error instanceof Error && error.message === "invalid_anthropic_key"
+        error instanceof Error && error.message === "invalid_provider_key"
           ? t("ai.invalid")
           : t("ai.saveFailed");
       setAiNotice({ tone: "error", message });
     } finally {
       setSavingKey(false);
+    }
+  }
+
+  async function removeAiKey() {
+    if (
+      removingKey ||
+      selectedProviderStatus?.source !== "stored" ||
+      !window.confirm(t("ai.remove"))
+    ) {
+      return;
+    }
+    setRemovingKey(true);
+    setAiNotice(null);
+    try {
+      const res = await fetch("/api/admin-settings", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: selectedProvider }),
+      });
+      if (!res.ok) throw new Error("settings_update_failed");
+      await refreshAiStatus();
+      setAiKey("");
+      setAiNotice({ tone: "success", message: t("ai.notConfigured") });
+    } catch {
+      setAiNotice({ tone: "error", message: t("ai.saveFailed") });
+    } finally {
+      setRemovingKey(false);
     }
   }
 
@@ -188,7 +285,7 @@ export function AdminPanel() {
         </button>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="grid items-start gap-6 xl:grid-cols-[0.8fr_1.2fr]">
         <form onSubmit={onUpload} className="cantek-form grid gap-5">
           <div>
             <p className="cantek-kicker text-cantek-cyan">{t("uploadKicker")}</p>
@@ -326,43 +423,78 @@ export function AdminPanel() {
         </form>
 
         <div className="space-y-6">
-          <form onSubmit={saveAiKey} className="cantek-form grid gap-4">
+          <form onSubmit={saveAiKey} className="cantek-form grid gap-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="cantek-kicker text-cantek-cyan">{t("ai.kicker")}</p>
                 <h2 className="mt-1 text-2xl font-bold">{t("ai.title")}</h2>
               </div>
               <span
+                role="status"
+                aria-atomic="true"
+                aria-label={`${configuredProviderCount} ${t("ai.connected")}`}
                 className={`mt-1 inline-flex items-center gap-2 border px-2.5 py-1 text-xs font-bold ${
-                  aiConfigured
+                  configuredProviderCount > 0
                     ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                     : "border-cantek-border bg-cantek-light text-cantek-muted"
                 }`}
               >
                 <span
-                  className={`h-2 w-2 rounded-full ${
-                    aiConfigured ? "bg-emerald-500" : "bg-cantek-muted"
+                  className={`h-2 w-2 ${
+                    configuredProviderCount > 0 ? "bg-emerald-500" : "bg-cantek-muted"
                   }`}
                 />
-                {aiConfigured ? t("ai.connected") : t("ai.notConfigured")}
+                {configuredProviderCount}/{providers.length || 7}
               </span>
             </div>
             <p className="text-sm leading-6 text-cantek-muted">
               {t("ai.description")}
             </p>
-            {aiHint && (
-              <p className="border-s-[3px] border-cantek-cyan bg-cantek-light px-3 py-2 font-mono text-xs text-cantek-dark">
-                {aiHint}
-              </p>
-            )}
+
+            <div className="grid min-h-24 gap-2 sm:grid-cols-2">
+              {providers.map((provider) => (
+                <button
+                  key={provider.id}
+                  type="button"
+                  onClick={() => {
+                    setSelectedProvider(provider.id);
+                    setAiKey("");
+                    setAiNotice(null);
+                  }}
+                  className={`border p-3 text-start transition-colors ${
+                    selectedProvider === provider.id
+                      ? "border-cantek-cyan bg-cantek-cyan/5"
+                      : "border-cantek-border bg-white hover:border-cantek-dark/40"
+                  }`}
+                >
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-bold text-cantek-dark">
+                      {provider.label}
+                    </span>
+                    <span
+                      className={`h-2 w-2 ${
+                        provider.configured ? "bg-emerald-500" : "bg-cantek-border"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  <span className="mt-1 block truncate text-xs text-cantek-muted">
+                    {provider.configured
+                      ? `${provider.hint} · ${provider.model}`
+                      : t("ai.notConfigured")}
+                  </span>
+                </button>
+              ))}
+            </div>
+
             <label className="grid gap-2 text-sm font-semibold">
-              {t("ai.keyLabel")}
+              {selectedProviderStatus?.label ?? t("ai.keyLabel")}
               <input
                 type="password"
                 value={aiKey}
                 onChange={(event) => setAiKey(event.target.value)}
-                placeholder="sk-ant-…"
-                autoComplete="off"
+                placeholder={selectedProviderStatus?.placeholder ?? t("ai.keyLabel")}
+                autoComplete="new-password"
                 spellCheck={false}
               />
             </label>
@@ -374,6 +506,16 @@ export function AdminPanel() {
               >
                 {savingKey ? t("ai.testing") : t("ai.save")}
               </button>
+              {selectedProviderStatus?.source === "stored" && (
+                <button
+                  type="button"
+                  disabled={removingKey}
+                  onClick={() => void removeAiKey()}
+                  className="min-h-11 border border-cantek-border bg-white px-3 py-2 text-sm font-semibold text-cantek-red transition hover:border-cantek-red disabled:opacity-50"
+                >
+                  {t("ai.remove")}
+                </button>
+              )}
               {aiNotice && (
                 <p
                   role="status"
@@ -389,7 +531,7 @@ export function AdminPanel() {
             </div>
           </form>
 
-          <section className="border border-cantek-border bg-white shadow-[0_8px_24px_rgb(50_62_72_/_7%)]">
+          <section className="min-h-80 border border-cantek-border bg-white shadow-[0_8px_24px_rgb(50_62_72_/_7%)]">
             <div className="flex items-center justify-between gap-3 border-b border-cantek-border px-5 py-4">
               <div>
                 <p className="cantek-kicker text-cantek-cyan">{t("libraryKicker")}</p>
@@ -408,9 +550,53 @@ export function AdminPanel() {
               </button>
             </div>
 
+            {docs.length > 0 && (
+              <div className="grid gap-2 border-b border-cantek-border bg-cantek-light/60 p-3 sm:grid-cols-[1fr_auto_auto]">
+                <label>
+                  <span className="sr-only">{t("document")}</span>
+                  <input
+                    type="search"
+                    value={documentQuery}
+                    onChange={(event) => setDocumentQuery(event.target.value)}
+                    placeholder={`${t("document")}…`}
+                    className="h-10 w-full border border-cantek-border bg-white px-3 text-sm outline-none focus:border-cantek-cyan"
+                  />
+                </label>
+                <label>
+                  <span className="sr-only">{t("language")}</span>
+                  <select
+                    value={languageFilter}
+                    onChange={(event) => setLanguageFilter(event.target.value)}
+                    className="h-10 border border-cantek-border bg-white px-3 text-sm"
+                  >
+                    <option value="all">{t("language")}</option>
+                    {locales.map((code) => (
+                      <option key={code} value={code}>
+                        {localeLabels[code]}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  <span className="sr-only">{t("sections")}</span>
+                  <select
+                    value={documentSort}
+                    onChange={(event) =>
+                      setDocumentSort(event.target.value as DocumentSort)
+                    }
+                    className="h-10 border border-cantek-border bg-white px-3 text-sm"
+                  >
+                    <option value="title">{t("titleLabel")}</option>
+                    <option value="language">{t("language")}</option>
+                    <option value="sections">{t("sections")}</option>
+                  </select>
+                </label>
+              </div>
+            )}
+
             {loadingDocs ? (
               <p className="px-5 py-8 text-sm text-cantek-muted">{t("loading")}</p>
-            ) : docs.length === 0 ? (
+            ) : displayedDocs.length === 0 ? (
               <div className="px-5 py-10 text-center">
                 <p className="text-lg font-bold text-cantek-dark">{t("emptyTitle")}</p>
                 <p className="mt-2 text-sm text-cantek-muted">{t("emptyHelp")}</p>
@@ -427,7 +613,7 @@ export function AdminPanel() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-cantek-border">
-                    {docs.map((doc) => (
+                    {displayedDocs.map((doc) => (
                       <tr key={doc.id} className="align-top hover:bg-cantek-light/60">
                         <td className="px-5 py-4">
                           <span className="block font-bold text-cantek-dark">

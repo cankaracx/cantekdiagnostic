@@ -1,21 +1,28 @@
-import Anthropic from "@anthropic-ai/sdk";
-import OpenAI from "openai";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import {
   isEmergency,
   isHazardous,
+  serviceClose,
   wrapHazardAnswer,
-  SERVICE_CLOSE,
 } from "@/lib/chat/hazards";
-import {
-  anthropicModel,
-  readAnthropicApiKey,
-} from "@/lib/chat/anthropic";
+import { localizedChatCopy } from "@/lib/chat/localized";
+import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
 import { searchManuals } from "@/lib/rag/search";
+import { isDocumentationRequest } from "@/lib/rag/retrieve";
 import type { AnswerResult, ChatMessage, Citation, RetrievedChunk } from "@/lib/rag/types";
 
 const MIN_SCORE = 0.35;
+const UNSAFE_REFERENCE_CHARACTERS =
+  /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2060-\u206f\ufeff]/g;
+
+function escapeReference(value: string): string {
+  return value
+    .replace(UNSAFE_REFERENCE_CHARACTERS, "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
 
 function citationsFrom(chunks: RetrievedChunk[]): Citation[] {
   const seen = new Set<string>();
@@ -33,35 +40,44 @@ function citationsFrom(chunks: RetrievedChunk[]): Citation[] {
   return out;
 }
 
-function formatPassages(chunks: RetrievedChunk[]): string {
+export function formatPassages(chunks: RetrievedChunk[]): string {
   if (!chunks.length) return "(no passages retrieved)";
   return chunks
     .map((c, i) => {
       const loc = c.page ? `p.${c.page}` : "page n/a";
-      return `[${i + 1}] ${c.documentTitle} (${loc})\n${c.content}`;
+      return [
+        `<retrieved_reference index="${i + 1}" page="${loc}">`,
+        `<title>${escapeReference(c.documentTitle)}</title>`,
+        `<content>${escapeReference(c.content.slice(0, 8_000))}</content>`,
+        "</retrieved_reference>",
+      ].join("\n");
     })
     .join("\n\n");
 }
 
 export function composeExtractiveAnswer(
-  query: string,
+  _query: string,
   chunks: RetrievedChunk[],
+  locale = "en",
 ): { body: string; missingManual: boolean } {
+  const copy = localizedChatCopy(locale);
   if (!chunks.length || chunks[0].score < MIN_SCORE) {
     return {
       missingManual: true,
-      body: `The loaded Cantek manuals do not contain a matching procedure for this question. Do not invent pressures, torque, amperage, or wiring. Contact Cantek service.\n\n${SERVICE_CLOSE}`,
+      body: `${copy.noDocs}\n\n${serviceClose(locale)}`,
     };
   }
 
   const steps = chunks.map((c, i) => {
-    const loc = c.page ? `p.${c.page}` : "page n/a";
-    return `${i + 1}. From ${c.documentTitle} (${loc}):\n${c.content}`;
+    const location = c.page
+      ? `${copy.page}${c.page}`
+      : copy.pageUnknown;
+    return `${i + 1}. ${c.content}\n\n${copy.source}: ${c.documentTitle} (${location})`;
   });
 
   return {
     missingManual: false,
-    body: `Question understood: ${query.trim()}\n\nDocumented procedure:\n\n${steps.join("\n\n")}`,
+    body: `${copy.title}\n\n${steps.join("\n\n")}`,
   };
 }
 
@@ -73,50 +89,32 @@ async function generateWithModel(
 ): Promise<{
   text: string;
   model: string;
-  provider: "anthropic" | "openai";
+  provider:
+    | "anthropic"
+    | "openai"
+    | "google"
+    | "xai"
+    | "groq"
+    | "mistral"
+    | "openrouter";
 } | null> {
-  const system = `${buildSystemPrompt({ locale, staffMode })}\n\nRETRIEVED PASSAGES:\n${passages}`;
-  const anthropicApiKey = await readAnthropicApiKey();
+  const system = `${buildSystemPrompt({
+    locale,
+    staffMode,
+    documentationRequested: isDocumentationRequest(
+      messages.at(-1)?.content ?? "",
+    ),
+  })}\n\nRETRIEVED PASSAGES:\n${passages}`;
+  const lastUserMessage = [...messages]
+    .reverse()
+    .find((message) => message.role === "user");
+  if (!lastUserMessage) return null;
 
-  if (anthropicApiKey) {
-    try {
-      const client = new Anthropic({ apiKey: anthropicApiKey });
-      const model = anthropicModel();
-      const response = await client.messages.create({
-        model,
-        max_tokens: 2400,
-        system,
-        messages: messages.map((m) => ({
-          role: m.role,
-          content: m.content,
-        })),
-      });
-      const text = response.content
-        .map((block) => (block.type === "text" ? block.text : ""))
-        .join("\n")
-        .trim();
-      if (text) return { text, model, provider: "anthropic" };
-    } catch {
-      // Continue to the configured fallback provider or extractive RAG.
-    }
-  }
-
-  if (process.env.OPENAI_API_KEY) {
-    try {
-      const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-      const model = process.env.OPENAI_CHAT_MODEL ?? "gpt-4o";
-      const response = await client.chat.completions.create({
-        model,
-        messages: [{ role: "system", content: system }, ...messages],
-      });
-      const text = response.choices[0]?.message?.content?.trim();
-      if (text) return { text, model, provider: "openai" };
-    } catch {
-      // Extractive RAG remains available when a provider is unavailable.
-    }
-  }
-
-  return null;
+  return generateWithProviders({
+    system,
+    messages: [{ role: "user", content: lastUserMessage.content.slice(0, 8_000) }],
+    allowFailover: !staffMode,
+  });
 }
 
 export async function answerQuestion(opts: {
@@ -139,7 +137,7 @@ export async function answerQuestion(opts: {
   );
   const grounded = hasGrounding ? retrieved : [];
   const citations = hazard || emergency ? [] : citationsFrom(grounded);
-  const extractive = composeExtractiveAnswer(lastUser, retrieved);
+  const extractive = composeExtractiveAnswer(lastUser, retrieved, opts.locale);
 
   const generated = hazard || emergency || !hasGrounding
     ? null
@@ -153,13 +151,17 @@ export async function answerQuestion(opts: {
   let answer: string;
   let missingManual: boolean;
   if (hazard || emergency) {
-    answer = wrapHazardAnswer("", { hazard, emergency });
+    answer = wrapHazardAnswer("", {
+      hazard,
+      emergency,
+      locale: opts.locale,
+    });
     missingManual = false;
   } else {
     answer = generated?.text ?? extractive.body;
     missingManual = extractive.missingManual && !generated;
-    if (!answer.includes("Cantek service") && !answer.includes("+90 242")) {
-      answer = `${answer.trim()}\n\n${SERVICE_CLOSE}`;
+    if (!answer.includes("+90 242") && !answer.includes("info@cantekgroup.com")) {
+      answer = `${answer.trim()}\n\n${serviceClose(opts.locale)}`;
     }
   }
 

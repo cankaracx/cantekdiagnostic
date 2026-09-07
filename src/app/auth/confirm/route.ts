@@ -2,13 +2,28 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase/server";
 
-function safeNext(value: string | null): string {
-  return value?.startsWith("/") && !value.startsWith("//") ? value : "/en";
+export function safeNext(value: string | null, origin: string): string {
+  if (
+    !value ||
+    !value.startsWith("/") ||
+    value.startsWith("//") ||
+    /[\\\u0000-\u001f\u007f]/.test(value)
+  ) {
+    return "/en";
+  }
+
+  try {
+    const destination = new URL(value, origin);
+    if (destination.origin !== origin) return "/en";
+    return `${destination.pathname}${destination.search}${destination.hash}`;
+  } catch {
+    return "/en";
+  }
 }
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const next = safeNext(url.searchParams.get("next"));
+  const next = safeNext(url.searchParams.get("next"), url.origin);
   const destination = new URL(next, url.origin);
   const supabase = await createServerSupabase();
 

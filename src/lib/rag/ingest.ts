@@ -7,6 +7,9 @@ import { addChunks, loadLocalIndex, saveLocalIndex, upsertDocument } from "@/lib
 import { createServiceSupabase } from "@/lib/supabase/env";
 import type { ChunkRecord, DocumentRecord, Visibility } from "@/lib/rag/types";
 
+const MAX_CHUNKS_PER_DOCUMENT = 500;
+const DATABASE_INSERT_BATCH_SIZE = 100;
+
 export type IngestMeta = {
   title: string;
   language: string;
@@ -34,6 +37,9 @@ export async function ingestParsedPages(
   const pieces = usablePages.length ? chunkPages(usablePages) : chunkText("");
   if (!pieces.length) {
     throw new Error("no_extractable_text");
+  }
+  if (pieces.length > MAX_CHUNKS_PER_DOCUMENT) {
+    throw new Error("document_too_large");
   }
 
   const embeddings = await embedTexts(pieces.map((p) => p.content));
@@ -91,18 +97,25 @@ export async function ingestParsedPages(
     if (deleteError) throw deleteError;
 
     if (chunks.length) {
-      const { error: chunkError } = await supabase.from("chunks").insert(
-        chunks.map((c) => ({
-          id: c.id,
-          document_id: c.documentId,
-          content: c.content,
-          page: c.page,
-          heading: c.heading,
-          token_count: c.tokenCount,
-          embedding: c.embedding,
-        })),
-      );
-      if (chunkError) throw chunkError;
+      for (
+        let offset = 0;
+        offset < chunks.length;
+        offset += DATABASE_INSERT_BATCH_SIZE
+      ) {
+        const batch = chunks.slice(offset, offset + DATABASE_INSERT_BATCH_SIZE);
+        const { error: chunkError } = await supabase.from("chunks").insert(
+          batch.map((c) => ({
+            id: c.id,
+            document_id: c.documentId,
+            content: c.content,
+            page: c.page,
+            heading: c.heading,
+            token_count: c.tokenCount,
+            embedding: c.embedding,
+          })),
+        );
+        if (chunkError) throw chunkError;
+      }
     }
 
     // Supabase is the source of truth in production; a failed local cache
