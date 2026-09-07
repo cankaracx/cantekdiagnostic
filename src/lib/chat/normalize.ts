@@ -25,7 +25,7 @@ export function normalizeChatMessages(input: unknown): ChatMessage[] {
     if (!content) continue;
 
     const previous = chronological.at(-1);
-    if (previous?.role === role) {
+    if (previous && previous.role === role) {
       previous.content = `${previous.content}\n\n${content}`.slice(
         0,
         MAX_MESSAGE_CHARS,
