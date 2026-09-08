@@ -27,6 +27,13 @@ describe("request hardening", () => {
     expect(isSameOrigin(request)).toBe(true);
   });
 
+  it("treats localhost and 127.0.0.1 as the same local origin", () => {
+    const request = new Request("http://localhost:3000/api/chat", {
+      headers: { origin: "http://127.0.0.1:3000" },
+    });
+    expect(isSameOrigin(request)).toBe(true);
+  });
+
   it("enforces JSON body limits even before parsing", async () => {
     const request = new Request("https://diagnostics.example/api/chat", {
       method: "POST",

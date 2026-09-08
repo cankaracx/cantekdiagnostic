@@ -194,6 +194,19 @@ export function rateLimitResponse(retryAfter: number): NextResponse {
   );
 }
 
+function originHost(value: string): { hostname: string; port: string } | null {
+  try {
+    const parsed = new URL(value);
+    return { hostname: parsed.hostname, port: parsed.port };
+  } catch {
+    return null;
+  }
+}
+
+function isLoopbackHost(hostname: string): boolean {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
+
 export function isSameOrigin(request: Request): boolean {
   const fetchSite = request.headers.get("sec-fetch-site");
   if (fetchSite === "cross-site") return false;
@@ -210,7 +223,17 @@ export function isSameOrigin(request: Request): boolean {
       return false;
     }
   }
-  return allowed.has(origin);
+  if (allowed.has(origin)) return true;
+
+  const requestHost = originHost(request.url);
+  const originParts = originHost(origin);
+  return Boolean(
+    requestHost &&
+      originParts &&
+      isLoopbackHost(requestHost.hostname) &&
+      isLoopbackHost(originParts.hostname) &&
+      requestHost.port === originParts.port,
+  );
 }
 
 export function sameOriginError(): NextResponse {
