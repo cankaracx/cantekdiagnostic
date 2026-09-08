@@ -6,6 +6,13 @@ import {
   wrapHazardAnswer,
 } from "@/lib/chat/hazards";
 import { localizedChatCopy } from "@/lib/chat/localized";
+import {
+  buildRetrievalQuery,
+  conversationWindow,
+  describePlantForPrompt,
+  equipmentSearchTerm,
+  type PlantContext,
+} from "@/lib/chat/plant";
 import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
 import { searchManuals } from "@/lib/rag/search";
@@ -86,6 +93,7 @@ async function generateWithModel(
   staffMode: boolean,
   messages: ChatMessage[],
   passages: string,
+  plant?: PlantContext,
 ): Promise<{
   text: string;
   model: string;
@@ -98,21 +106,21 @@ async function generateWithModel(
     | "mistral"
     | "openrouter";
 } | null> {
+  const plantContext = describePlantForPrompt(plant ?? {});
   const system = `${buildSystemPrompt({
     locale,
     staffMode,
     documentationRequested: isDocumentationRequest(
       messages.at(-1)?.content ?? "",
     ),
+    plantContext,
   })}\n\nRETRIEVED PASSAGES:\n${passages}`;
-  const lastUserMessage = [...messages]
-    .reverse()
-    .find((message) => message.role === "user");
-  if (!lastUserMessage) return null;
+  const history = conversationWindow(messages);
+  if (!history.length) return null;
 
   return generateWithProviders({
     system,
-    messages: [{ role: "user", content: lastUserMessage.content.slice(0, 8_000) }],
+    messages: history,
     allowFailover: !staffMode,
   });
 }
@@ -122,16 +130,22 @@ export async function answerQuestion(opts: {
   locale: string;
   staffMode: boolean;
   database?: SupabaseClient | null;
+  plant?: PlantContext;
 }): Promise<AnswerResult> {
-  const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-  const retrieved = await searchManuals(lastUser, {
+  const history = conversationWindow(opts.messages);
+  const lastUser =
+    [...history].reverse().find((m) => m.role === "user")?.content ?? "";
+  const retrievalQuery = buildRetrievalQuery(history, opts.plant ?? {});
+  const retrieved = await searchManuals(retrievalQuery || lastUser, {
     includeInternal: opts.staffMode,
     limit: 8,
     database: opts.database,
+    equipment: equipmentSearchTerm(opts.plant?.equipment),
   });
 
-  const hazard = isHazardous(lastUser);
-  const emergency = isEmergency(lastUser);
+  const safetyText = [retrievalQuery, lastUser].filter(Boolean).join("\n");
+  const hazard = isHazardous(safetyText);
+  const emergency = isEmergency(safetyText);
   const hasGrounding = Boolean(
     retrieved.length && retrieved[0].score >= MIN_SCORE,
   );
@@ -144,8 +158,9 @@ export async function answerQuestion(opts: {
     : await generateWithModel(
         opts.locale,
         opts.staffMode,
-        opts.messages,
+        history,
         formatPassages(grounded),
+        opts.plant,
       );
 
   let answer: string;

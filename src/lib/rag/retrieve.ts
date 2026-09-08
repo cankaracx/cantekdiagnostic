@@ -46,7 +46,7 @@ export function hybridRank(
   query: string,
   queryEmbedding: number[] | null,
   chunks: ChunkRecord[],
-  opts: { includeInternal: boolean; limit?: number },
+  opts: { includeInternal: boolean; limit?: number; equipment?: string },
 ): RetrievedChunk[] {
   const allowed: Visibility[] = opts.includeInternal ? ["repair", "internal"] : ["repair"];
   const scored: RetrievedChunk[] = [];
@@ -67,11 +67,17 @@ export function hybridRank(
       queryEmbedding && chunk.embedding ? cosine(queryEmbedding, chunk.embedding) : 0;
     const titleHits = keywordScore(query, chunk.documentTitle).hits.length;
     const documentationBoost = isDocumentationRequest(query) ? 0.3 : 0;
+    const equipmentNeedle = opts.equipment?.trim().toLowerCase();
+    const equipmentBoost =
+      equipmentNeedle && chunk.equipment?.toLowerCase().includes(equipmentNeedle)
+        ? 1.8
+        : 0;
     const score =
       vector * 2.2 +
       kw.score * 0.35 +
       titleHits * 0.45 +
-      documentationBoost;
+      documentationBoost +
+      equipmentBoost;
     if (score <= 0) continue;
     scored.push({ ...chunk, score, keywordHits: kw.hits });
   }

@@ -83,6 +83,17 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not invent/);
   });
 
+  it("includes the service job sheet so follow-up questions keep plant context", () => {
+    const prompt = buildSystemPrompt({
+      locale: "en",
+      staffMode: false,
+      plantContext: "Equipment family: cold room\nObserved fault: high pressure HP alarm",
+    });
+    expect(prompt).toContain("PLANT JOB");
+    expect(prompt).toContain("cold room");
+    expect(prompt).toMatch(/follow-up questions/);
+  });
+
   it("requires all Turkish responses and fallback text to stay Turkish", () => {
     const prompt = buildSystemPrompt({ locale: "tr", staffMode: false });
     expect(prompt).toContain("entire response in Turkish");

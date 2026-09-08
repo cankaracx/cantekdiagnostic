@@ -17,9 +17,18 @@ export function buildSystemPrompt(opts: {
   locale: string;
   staffMode: boolean;
   documentationRequested?: boolean;
+  plantContext?: string | null;
 }): string {
   const language = LANGUAGE_NAMES[opts.locale] ?? "English";
-  return `You provide Cantek Group diagnostic support for industrial cold storage, cooling packs, controllers (Octosense / IRS / Octopush), and related plant. Headquarters: Antalya, Turkey.
+  const plantBlock = opts.plantContext
+    ? `
+PLANT JOB
+${opts.plantContext}
+- Use this job sheet to interpret short follow-up questions such as "and the condenser?" or "same alarm yesterday".
+- Do not invent a model from the serial unless that model appears in the retrieved passages.
+`
+    : "";
+  return `You provide Cantek Group diagnostic support for industrial cold storage, cooling packs, controllers (Octosense / IRS / Octopush), and related plant. Headquarters: Antalya, Turkey.${plantBlock}
 
 LANGUAGE
 - Write the entire response in ${language} (UI locale: ${opts.locale}), including headings, warnings, missing-document messages, and service-contact text.

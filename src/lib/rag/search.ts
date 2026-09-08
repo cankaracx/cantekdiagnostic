@@ -10,10 +10,12 @@ export async function searchManuals(
     includeInternal: boolean;
     limit?: number;
     database?: SupabaseClient | null;
+    equipment?: string;
   },
 ): Promise<RetrievedChunk[]> {
   const [queryEmbedding] = await embedTexts([query]);
   const supabase = opts.database;
+  const equipmentFilter = opts.equipment?.trim().slice(0, 80) || null;
 
   if (supabase) {
     const { data: matches, error: searchError } = await supabase.rpc(
@@ -23,6 +25,7 @@ export async function searchManuals(
         query_text: query.slice(0, 4_000),
         include_internal: opts.includeInternal,
         match_count: opts.limit ?? 8,
+        equipment_filter: equipmentFilter,
       },
     );
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isStaffSession } from "@/lib/auth/staff";
 import { answerQuestion } from "@/lib/chat/generate";
+import { conversationWindow, parsePlantContext } from "@/lib/chat/plant";
 import { localeCookieName } from "@/i18n/routing";
 import { cookies } from "next/headers";
 import { isAppLocale } from "@/lib/geo/locales";
@@ -41,6 +42,9 @@ export async function POST(request: Request) {
     messages?: { role: "user" | "assistant"; content: string }[];
     mode?: "public" | "technician";
     locale?: string;
+    serial?: string;
+    equipment?: string;
+    fault?: string;
   };
   try {
     body = await readJsonBody<typeof body>(request, 100_000);
@@ -50,23 +54,25 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: code }, { status });
   }
 
-  const messages = Array.isArray(body.messages)
-    ? body.messages
-        .slice(-12)
-        .filter(
-          (message) =>
-            (message.role === "user" || message.role === "assistant") &&
-            typeof message.content === "string",
-        )
-        .map((message) => ({
-          role: message.role,
-          content: message.content.trim().slice(0, 4_000),
-        }))
-        .filter((message) => message.content.length > 0)
-    : [];
+  const messages = conversationWindow(
+    Array.isArray(body.messages)
+      ? body.messages
+          .slice(-12)
+          .filter(
+            (message) =>
+              (message.role === "user" || message.role === "assistant") &&
+              typeof message.content === "string",
+          )
+          .map((message) => ({
+            role: message.role,
+            content: message.content.trim().slice(0, 4_000),
+          }))
+      : [],
+  );
   if (!messages.length || messages[messages.length - 1]?.role !== "user") {
     return NextResponse.json({ error: "messages required" }, { status: 400 });
   }
+  const plant = parsePlantContext(body);
 
   const jar = await cookies();
   const cookieLocale = jar.get(localeCookieName)?.value;
@@ -79,7 +85,6 @@ export async function POST(request: Request) {
   const staff = await isStaffSession();
   const staffMode = body.mode === "technician" && staff;
   const database = await createServerSupabase();
-  const currentMessage = messages[messages.length - 1]!;
 
   if (!staffMode) {
     const dailyLimit = await checkGlobalRateLimit(
@@ -99,10 +104,11 @@ export async function POST(request: Request) {
 
   try {
     const result = await answerQuestion({
-      messages: [currentMessage],
+      messages,
       locale,
       staffMode,
       database,
+      plant,
     });
     return NextResponse.json(result, {
       headers: { "Cache-Control": "no-store" },
