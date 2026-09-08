@@ -1,5 +1,6 @@
 "use client";
 
+import { FaultBoard } from "@/components/FaultBoard";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import type { Citation } from "@/lib/rag/types";
@@ -102,6 +103,7 @@ export function ChatPanel(props: {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [openCitation, setOpenCitation] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -115,12 +117,13 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
+  async function send(override?: string) {
+    const text = (override ?? input).trim();
     if (!text || busy) return;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
     setInput("");
+    setOpenCitation(null);
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       textareaRef.current.style.overflowY = "hidden";
@@ -137,7 +140,18 @@ export function ChatPanel(props: {
           locale,
         }),
       });
-      const data = await res.json();
+      let data: {
+        error?: string;
+        answer?: string;
+        citations?: Citation[];
+        hazard?: boolean;
+        emergency?: boolean;
+      } = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
       if (!res.ok) {
         throw new Error(data.error ?? "chat_failed");
       }
@@ -151,10 +165,15 @@ export function ChatPanel(props: {
           emergency: data.emergency,
         },
       ]);
-    } catch {
+    } catch (error) {
+      const code = error instanceof Error ? error.message : "";
       setMessages([
         ...next,
-        { role: "assistant", content: t("chat.error") },
+        {
+          role: "assistant",
+          content:
+            code === "rate_limited" ? t("chat.rateLimited") : t("chat.error"),
+        },
       ]);
     } finally {
       setBusy(false);
@@ -201,8 +220,16 @@ export function ChatPanel(props: {
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
-            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
+          <div className="space-y-4">
+            <FaultBoard
+              disabled={busy}
+              onLookup={(query) => {
+                void send(query);
+              }}
+            />
+            <p className="px-1 text-sm leading-6 text-cantek-muted">
+              {t("home.empty")}
+            </p>
           </div>
         )}
         {messages.map((message, index) => {
@@ -246,26 +273,53 @@ export function ChatPanel(props: {
                 <div className="whitespace-pre-wrap">{message.content}</div>
                 {message.citations && message.citations.length > 0 && (
                   <div className="mt-3 border-t border-cantek-border pt-2.5">
-                    <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                    <p className="mb-2 text-xs font-bold text-cantek-muted">
                       {t("home.sources")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">
-                      {message.citations.map((citation) => (
-                        <span
-                          key={citation.chunkId}
-                          className="citation-chip"
-                          title={citation.documentTitle}
-                        >
-                          <DocumentIcon />
-                          <span className="truncate">
-                            {citation.documentTitle}
-                            {citation.page
-                              ? ` · ${PAGE_LABELS[locale] ?? "p."}${citation.page}`
-                              : ""}
-                          </span>
-                        </span>
-                      ))}
+                      {message.citations.map((citation) => {
+                        const selected = openCitation === citation.chunkId;
+                        const pageLabel = citation.page
+                          ? `${PAGE_LABELS[locale] ?? "p."} ${citation.page}`
+                          : null;
+                        return (
+                          <button
+                            key={citation.chunkId}
+                            type="button"
+                            className={`citation-chip ${selected ? "citation-chip-open" : ""}`}
+                            aria-expanded={selected}
+                            title={citation.documentTitle}
+                            onClick={() =>
+                              setOpenCitation(selected ? null : citation.chunkId)
+                            }
+                          >
+                            <DocumentIcon />
+                            <span className="truncate">
+                              {citation.documentTitle}
+                              {pageLabel ? ` ${pageLabel}` : ""}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
+                    {message.citations.map((citation) =>
+                      openCitation === citation.chunkId && citation.excerpt ? (
+                        <aside
+                          key={`${citation.chunkId}-excerpt`}
+                          className="source-slip"
+                        >
+                          <p className="source-slip-title">
+                            {citation.heading || citation.documentTitle}
+                          </p>
+                          {citation.page ? (
+                            <p className="source-slip-page">
+                              {PAGE_LABELS[locale] ?? "p."} {citation.page}
+                            </p>
+                          ) : null}
+                          <p>{citation.excerpt}</p>
+                        </aside>
+                      ) : null,
+                    )}
                   </div>
                 )}
               </article>

@@ -31,13 +31,37 @@
     "empty": "Sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
     "sources": "Kaynaklar",
     "service": "Cantek servis",
-    "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
+    "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın.",
+    "faults": {
+      "plant": "Rack kontrolörü",
+      "standby": "Alarm seçilmedi",
+      "alarmOn": "Alarm var — onaylı kılavuzlarda ara",
+      "help": "Tesisteki ekrandaki lambaları ve kodu eşleştirin. Bu, genel internet tavsiyesi değil, Cantek servis belgelerini arar.",
+      "lamps": "Alarm lambaları",
+      "hp": "Yüksek basınç",
+      "hpCode": "HP",
+      "hpQuery": "Cantek soğuk depo tesisinde yüksek basınç HP alarmı. Kılavuz hangi müdahalesiz kontrolleri listeler?",
+      "lp": "Düşük basınç",
+      "lpCode": "LP",
+      "lpQuery": "Cantek tesisinde düşük basınç LP alarmı. Kılavuz hangi müdahalesiz kontrolleri listeler?",
+      "hi": "Yüksek sıcaklık",
+      "hiCode": "HI",
+      "hiQuery": "Cantek soğuk odada yüksek sıcaklık HI alarmı. Servis çağırmadan önce kılavuz neyin kontrol edilmesini söylüyor?",
+      "defrost": "Defrost / buzlu evaporatör",
+      "defrostCode": "DEF",
+      "defrostQuery": "Evaporatör buzlu veya DEF görünüyor. Cantek kılavuzlarında hangi defrost kontrolleri var?",
+      "code": "Ekran kodu",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Cantek tesisinde kontrolör alarm kodu {code} (Octosense, IRS veya rack ekranı). Kılavuz bu kodun ne anlama geldiğini söylüyor?",
+      "lookup": "Kılavuzda ara"
+    }
   },
   "chat": {
     "you": "Siz",
     "assistant": "Cantek destek",
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
-    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
+    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın.",
+    "rateLimited": "Bu ağdan çok fazla arıza tanı isteği geldi. Bir dakika bekleyip yeniden deneyin veya Cantek servisini arayın."
   },
   "account": {
     "kicker": "Müşteri erişimi",

@@ -10,6 +10,7 @@ import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
 import { searchManuals } from "@/lib/rag/search";
 import { isDocumentationRequest } from "@/lib/rag/retrieve";
+import { excerptManualPassage } from "@/lib/rag/alarms";
 import type { AnswerResult, ChatMessage, Citation, RetrievedChunk } from "@/lib/rag/types";
 
 const MIN_SCORE = 0.35;
@@ -35,6 +36,8 @@ function citationsFrom(chunks: RetrievedChunk[]): Citation[] {
       documentTitle: chunk.documentTitle,
       page: chunk.page,
       chunkId: chunk.id,
+      heading: chunk.heading,
+      excerpt: excerptManualPassage(chunk.content),
     });
   }
   return out;

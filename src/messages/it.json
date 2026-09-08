@@ -31,13 +31,37 @@
     "empty": "Fai una domanda su temperatura, allarmi, ghiaccio, compressori, ammoniaca o controllori.",
     "sources": "Fonti",
     "service": "Assistenza Cantek",
-    "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali."
+    "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali.",
+    "faults": {
+      "plant": "Controllore del rack",
+      "standby": "Nessun allarme selezionato",
+      "alarmOn": "Allarme presente — cerca nei manuali approvati",
+      "help": "Riporta le spie e il codice del display dell'impianto. La ricerca riguarda i documenti di assistenza Cantek, non consigli generici.",
+      "lamps": "Spie di allarme",
+      "hp": "Alta pressione",
+      "hpCode": "HP",
+      "hpQuery": "Allarme di alta pressione HP su un impianto frigorifero Cantek. Quali controlli non invasivi elenca il manuale?",
+      "lp": "Bassa pressione",
+      "lpCode": "LP",
+      "lpQuery": "Allarme di bassa pressione LP su un impianto Cantek. Quali controlli non invasivi elenca il manuale?",
+      "hi": "Alta temperatura",
+      "hiCode": "HI",
+      "hiQuery": "Allarme di alta temperatura HI in una cella Cantek. Cosa indica il manuale da verificare prima di chiamare l'assistenza?",
+      "defrost": "Sbrinamento / evaporatore ghiacciato",
+      "defrostCode": "DEF",
+      "defrostQuery": "L'evaporatore è ghiacciato o compare DEF. Quali controlli di sbrinamento sono nei manuali Cantek?",
+      "code": "Codice a display",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Codice allarme controllore {code} su un impianto Cantek (Octosense, IRS o display rack). Cosa dice il manuale su questo codice?",
+      "lookup": "Cerca"
+    }
   },
   "chat": {
     "you": "Tu",
     "assistant": "Supporto Cantek",
     "noDocs": "Nessun contenuto nei manuali caricati corrisponde alla richiesta. Contatta l'assistenza Cantek invece di procedere per tentativi con setpoint o cablaggi.",
-    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek."
+    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek.",
+    "rateLimited": "Troppe richieste di diagnostica da questa rete. Attendi un minuto e riprova, oppure chiama l'assistenza Cantek."
   },
   "account": {
     "kicker": "Accesso clienti",

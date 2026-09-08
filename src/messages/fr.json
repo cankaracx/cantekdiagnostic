@@ -31,13 +31,37 @@
     "empty": "Parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
     "sources": "Sources",
     "service": "Service Cantek",
-    "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
+    "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales.",
+    "faults": {
+      "plant": "Régulateur de rack",
+      "standby": "Aucune alarme sélectionnée",
+      "alarmOn": "Alarme présente — chercher dans les manuels approuvés",
+      "help": "Reproduisez les voyants et le code de l’afficheur de l’installation. La recherche porte sur les documents de service Cantek, pas sur des conseils génériques.",
+      "lamps": "Voyants d’alarme",
+      "hp": "Haute pression",
+      "hpCode": "HP",
+      "hpQuery": "Alarme haute pression HP sur une installation frigorifique Cantek. Quels contrôles non invasifs le manuel indique-t-il ?",
+      "lp": "Basse pression",
+      "lpCode": "LP",
+      "lpQuery": "Alarme basse pression LP sur une installation Cantek. Quels contrôles non invasifs le manuel indique-t-il ?",
+      "hi": "Haute température",
+      "hiCode": "HI",
+      "hiQuery": "Alarme haute température HI en chambre Cantek. Que faut-il vérifier selon le manuel avant d’appeler le service ?",
+      "defrost": "Dégivrage / batterie givrée",
+      "defrostCode": "DEF",
+      "defrostQuery": "L’évaporateur est givré ou DEF s’affiche. Quels contrôles de dégivrage figurent dans les manuels Cantek ?",
+      "code": "Code affiché",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Code d’alarme régulateur {code} sur une installation Cantek (Octosense, IRS ou afficheur de rack). Que dit le manuel sur ce code ?",
+      "lookup": "Rechercher"
+    }
   },
   "chat": {
     "you": "Vous",
     "assistant": "Support Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
-    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek.",
+    "rateLimited": "Trop de demandes de diagnostic depuis ce réseau. Attendez une minute puis réessayez, ou appelez le service Cantek."
   },
   "account": {
     "kicker": "Accès client",

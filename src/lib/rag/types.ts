@@ -47,6 +47,8 @@ export type Citation = {
   documentTitle: string;
   page: number | null;
   chunkId: string;
+  heading?: string | null;
+  excerpt?: string;
 };
 
 export type AnswerProvider =

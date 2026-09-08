@@ -31,13 +31,37 @@
     "empty": "Fragen Sie zu Temperatur, Alarmen, Eisbildung, Verdichtern, Ammoniak oder Steuerungen.",
     "sources": "Quellen",
     "service": "Cantek-Service",
-    "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften."
+    "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften.",
+    "faults": {
+      "plant": "Verbundregler",
+      "standby": "Kein Alarm gewählt",
+      "alarmOn": "Alarm anstehend — in den freigegebenen Handbüchern suchen",
+      "help": "Lampen und Code vom Anlagendisplay übernehmen. Es werden Cantek-Servicedokumente durchsucht, keine allgemeinen Internettipps.",
+      "lamps": "Alarmlampen",
+      "hp": "Hochdruck",
+      "hpCode": "HP",
+      "hpQuery": "Hochdruckalarm HP an einer Cantek-Kälteanlage. Welche nicht invasiven Prüfungen listet das Handbuch?",
+      "lp": "Niederdruck",
+      "lpCode": "LP",
+      "lpQuery": "Niederdruckalarm LP an einer Cantek-Anlage. Welche nicht invasiven Prüfungen listet das Handbuch?",
+      "hi": "Übertemperatur",
+      "hiCode": "HI",
+      "hiQuery": "Übertemperaturalarm HI in einem Cantek-Kühlraum. Was soll laut Handbuch vor dem Serviceeinsatz geprüft werden?",
+      "defrost": "Abtauung / vereister Verdampfer",
+      "defrostCode": "DEF",
+      "defrostQuery": "Verdampfer vereist oder DEF angezeigt. Welche Abtauprüfungen stehen in den Cantek-Handbüchern?",
+      "code": "Anzeigecode",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Regler-Alarmcode {code} an einer Cantek-Anlage (Octosense, IRS oder Verbunddisplay). Was sagt das Handbuch zu diesem Code?",
+      "lookup": "Nachschlagen"
+    }
   },
   "chat": {
     "you": "Sie",
     "assistant": "Cantek-Support",
     "noDocs": "In den geladenen Handbüchern wurde hierzu nichts Passendes gefunden. Wenden Sie sich an den Cantek-Service, anstatt Sollwerte oder Verdrahtungen zu erraten.",
-    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service."
+    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service.",
+    "rateLimited": "Zu viele Diagnoseanfragen aus diesem Netz. Warten Sie eine Minute und versuchen Sie es erneut, oder rufen Sie den Cantek-Service."
   },
   "account": {
     "kicker": "Kundenzugang",

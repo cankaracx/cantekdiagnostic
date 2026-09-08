@@ -1,16 +1,14 @@
+import { extractAlarmTokens } from "@/lib/rag/alarms";
 import { cosine } from "@/lib/rag/embed";
 import type { ChunkRecord, RetrievedChunk, Visibility } from "@/lib/rag/types";
 
-const ALARM_CODE = /\b(?:E\d{1,3}|HP|LP|HPS|LPS|HT|LT|NH3)\b/gi;
+export { extractAlarmTokens };
+
 const DOCUMENT_REQUEST =
   /(manual|documentation|document|procedure|repair guide|service guide|kılavuz|doküman|belge|prosedür|manuel|procédure|documentación|procedimiento|руководство|документ|процедур|دليل|وثائق|إجراء|handbuch|dokumentation|verfahren|manuale|documentazione|procedura|documentação|procedimento|instrukcja|dokumentacja)/i;
 
 export function isDocumentationRequest(query: string): boolean {
   return DOCUMENT_REQUEST.test(query);
-}
-
-export function extractAlarmTokens(query: string): string[] {
-  return [...new Set((query.match(ALARM_CODE) ?? []).map((t) => t.toUpperCase()))];
 }
 
 function tokenize(text: string): string[] {

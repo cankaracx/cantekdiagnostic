@@ -31,13 +31,37 @@
     "empty": "Pergunte sobre temperatura, alarmes, gelo, compressores, amoníaco ou controladores.",
     "sources": "Fontes",
     "service": "Assistência Cantek",
-    "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais."
+    "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais.",
+    "faults": {
+      "plant": "Controlador do rack",
+      "standby": "Nenhum alarme selecionado",
+      "alarmOn": "Alarme presente — pesquisar nos manuais aprovados",
+      "help": "Iguale as lâmpadas e o código do visor da instalação. A pesquisa usa documentos de assistência Cantek, não conselhos genéricos da internet.",
+      "lamps": "Lâmpadas de alarme",
+      "hp": "Alta pressão",
+      "hpCode": "HP",
+      "hpQuery": "Alarme de alta pressão HP numa instalação frigorífica Cantek. Que verificações não invasivas o manual indica?",
+      "lp": "Baixa pressão",
+      "lpCode": "LP",
+      "lpQuery": "Alarme de baixa pressão LP numa instalação Cantek. Que verificações não invasivas o manual indica?",
+      "hi": "Temperatura alta",
+      "hiCode": "HI",
+      "hiQuery": "Alarme de temperatura alta HI numa câmara Cantek. O que o manual diz para verificar antes de chamar a assistência?",
+      "defrost": "Degelo / evaporador gelado",
+      "defrostCode": "DEF",
+      "defrostQuery": "O evaporador está gelado ou aparece DEF. Que verificações de degelo existem nos manuais Cantek?",
+      "code": "Código no visor",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Código de alarme do controlador {code} numa instalação Cantek (Octosense, IRS ou visor de rack). O que o manual diz sobre este código?",
+      "lookup": "Consultar"
+    }
   },
   "chat": {
     "you": "Você",
     "assistant": "Suporte Cantek",
     "noDocs": "Nada nos manuais carregados corresponde a esta situação. Contacte a assistência Cantek em vez de tentar adivinhar valores de ajuste ou ligações elétricas.",
-    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek."
+    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek.",
+    "rateLimited": "Demasiados pedidos de diagnóstico desta rede. Espere um minuto e tente novamente, ou ligue para a assistência Cantek."
   },
   "account": {
     "kicker": "Acesso de cliente",

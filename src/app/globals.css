@@ -409,14 +409,221 @@ textarea {
   padding: 0.3rem 0.55rem;
   color: var(--cantek-dark);
   font-size: 0.72rem;
+  text-align: start;
   transition:
     border-color 150ms ease,
-    color 150ms ease;
+    color 150ms ease,
+    background-color 150ms ease;
 }
 
-.citation-chip:hover {
+.citation-chip:hover,
+.citation-chip-open {
   border-color: var(--cantek-cyan);
   color: var(--cantek-cyan);
+}
+
+.citation-chip-open {
+  background: color-mix(in srgb, var(--cantek-cyan) 8%, white);
+}
+
+.source-slip {
+  margin-top: 0.7rem;
+  border: 1px solid var(--cantek-border);
+  border-inline-start: 4px solid var(--cantek-cyan);
+  background: var(--cantek-light);
+  padding: 0.75rem 0.85rem;
+  color: var(--cantek-text);
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+.source-slip-title {
+  color: var(--cantek-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.source-slip-page {
+  margin-bottom: 0.4rem;
+  color: var(--cantek-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.fault-fascia {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid #1b262c;
+  background: #1b262c;
+  color: #c8e6ee;
+}
+
+.fault-fascia-readout {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem 0.75rem;
+  background:
+    linear-gradient(180deg, #243038 0%, #1b262c 100%);
+  border-bottom: 1px solid rgb(200 230 238 / 12%);
+}
+
+.fault-fascia-plant {
+  color: #8fb8c4;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.fault-fascia-code {
+  color: #c8e6ee;
+  font-size: 1.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.22em;
+  line-height: 1;
+}
+
+.fault-fascia-status {
+  color: #e2b93b;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.fault-fascia-body {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.9rem 1rem 1rem;
+  background: #212c33;
+}
+
+.fault-fascia-help {
+  color: #c8e6ee;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.fault-lamp-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.fault-lamp {
+  display: grid;
+  justify-items: center;
+  gap: 0.28rem;
+  min-height: 4.4rem;
+  border: 1px solid rgb(200 230 238 / 16%);
+  background: #1b262c;
+  padding: 0.5rem 0.25rem;
+  color: #c8e6ee;
+  text-align: center;
+}
+
+.fault-lamp:hover:not(:disabled),
+.fault-lamp-active {
+  border-color: #e2b93b;
+  background: #162026;
+}
+
+.fault-lamp-led {
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1px solid rgb(200 230 238 / 28%);
+  background: #314048;
+}
+
+.fault-lamp-led-on {
+  border-color: #e2b93b;
+  background: #e2b93b;
+  box-shadow: 0 0 8px rgb(226 185 59 / 55%);
+}
+
+.fault-lamp-code {
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+}
+
+.fault-lamp-name {
+  color: #8fb8c4;
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.fault-lamp-active .fault-lamp-name {
+  color: #f3edd4;
+}
+
+.fault-code-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.55rem;
+  align-items: end;
+}
+
+.fault-code-field {
+  display: grid;
+  gap: 0.3rem;
+  color: #9fc0ca;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.fault-code-field input {
+  min-height: 2.7rem;
+  border: 1px solid rgb(200 230 238 / 22%);
+  background: #141d22;
+  padding: 0.45rem 0.7rem;
+  color: #c8e6ee;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fault-code-field input::placeholder {
+  color: rgb(200 230 238 / 35%);
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.fault-code-field input:focus {
+  border-color: #00a0dd;
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(0 160 221 / 25%);
+}
+
+.fault-lookup {
+  min-height: 2.7rem;
+  border: 1px solid #00a0dd;
+  background: #00a0dd;
+  padding-inline: 1rem;
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.fault-lookup:hover:not(:disabled) {
+  border-color: #d62839;
+  background: #d62839;
+}
+
+.fault-lookup:disabled,
+.fault-lamp:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+@media (max-width: 639px) {
+  .fault-lamp-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .fault-code-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .alert-card {

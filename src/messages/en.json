@@ -31,13 +31,37 @@
     "empty": "Ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
     "sources": "Sources",
     "service": "Cantek service",
-    "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
+    "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first.",
+    "faults": {
+      "plant": "Rack controller",
+      "standby": "No alarm selected",
+      "alarmOn": "Alarm present — search the approved manuals",
+      "help": "Match the lamps and the code on the plant display. This searches Cantek service documents, not generic internet advice.",
+      "lamps": "Alarm lamps",
+      "hp": "High pressure",
+      "hpCode": "HP",
+      "hpQuery": "High-pressure HP alarm on a Cantek cold-storage plant. What non-invasive checks does the manual list?",
+      "lp": "Low pressure",
+      "lpCode": "LP",
+      "lpQuery": "Low-pressure LP alarm on a Cantek plant. What non-invasive checks does the manual list?",
+      "hi": "High temperature",
+      "hiCode": "HI",
+      "hiQuery": "High-temperature HI alarm in a Cantek cold room. What does the manual say to check before calling service?",
+      "defrost": "Defrost / iced coil",
+      "defrostCode": "DEF",
+      "defrostQuery": "Evaporator is iced or DEF is showing. What defrost checks are in the Cantek manuals?",
+      "code": "Display code",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Controller alarm code {code} on a Cantek plant (Octosense, IRS, or rack display). What does the manual say this code means?",
+      "lookup": "Look up"
+    }
   },
   "chat": {
     "you": "You",
     "assistant": "Cantek support",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
-    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
+    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service.",
+    "rateLimited": "Too many diagnostic requests from this network. Wait a minute and try again, or call Cantek service."
   },
   "account": {
     "kicker": "Customer access",

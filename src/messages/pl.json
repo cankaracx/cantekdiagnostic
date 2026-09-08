@@ -31,13 +31,37 @@
     "empty": "Zapytaj o temperaturę, alarmy, oblodzenie, sprężarki, amoniak lub sterowniki.",
     "sources": "Źródła",
     "service": "Serwis Cantek",
-    "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych."
+    "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych.",
+    "faults": {
+      "plant": "Sterownik racka",
+      "standby": "Nie wybrano alarmu",
+      "alarmOn": "Alarm obecny — szukaj w zatwierdzonej dokumentacji",
+      "help": "Dopasuj lampki i kod z wyświetlacza instalacji. Przeszukiwana jest dokumentacja serwisowa Cantek, a nie ogólne porady z internetu.",
+      "lamps": "Lampki alarmowe",
+      "hp": "Wysokie ciśnienie",
+      "hpCode": "HP",
+      "hpQuery": "Alarm wysokiego ciśnienia HP na instalacji chłodniczej Cantek. Jakie nieinwazyjne sprawdzenia wymienia dokumentacja?",
+      "lp": "Niskie ciśnienie",
+      "lpCode": "LP",
+      "lpQuery": "Alarm niskiego ciśnienia LP na instalacji Cantek. Jakie nieinwazyjne sprawdzenia wymienia dokumentacja?",
+      "hi": "Wysoka temperatura",
+      "hiCode": "HI",
+      "hiQuery": "Alarm wysokiej temperatury HI w komorze Cantek. Co dokumentacja każe sprawdzić przed wezwaniem serwisu?",
+      "defrost": "Odtaianie / oblodzona chłodnica",
+      "defrostCode": "DEF",
+      "defrostQuery": "Chłodnica jest oblodzona albo świeci DEF. Jakie sprawdzenia odtajania są w dokumentacji Cantek?",
+      "code": "Kod na wyświetlaczu",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Kod alarmu sterownika {code} na instalacji Cantek (Octosense, IRS lub wyświetlacz racka). Co dokumentacja mówi o tym kodzie?",
+      "lookup": "Wyszukaj"
+    }
   },
   "chat": {
     "you": "Ty",
     "assistant": "Wsparcie Cantek",
     "noDocs": "Załadowana dokumentacja nie zawiera informacji odpowiadających temu zapytaniu. Zamiast zgadywać nastawy lub sposób okablowania, skontaktuj się z serwisem Cantek.",
-    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek."
+    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek.",
+    "rateLimited": "Zbyt wiele zapytań diagnostycznych z tej sieci. Poczekaj minutę i spróbuj ponownie albo zadzwoń do serwisu Cantek."
   },
   "account": {
     "kicker": "Dostęp klienta",

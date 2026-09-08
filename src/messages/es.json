@@ -31,13 +31,37 @@
     "empty": "Pregunte por temperatura, alarmas, hielo, compresores, amoníaco o controladores.",
     "sources": "Fuentes",
     "service": "Servicio Cantek",
-    "disclaimer": "La guía proviene de documentos Cantek. No sustituye a un técnico frigorista certificado. Siga primero las normas locales de emergencia."
+    "disclaimer": "La guía proviene de documentos Cantek. No sustituye a un técnico frigorista certificado. Siga primero las normas locales de emergencia.",
+    "faults": {
+      "plant": "Controlador del rack",
+      "standby": "Ninguna alarma seleccionada",
+      "alarmOn": "Alarma presente — buscar en los manuales aprobados",
+      "help": "Iguale las lámparas y el código de la pantalla de la planta. Se buscan documentos de servicio Cantek, no consejos genéricos de internet.",
+      "lamps": "Lámparas de alarma",
+      "hp": "Alta presión",
+      "hpCode": "HP",
+      "hpQuery": "Alarma de alta presión HP en una planta frigorífica Cantek. ¿Qué comprobaciones no invasivas indica el manual?",
+      "lp": "Baja presión",
+      "lpCode": "LP",
+      "lpQuery": "Alarma de baja presión LP en una planta Cantek. ¿Qué comprobaciones no invasivas indica el manual?",
+      "hi": "Alta temperatura",
+      "hiCode": "HI",
+      "hiQuery": "Alarma de alta temperatura HI en una cámara Cantek. ¿Qué dice el manual que hay que comprobar antes de llamar al servicio?",
+      "defrost": "Desescarche / evaporador helado",
+      "defrostCode": "DEF",
+      "defrostQuery": "El evaporador está helado o aparece DEF. ¿Qué comprobaciones de desescarche hay en los manuales Cantek?",
+      "code": "Código en pantalla",
+      "codePlaceholder": "E0, HP, CHT…",
+      "codeQuery": "Código de alarma del controlador {code} en una planta Cantek (Octosense, IRS o pantalla de rack). ¿Qué dice el manual sobre este código?",
+      "lookup": "Consultar"
+    }
   },
   "chat": {
     "you": "Usted",
     "assistant": "Soporte Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
-    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
+    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek.",
+    "rateLimited": "Demasiadas solicitudes de diagnóstico desde esta red. Espere un minuto e inténtelo de nuevo, o llame al servicio Cantek."
   },
   "account": {
     "kicker": "Acceso de clientes",
