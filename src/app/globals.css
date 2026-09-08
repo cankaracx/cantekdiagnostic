@@ -305,7 +305,90 @@ textarea {
   overflow: hidden;
   border: 1px solid var(--cantek-border);
   background: #fff;
-  box-shadow: 0 18px 42px -28px rgb(39 50 58 / 55%);
+}
+
+.job-docket {
+  border-bottom: 1px solid var(--cantek-border);
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgb(50 62 72 / 2.2%) 10px,
+      rgb(50 62 72 / 2.2%) 11px
+    ),
+    #fff;
+}
+
+.job-docket-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 2px solid var(--cantek-dark);
+  background: var(--cantek-dark);
+  padding: 0.85rem 1.15rem 0.8rem;
+}
+
+.job-stamp {
+  max-width: min(100%, 22rem);
+  border: 1px solid rgb(255 255 255 / 35%);
+  background: var(--cantek-cyan);
+  padding: 0.4rem 0.7rem;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.3;
+  transform: rotate(-1.5deg);
+}
+
+.job-option {
+  min-height: 2.75rem;
+  border: 1px solid var(--cantek-border);
+  background: #fff;
+  padding: 0.4rem 0.75rem;
+  color: var(--cantek-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease,
+    color 140ms ease;
+}
+
+.job-option:hover {
+  border-color: var(--cantek-cyan);
+  color: var(--cantek-cyan);
+}
+
+.job-option[aria-pressed="true"] {
+  border-color: var(--cantek-dark);
+  background: var(--cantek-dark);
+  color: #fff;
+}
+
+.job-option[aria-pressed="true"]:hover {
+  border-color: var(--cantek-dark);
+  color: #fff;
+}
+
+.job-serial {
+  min-height: 2.75rem;
+  border: 0;
+  border-bottom: 1px solid var(--cantek-dark);
+  background: transparent;
+  padding: 0.45rem 0;
+  color: var(--cantek-text);
+  outline: none;
+}
+
+.job-serial:focus {
+  border-bottom-color: var(--cantek-cyan);
+}
+
+.job-serial::placeholder {
+  color: color-mix(in srgb, var(--cantek-muted) 70%, white);
 }
 
 .chat-shell-header {
@@ -536,6 +619,15 @@ textarea {
 
   .cantek-hero-mosaic::after {
     background: linear-gradient(0deg, rgb(39 50 58 / 74%) 0%, rgb(39 50 58 / 12%) 70%);
+  }
+
+  .job-docket-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .job-stamp {
+    transform: none;
   }
 }
 

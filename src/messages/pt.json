@@ -28,7 +28,7 @@
     "placeholder": "Exemplo: a câmara frigorífica não baixa a temperatura, alarme HP numa tarde de verão, controlador Octosense…",
     "send": "Perguntar",
     "thinking": "A pesquisar nos manuais…",
-    "empty": "Pergunte sobre temperatura, alarmes, gelo, compressores, amoníaco ou controladores.",
+    "empty": "Marque a instalação e a avaria na ficha de serviço, ou pergunte sobre temperatura, alarmes, gelo, compressores, amoníaco ou controladores.",
     "sources": "Fontes",
     "service": "Assistência Cantek",
     "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais."
@@ -38,6 +38,31 @@
     "assistant": "Suporte Cantek",
     "noDocs": "Nada nos manuais carregados corresponde a esta situação. Contacte a assistência Cantek em vez de tentar adivinhar valores de ajuste ou ligações elétricas.",
     "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek."
+  },
+  "plant": {
+    "docketTitle": "Folha de serviço",
+    "docketLabel": "Instalação, avaria e série deste diagnóstico",
+    "equipment": "Instalação",
+    "fault": "Avaria observada",
+    "serial": "Modelo / série",
+    "serialPlaceholder": "Se conhecido",
+    "askFromJob": "Procurar esta ficha nos manuais",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Câmara frigorífica",
+      "blast": "Túnel de congelação",
+      "ice": "Fábrica de gelo",
+      "pack": "Grupo de refrigeração",
+      "controller": "Controlador"
+    },
+    "faultOptions": {
+      "pull-down": "Não baixa a temperatura",
+      "high-pressure": "Alarme de alta pressão",
+      "ice-build": "Gelo no evaporador",
+      "short-cycle": "Ciclos curtos",
+      "alarm": "Alarme do controlador",
+      "oil": "Óleo ou lubrificação"
+    }
   },
   "account": {
     "kicker": "Acesso de cliente",

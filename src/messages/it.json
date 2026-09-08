@@ -28,7 +28,7 @@
     "placeholder": "Esempio: la cella frigorifera non raggiunge la temperatura, allarme HP in un pomeriggio estivo, controllore Octosense…",
     "send": "Chiedi",
     "thinking": "Ricerca nei manuali…",
-    "empty": "Fai una domanda su temperatura, allarmi, ghiaccio, compressori, ammoniaca o controllori.",
+    "empty": "Segna impianto e guasto sul foglio di lavoro, oppure fai una domanda su temperatura, allarmi, ghiaccio, compressori, ammoniaca o controllori.",
     "sources": "Fonti",
     "service": "Assistenza Cantek",
     "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali."
@@ -38,6 +38,31 @@
     "assistant": "Supporto Cantek",
     "noDocs": "Nessun contenuto nei manuali caricati corrisponde alla richiesta. Contatta l'assistenza Cantek invece di procedere per tentativi con setpoint o cablaggi.",
     "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek."
+  },
+  "plant": {
+    "docketTitle": "Scheda di intervento",
+    "docketLabel": "Impianto, guasto e matricola per questa diagnostica",
+    "equipment": "Impianto",
+    "fault": "Guasto osservato",
+    "serial": "Modello / matricola",
+    "serialPlaceholder": "Se noto",
+    "askFromJob": "Cerca questa scheda nei manuali",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Cella frigorifera",
+      "blast": "Tunnel di surgelazione",
+      "ice": "Impianto ghiaccio",
+      "pack": "Gruppo frigorifero",
+      "controller": "Controllore"
+    },
+    "faultOptions": {
+      "pull-down": "Non raggiunge la temperatura",
+      "high-pressure": "Allarme alta pressione",
+      "ice-build": "Ghiaccio sull'evaporatore",
+      "short-cycle": "Cicli brevi",
+      "alarm": "Allarme del controllore",
+      "oil": "Olio o lubrificazione"
+    }
   },
   "account": {
     "kicker": "Accesso clienti",

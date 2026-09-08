@@ -28,7 +28,7 @@
     "placeholder": "Example: cold room not pulling down, HP alarm on a summer afternoon, Octosense controller…",
     "send": "Ask",
     "thinking": "Searching manuals…",
-    "empty": "Ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
+    "empty": "Mark the plant and fault on the job sheet, or ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
     "sources": "Sources",
     "service": "Cantek service",
     "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
@@ -38,6 +38,31 @@
     "assistant": "Cantek support",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
     "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
+  },
+  "plant": {
+    "docketTitle": "Service job",
+    "docketLabel": "Plant, fault, and serial for this diagnostic",
+    "equipment": "Plant",
+    "fault": "Observed fault",
+    "serial": "Model / serial",
+    "serialPlaceholder": "If known",
+    "askFromJob": "Search manuals for this job",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Cold room",
+      "blast": "Blast freezer",
+      "ice": "Ice plant",
+      "pack": "Cooling pack",
+      "controller": "Controller"
+    },
+    "faultOptions": {
+      "pull-down": "Not pulling down",
+      "high-pressure": "High-pressure alarm",
+      "ice-build": "Ice on evaporator",
+      "short-cycle": "Short cycling",
+      "alarm": "Controller alarm",
+      "oil": "Oil or lubrication"
+    }
   },
   "account": {
     "kicker": "Customer access",

@@ -28,7 +28,7 @@
     "placeholder": "Beispiel: Kühlraum erreicht die Solltemperatur nicht, HP-Alarm an einem Sommernachmittag, Octosense-Steuerung…",
     "send": "Fragen",
     "thinking": "Handbücher werden durchsucht…",
-    "empty": "Fragen Sie zu Temperatur, Alarmen, Eisbildung, Verdichtern, Ammoniak oder Steuerungen.",
+    "empty": "Markieren Sie Anlage und Störung auf dem Auftrag, oder fragen Sie zu Temperatur, Alarmen, Eisbildung, Verdichtern, Ammoniak oder Steuerungen.",
     "sources": "Quellen",
     "service": "Cantek-Service",
     "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften."
@@ -38,6 +38,31 @@
     "assistant": "Cantek-Support",
     "noDocs": "In den geladenen Handbüchern wurde hierzu nichts Passendes gefunden. Wenden Sie sich an den Cantek-Service, anstatt Sollwerte oder Verdrahtungen zu erraten.",
     "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service."
+  },
+  "plant": {
+    "docketTitle": "Serviceauftrag",
+    "docketLabel": "Anlage, Störung und Seriennummer für diese Diagnose",
+    "equipment": "Anlage",
+    "fault": "Beobachtete Störung",
+    "serial": "Modell / Serie",
+    "serialPlaceholder": "Falls bekannt",
+    "askFromJob": "Handbücher zu diesem Auftrag suchen",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Kühlraum",
+      "blast": "Schockfroster",
+      "ice": "Eisanlage",
+      "pack": "Kälteaggregat",
+      "controller": "Steuerung"
+    },
+    "faultOptions": {
+      "pull-down": "Temperatur fällt nicht",
+      "high-pressure": "Hochdruckalarm",
+      "ice-build": "Eis am Verdampfer",
+      "short-cycle": "Kurztaktung",
+      "alarm": "Steuerungsalarm",
+      "oil": "Öl oder Schmierung"
+    }
   },
   "account": {
     "kicker": "Kundenzugang",

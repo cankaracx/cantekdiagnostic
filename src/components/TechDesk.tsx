@@ -43,14 +43,7 @@ export function TechDesk() {
 
   return (
     <div className="space-y-6">
-      <div className="cantek-form grid gap-4 md:grid-cols-2">
-        <label className="grid gap-2 text-sm font-semibold">
-          {t("serial")}
-          <input
-            value={serial}
-            onChange={(e) => setSerial(e.target.value)}
-          />
-        </label>
+      <div className="cantek-form grid gap-4">
         <label className="grid gap-2 text-sm font-semibold">
           {t("notes")}
           <input
@@ -58,7 +51,7 @@ export function TechDesk() {
             onChange={(e) => setNotes(e.target.value)}
           />
         </label>
-        <div className="flex gap-3 md:col-span-2">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="button"
             onClick={() => void handoff()}
@@ -76,6 +69,7 @@ export function TechDesk() {
       <ChatPanel
         mode="technician"
         serial={serial}
+        onSerialChange={setSerial}
         onTranscriptChange={setTranscript}
       />
     </div>

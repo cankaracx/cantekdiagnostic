@@ -28,7 +28,7 @@
     "placeholder": "Exemple : chambre qui ne descend pas, alarme HP un après-midi d’été, régulateur Octosense…",
     "send": "Demander",
     "thinking": "Recherche dans les manuels…",
-    "empty": "Parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
+    "empty": "Cochez l’installation et le défaut sur la fiche, ou parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
     "sources": "Sources",
     "service": "Service Cantek",
     "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
@@ -38,6 +38,31 @@
     "assistant": "Support Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
     "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+  },
+  "plant": {
+    "docketTitle": "Bon de service",
+    "docketLabel": "Installation, défaut et série pour ce diagnostic",
+    "equipment": "Installation",
+    "fault": "Défaut observé",
+    "serial": "Modèle / série",
+    "serialPlaceholder": "Si connu",
+    "askFromJob": "Chercher ce cas dans les manuels",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Chambre froide",
+      "blast": "Tunnel de surgélation",
+      "ice": "Usine à glace",
+      "pack": "Groupe frigorifique",
+      "controller": "Régulateur"
+    },
+    "faultOptions": {
+      "pull-down": "Température qui ne descend pas",
+      "high-pressure": "Alarme haute pression",
+      "ice-build": "Glace sur l’évaporateur",
+      "short-cycle": "Courts cycles",
+      "alarm": "Alarme régulateur",
+      "oil": "Huile ou graissage"
+    }
   },
   "account": {
     "kicker": "Accès client",

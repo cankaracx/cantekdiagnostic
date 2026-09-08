@@ -1,5 +1,10 @@
 "use client";
 
+import { JobDocket } from "@/components/JobDocket";
+import {
+  type PlantEquipmentId,
+  type PlantFaultId,
+} from "@/lib/chat/plant";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import type { Citation } from "@/lib/rag/types";
@@ -92,18 +97,38 @@ function resizeComposer(textarea: HTMLTextAreaElement) {
 export function ChatPanel(props: {
   mode: "public" | "technician";
   serial?: string;
+  onSerialChange?: (serial: string) => void;
   onTranscriptChange?: (
     messages: { role: "user" | "assistant"; content: string }[],
   ) => void;
 }) {
   const t = useTranslations();
   const locale = useLocale();
-  const { onTranscriptChange } = props;
+  const { onTranscriptChange, onSerialChange } = props;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [equipment, setEquipment] = useState<PlantEquipmentId>();
+  const [fault, setFault] = useState<PlantFaultId>();
+  const [serial, setSerial] = useState(props.serial ?? "");
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  function updateSerial(value: string) {
+    setSerial(value);
+    onSerialChange?.(value);
+  }
+
+  function jobPrompt() {
+    if (!equipment || !fault) return "";
+    const selected = t("plant.selected", {
+      equipment: t(`plant.equipmentOptions.${equipment}`),
+      fault: t(`plant.faultOptions.${fault}`),
+    });
+    return serial.trim()
+      ? `${selected}. ${t("tech.serial")}: ${serial.trim()}`
+      : selected;
+  }
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -115,8 +140,8 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
+  async function send(preset?: string) {
+    const text = (preset ?? input).trim();
     if (!text || busy) return;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
@@ -133,7 +158,9 @@ export function ChatPanel(props: {
         body: JSON.stringify({
           messages: next.map(({ role, content }) => ({ role, content })),
           mode: props.mode,
-          serial: props.serial,
+          serial: serial.trim() || undefined,
+          equipment,
+          fault,
           locale,
         }),
       });
@@ -191,17 +218,27 @@ export function ChatPanel(props: {
             </h3>
           </div>
         </div>
-        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted sm:inline">
+        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold text-cantek-muted sm:inline">
           {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
         </span>
       </div>
+      <JobDocket
+        equipment={equipment}
+        fault={fault}
+        serial={serial}
+        onEquipmentChange={setEquipment}
+        onFaultChange={setFault}
+        onSerialChange={updateSerial}
+        onSearchJob={() => void send(jobPrompt())}
+        canSearchJob={Boolean(jobPrompt()) && !busy}
+      />
       <div
         className="chat-scroll space-y-4 p-4 sm:p-6"
         aria-live="polite"
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
+          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4">
             <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
           </div>
         )}
@@ -260,7 +297,7 @@ export function ChatPanel(props: {
                           <span className="truncate">
                             {citation.documentTitle}
                             {citation.page
-                              ? ` · ${PAGE_LABELS[locale] ?? "p."}${citation.page}`
+                              ? ` ${PAGE_LABELS[locale] ?? "p."}${citation.page}`
                               : ""}
                           </span>
                         </span>
@@ -298,7 +335,7 @@ export function ChatPanel(props: {
         className="chat-composer flex items-end gap-3 p-3 sm:p-4"
         onSubmit={(e) => {
           e.preventDefault();
-          void send();
+          void send(input.trim() || jobPrompt());
         }}
       >
         <textarea
@@ -320,13 +357,13 @@ export function ChatPanel(props: {
               !e.nativeEvent.isComposing
             ) {
               e.preventDefault();
-              void send();
+              void send(input.trim() || jobPrompt());
             }
           }}
         />
         <button
           type="submit"
-          disabled={busy || !input.trim()}
+          disabled={busy || !(input.trim() || jobPrompt())}
           className="send-button"
           aria-label={t("home.send")}
         >

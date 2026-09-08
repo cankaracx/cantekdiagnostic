@@ -28,7 +28,7 @@
     "placeholder": "Örnek: soğuk oda düşmüyor, yaz öğleden sonra HP alarmı, Octosense kontrolör…",
     "send": "Sor",
     "thinking": "Kılavuzlar aranıyor…",
-    "empty": "Sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
+    "empty": "İş emrinde tesisi ve arızayı işaretleyin, ya da sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
     "sources": "Kaynaklar",
     "service": "Cantek servis",
     "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
@@ -38,6 +38,31 @@
     "assistant": "Cantek destek",
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
     "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
+  },
+  "plant": {
+    "docketTitle": "Servis iş emri",
+    "docketLabel": "Bu tanı için tesis, arıza ve seri bilgisi",
+    "equipment": "Tesis",
+    "fault": "Gözlenen arıza",
+    "serial": "Model / seri",
+    "serialPlaceholder": "Varsa yazın",
+    "askFromJob": "Bu iş için kılavuzları ara",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Soğuk oda",
+      "blast": "Şok tünel",
+      "ice": "Buz tesisi",
+      "pack": "Soğutma grubu",
+      "controller": "Kontrolör"
+    },
+    "faultOptions": {
+      "pull-down": "Sıcaklık düşmüyor",
+      "high-pressure": "Yüksek basınç alarmı",
+      "ice-build": "Evaporatörde buz",
+      "short-cycle": "Kısa çevrim",
+      "alarm": "Kontrolör alarmı",
+      "oil": "Yağ / yağlama"
+    }
   },
   "account": {
     "kicker": "Müşteri erişimi",

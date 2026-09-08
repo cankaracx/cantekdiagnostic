@@ -28,7 +28,7 @@
     "placeholder": "Przykład: komora chłodnicza nie osiąga zadanej temperatury, alarm HP w letnie popołudnie, sterownik Octosense…",
     "send": "Zapytaj",
     "thinking": "Przeszukiwanie dokumentacji…",
-    "empty": "Zapytaj o temperaturę, alarmy, oblodzenie, sprężarki, amoniak lub sterowniki.",
+    "empty": "Zaznacz instalację i usterkę na karcie zlecenia albo zapytaj o temperaturę, alarmy, oblodzenie, sprężarki, amoniak lub sterowniki.",
     "sources": "Źródła",
     "service": "Serwis Cantek",
     "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych."
@@ -38,6 +38,31 @@
     "assistant": "Wsparcie Cantek",
     "noDocs": "Załadowana dokumentacja nie zawiera informacji odpowiadających temu zapytaniu. Zamiast zgadywać nastawy lub sposób okablowania, skontaktuj się z serwisem Cantek.",
     "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek."
+  },
+  "plant": {
+    "docketTitle": "Zlecenie serwisowe",
+    "docketLabel": "Instalacja, usterka i numer seryjny tej diagnostyki",
+    "equipment": "Instalacja",
+    "fault": "Zaobserwowana usterka",
+    "serial": "Model / numer seryjny",
+    "serialPlaceholder": "Jeśli znany",
+    "askFromJob": "Szukaj tego zlecenia w dokumentacji",
+    "selected": "{equipment} — {fault}",
+    "equipmentOptions": {
+      "cold-room": "Komora chłodnicza",
+      "blast": "Tunel szokowy",
+      "ice": "Wytwornica lodu",
+      "pack": "Agregat chłodniczy",
+      "controller": "Sterownik"
+    },
+    "faultOptions": {
+      "pull-down": "Nie schładza",
+      "high-pressure": "Alarm wysokiego ciśnienia",
+      "ice-build": "Lód na parowniku",
+      "short-cycle": "Krótkie cykle",
+      "alarm": "Alarm sterownika",
+      "oil": "Olej lub smarowanie"
+    }
   },
   "account": {
     "kicker": "Dostęp klienta",
