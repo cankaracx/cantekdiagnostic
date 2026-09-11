@@ -1,5 +1,7 @@
 "use client";
 
+import { PlantDocket, PlantReadingsPanel } from "@/components/PlantReadings";
+import type { PlantReadings } from "@/lib/chat/plant";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import type { Citation } from "@/lib/rag/types";
@@ -102,6 +104,7 @@ export function ChatPanel(props: {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [plantReadings, setPlantReadings] = useState<PlantReadings | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -115,8 +118,8 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
+  async function send(nextInput?: string) {
+    const text = (nextInput ?? input).trim();
     if (!text || busy) return;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
@@ -139,7 +142,9 @@ export function ChatPanel(props: {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? "chat_failed");
+        throw new Error(
+          data.error === "rate_limited" ? "rate_limited" : "chat_failed",
+        );
       }
       setMessages([
         ...next,
@@ -151,10 +156,15 @@ export function ChatPanel(props: {
           emergency: data.emergency,
         },
       ]);
-    } catch {
+    } catch (error) {
+      const rateLimited =
+        error instanceof Error && error.message === "rate_limited";
       setMessages([
         ...next,
-        { role: "assistant", content: t("chat.error") },
+        {
+          role: "assistant",
+          content: rateLimited ? t("chat.rateLimited") : t("chat.error"),
+        },
       ]);
     } finally {
       setBusy(false);
@@ -201,10 +211,17 @@ export function ChatPanel(props: {
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
-            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
-          </div>
+          <PlantReadingsPanel
+            disabled={busy}
+            onLookup={(query, readings) => {
+              setPlantReadings(readings);
+              void send(query);
+            }}
+          />
         )}
+        {messages.length > 0 && plantReadings ? (
+          <PlantDocket readings={plantReadings} />
+        ) : null}
         {messages.map((message, index) => {
           const isUser = message.role === "user";
 

@@ -5,6 +5,7 @@ import {
   serviceClose,
   wrapHazardAnswer,
 } from "@/lib/chat/hazards";
+import { buildRetrievalQuery, toProviderMessages } from "@/lib/chat/context";
 import { localizedChatCopy } from "@/lib/chat/localized";
 import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
@@ -102,17 +103,16 @@ async function generateWithModel(
     locale,
     staffMode,
     documentationRequested: isDocumentationRequest(
-      messages.at(-1)?.content ?? "",
+      messages.filter((message) => message.role === "user").at(-1)?.content ??
+        "",
     ),
   })}\n\nRETRIEVED PASSAGES:\n${passages}`;
-  const lastUserMessage = [...messages]
-    .reverse()
-    .find((message) => message.role === "user");
-  if (!lastUserMessage) return null;
+  const providerMessages = toProviderMessages(messages);
+  if (!providerMessages.length) return null;
 
   return generateWithProviders({
     system,
-    messages: [{ role: "user", content: lastUserMessage.content.slice(0, 8_000) }],
+    messages: providerMessages,
     allowFailover: !staffMode,
   });
 }
@@ -122,9 +122,11 @@ export async function answerQuestion(opts: {
   locale: string;
   staffMode: boolean;
   database?: SupabaseClient | null;
+  serial?: string;
 }): Promise<AnswerResult> {
   const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-  const retrieved = await searchManuals(lastUser, {
+  const retrievalQuery = buildRetrievalQuery(opts.messages, opts.serial);
+  const retrieved = await searchManuals(retrievalQuery || lastUser, {
     includeInternal: opts.staffMode,
     limit: 8,
     database: opts.database,

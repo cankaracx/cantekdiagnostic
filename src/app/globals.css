@@ -529,6 +529,309 @@ textarea {
   opacity: 0.45;
 }
 
+.octo-panel {
+  border: 1px solid #12191e;
+  background:
+    linear-gradient(180deg, #243038 0%, #1c252b 18%, #1c252b 100%);
+  color: #e8eef1;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 7%),
+    0 16px 28px rgb(20 27 32 / 28%);
+}
+
+.octo-panel-head {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1rem 1rem 0.75rem;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+@media (min-width: 640px) {
+  .octo-panel-head {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: end;
+    padding: 1.15rem 1.15rem 0.9rem;
+  }
+}
+
+.octo-brand {
+  color: #7ee3ff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.octo-title {
+  margin-top: 0.2rem;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.octo-intro {
+  color: #c5d0d6;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.octo-lcd-row {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem 1rem 0.35rem;
+}
+
+@media (min-width: 640px) {
+  .octo-lcd-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-inline: 1.15rem;
+  }
+}
+
+.octo-lcd {
+  display: grid;
+  gap: 0.15rem;
+  min-height: 5.4rem;
+  border: 1px solid #3d4f5a;
+  background: #0e1418;
+  padding: 0.55rem 0.7rem 0.45rem;
+}
+
+.octo-lcd-tag {
+  color: #7ee3ff;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.octo-lcd-name {
+  color: #9eb0ba;
+  font-size: 0.7rem;
+}
+
+.octo-lcd-readout {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  color: #7ee3ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.octo-lcd-readout input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #d7f7ff;
+  font-size: 1.65rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  outline: none;
+}
+
+.octo-lcd-readout input::placeholder {
+  color: #3e5b66;
+}
+
+.octo-lcd-readout span {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #7ee3ff;
+}
+
+.octo-gap {
+  margin: 0 1rem 0.35rem;
+  color: #f0c37a;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.octo-section-label {
+  margin: 0.55rem 1rem 0.4rem;
+  color: #9eb0ba;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.octo-lamp-row,
+.octo-fault-row {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .octo-lamp-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    padding-inline: 1.15rem;
+  }
+
+  .octo-fault-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-inline: 1.15rem;
+  }
+
+  .octo-section-label,
+  .octo-gap {
+    margin-inline: 1.15rem;
+  }
+}
+
+.octo-lamp {
+  display: flex;
+  min-height: 3.1rem;
+  align-items: center;
+  gap: 0.55rem;
+  border: 1px solid #3a4a54;
+  background: #151d22;
+  padding: 0.45rem 0.55rem;
+  text-align: start;
+  color: #c5d0d6;
+}
+
+.octo-lamp-bead {
+  width: 0.85rem;
+  height: 0.85rem;
+  flex: none;
+  border: 1px solid #2c3b43;
+  border-radius: 999px;
+  background: #2a343a;
+  box-shadow: inset 0 1px 2px rgb(0 0 0 / 55%);
+}
+
+.octo-lamp-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.octo-lamp-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #e8eef1;
+}
+
+.octo-lamp-state {
+  font-size: 0.68rem;
+  color: #9eb0ba;
+}
+
+.octo-lamp.is-on .octo-lamp-bead {
+  border-color: transparent;
+}
+
+.octo-lamp-run.is-on .octo-lamp-bead {
+  background: #00a0dd;
+  box-shadow: 0 0 0 2px rgb(0 160 221 / 22%);
+}
+
+.octo-lamp-heat.is-on .octo-lamp-bead {
+  background: #c47a12;
+  box-shadow: 0 0 0 2px rgb(196 122 18 / 25%);
+}
+
+.octo-lamp-alarm.is-on .octo-lamp-bead {
+  background: #b3202e;
+  box-shadow: 0 0 0 2px rgb(179 32 46 / 28%);
+}
+
+.octo-fault {
+  min-height: 2.55rem;
+  border: 1px solid #3a4a54;
+  background: #151d22;
+  padding: 0.45rem 0.7rem;
+  text-align: start;
+  color: #e8eef1;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.octo-lamp:disabled,
+.octo-fault:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.octo-lamp:hover:not(:disabled),
+.octo-fault:hover:not(:disabled) {
+  border-color: #7ee3ff;
+}
+
+.octo-fault.is-selected {
+  border-color: #00a0dd;
+  background: color-mix(in srgb, #00a0dd 16%, #151d22);
+  color: #fff;
+}
+
+.octo-actions {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1rem;
+  border-top: 1px solid rgb(255 255 255 / 8%);
+  margin-top: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .octo-actions {
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    padding: 1rem 1.15rem 1.15rem;
+  }
+}
+
+.octo-lookup {
+  min-height: 2.75rem;
+  border: 1px solid #00a0dd;
+  background: #00a0dd;
+  padding: 0.55rem 1rem;
+  color: #072028;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.octo-lookup:hover:not(:disabled) {
+  border-color: #7ee3ff;
+  background: #7ee3ff;
+}
+
+.octo-lookup:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.octo-actions p {
+  color: #9eb0ba;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.octo-docket {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+  border: 1px solid #27323a;
+  background: #1c252b;
+  padding: 0.55rem 0.7rem;
+  color: #d7e3e8;
+  font-size: 0.72rem;
+}
+
+.octo-docket span:first-child {
+  margin-inline-end: 0.25rem;
+  color: #7ee3ff;
+  font-weight: 800;
+}
+
+.octo-docket span:not(:first-child) {
+  border: 1px solid #3a4a54;
+  padding: 0.15rem 0.4rem;
+}
+
+.chat-scroll:has(.octo-panel) {
+  max-height: none;
+}
+
 @media (max-width: 639px) {
   .cantek-hero-mosaic {
     min-height: 34rem;
