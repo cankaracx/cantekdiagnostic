@@ -37,6 +37,8 @@
     "you": "Usted",
     "assistant": "Soporte Cantek",
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
+    "greeting": "Hola. Soy el soporte de diagnóstico Cantek para almacenamiento frigorífico industrial. Describa el problema de la planta o pida los contactos de servicio Cantek.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) tiene sede en Antalya, Türkiye: Zona Industrial Organizada, 2.ª sección, calle 21, n.º 1, Döşemealtı, Antalya 07177. Damos soporte a cámaras frigoríficas industriales, grupos de frío y controladores Octosense, IRS y Octopush. Este portal responde a partir de manuales de servicio aprobados cuando están cargados. Servicio Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Configure uno o varios proveedores compatibles. Las claves se validan antes de guardarse, permanecen en el esquema privado y nunca se devuelven al navegador. Si un proveedor no está disponible, se utiliza automáticamente el siguiente configurado.",
       "connected": "Conectado",
       "notConfigured": "Sin configurar",
+      "sourceStored": "Guardada en administración",
+      "sourceEnvironment": "Desde el entorno",
       "statusUnavailable": "El estado de conexión no está disponible.",
       "keyLabel": "Clave API del proveedor",
       "save": "Probar y guardar clave",
       "testing": "Probando conexión…",
       "saved": "El proveedor está conectado y disponible para el diagnóstico.",
       "invalid": "El proveedor rechazó esta clave. Revísela e inténtelo de nuevo.",
+      "providerUnavailable": "No se pudo contactar al proveedor. Revise la clave e inténtelo de nuevo.",
+      "serviceRoleMissing": "El almacenamiento del servidor no está configurado. Defina la clave de rol de servicio y vuelva a guardar.",
+      "storeUnavailable": "El almacén privado de secretos no está disponible. Inténtelo de nuevo en unos minutos.",
+      "originBlocked": "Esta solicitud se bloqueó porque no proviene del sitio de administración.",
       "saveFailed": "No se pudo guardar la clave de forma segura.",
+      "removedUsingEnvironment": "Se eliminó la clave guardada. La clave de entorno sigue en uso.",
       "remove": "Eliminar clave guardada"
     }
   },

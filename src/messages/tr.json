@@ -37,6 +37,8 @@
     "you": "Siz",
     "assistant": "Cantek destek",
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
+    "greeting": "Merhaba. Endüstriyel soğuk depo için Cantek arıza tanı desteğiyim. Tesisteki sorunu yazın veya Cantek servis iletişimini isteyin.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) Antalya, Türkiye merkezlidir: Organize Sanayi Bölgesi, 2. Kısım, 21. Cadde, No:1, Döşemealtı, Antalya 07177. Endüstriyel soğuk depo, soğutma üniteleri ve Octosense, IRS, Octopush kontrolörleri desteklenir. Bu portal, yüklü onaylı servis kılavuzlarından yanıt verir. Cantek servisi: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
   },
   "account": {
@@ -134,16 +136,23 @@
     "ai": {
       "kicker": "Yanıt sağlayıcıları",
       "title": "Sağlayıcı bağlantıları",
-      "description": "Desteklenen sağlayıcılardan birini veya birkaçını yapılandırın. Anahtarlar saklanmadan önce doğrulanır, özel veritabanı şemasında tutulur ve tarayıcıya geri gönderilmez. Bir sağlayıcı kullanılamazsa sıradaki yapılandırılmış sağlayıcı otomatik olarak kullanılır.",
+      "description": "Bir sağlayıcı seçin, API anahtarını yapıştırın, ardından test edip kaydedin. Anahtarlar saklanmadan önce doğrulanır, özel veritabanı şemasında tutulur ve tarayıcıya geri gönderilmez. Ortam anahtarları yedek olarak kalır. Bir sağlayıcı kullanılamazsa sıradaki yapılandırılmış sağlayıcı otomatik olarak kullanılır.",
       "connected": "Bağlı",
-      "notConfigured": "Yapılandırılmadı",
+      "notConfigured": "Yapılandırılmamış",
+      "sourceStored": "Yönetici panelinde kayıtlı",
+      "sourceEnvironment": "Ortam değişkeninden",
       "statusUnavailable": "Bağlantı durumu alınamıyor.",
       "keyLabel": "Sağlayıcı API anahtarı",
       "save": "Anahtarı test et ve kaydet",
       "testing": "Bağlantı test ediliyor…",
-      "saved": "Sağlayıcı bağlandı ve arıza tanı için kullanılabilir.",
+      "saved": "Sağlayıcı bağlı ve arıza tanı için kullanılabilir.",
       "invalid": "Sağlayıcı bu anahtarı reddetti. Kontrol edip yeniden deneyin.",
+      "providerUnavailable": "Sağlayıcıya ulaşılamadı. Anahtarı kontrol edip yeniden deneyin.",
+      "serviceRoleMissing": "Sunucu depolaması yapılandırılmamış. Hizmet rolü anahtarını ayarlayıp yeniden kaydedin.",
+      "storeUnavailable": "Özel gizli depo kullanılamıyor. Birkaç dakika sonra yeniden deneyin.",
+      "originBlocked": "Bu istek yönetici sitesinden gelmediği için engellendi.",
       "saveFailed": "Anahtar güvenli şekilde kaydedilemedi.",
+      "removedUsingEnvironment": "Kayıtlı anahtar kaldırıldı. Ortam anahtarı hâlâ kullanılıyor.",
       "remove": "Kayıtlı anahtarı kaldır"
     }
   },

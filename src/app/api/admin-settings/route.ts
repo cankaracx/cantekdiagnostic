@@ -82,7 +82,9 @@ export async function POST(request: Request) {
         ? 400
         : code === "provider_unavailable"
           ? 502
-          : 503;
+          : code === "invalid_origin"
+            ? 403
+            : 503;
     return NextResponse.json({ error: code }, { status });
   }
 }
@@ -101,27 +103,29 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "super_admin_only" }, { status: 403 });
   }
 
-  let body: { provider?: unknown };
-  try {
-    body = await readJsonBody<typeof body>(request, 1_024);
-  } catch (error) {
-    const status = error instanceof RequestBodyError ? error.status : 400;
-    return NextResponse.json({ error: "invalid_request" }, { status });
+  let provider: unknown = new URL(request.url).searchParams.get("provider");
+  if (!isAiProviderId(provider)) {
+    try {
+      const body = await readJsonBody<{ provider?: unknown }>(request, 1_024);
+      provider = body.provider;
+    } catch (error) {
+      const status = error instanceof RequestBodyError ? error.status : 400;
+      return NextResponse.json({ error: "invalid_request" }, { status });
+    }
   }
-  if (!isAiProviderId(body.provider)) {
+  if (!isAiProviderId(provider)) {
     return NextResponse.json({ error: "unsupported_provider" }, { status: 400 });
   }
 
   try {
-    await removeProviderCredential(body.provider);
+    await removeProviderCredential(provider);
     const status = (await listProviderStatuses()).find(
-      (provider) => provider.id === body.provider,
+      (item) => item.id === provider,
     );
     return NextResponse.json({ provider: status });
-  } catch {
-    return NextResponse.json(
-      { error: "settings_update_failed" },
-      { status: 503 },
-    );
+  } catch (error) {
+    const code =
+      error instanceof Error ? error.message : "settings_update_failed";
+    return NextResponse.json({ error: code }, { status: 503 });
   }
 }

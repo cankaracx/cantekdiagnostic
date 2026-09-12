@@ -37,6 +37,8 @@
     "you": "Sie",
     "assistant": "Cantek-Support",
     "noDocs": "In den geladenen Handbüchern wurde hierzu nichts Passendes gefunden. Wenden Sie sich an den Cantek-Service, anstatt Sollwerte oder Verdrahtungen zu erraten.",
+    "greeting": "Guten Tag. Ich bin der Cantek-Diagnosesupport für industrielle Kältelager. Beschreiben Sie die Anlagenstörung oder fragen Sie nach den Cantek-Servicekontakten.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) hat den Sitz in Antalya, Türkiye: Organized Industrial Zone, 2. Abschnitt, 21. Straße, Nr. 1, Döşemealtı, Antalya 07177. Wir unterstützen industrielle Kältelager, Kühlaggregate und Steuerungen wie Octosense, IRS und Octopush. Dieses Portal antwortet aus freigegebenen Servicehandbüchern, sofern sie geladen sind. Cantek-Service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Konfigurieren Sie einen oder mehrere unterstützte Anbieter. Schlüssel werden vor dem Speichern geprüft, im privaten Datenbankschema aufbewahrt und niemals an den Browser zurückgegeben. Ist ein Anbieter nicht verfügbar, wird automatisch der nächste konfigurierte Anbieter verwendet.",
       "connected": "Verbunden",
       "notConfigured": "Nicht konfiguriert",
+      "sourceStored": "In der Administration gespeichert",
+      "sourceEnvironment": "Aus der Umgebung",
       "statusUnavailable": "Der Verbindungsstatus ist nicht verfügbar.",
       "keyLabel": "API-Schlüssel des Anbieters",
       "save": "Schlüssel testen und speichern",
       "testing": "Verbindung wird getestet…",
       "saved": "Der Anbieter ist verbunden und für Diagnosen verfügbar.",
       "invalid": "Der Anbieter hat diesen Schlüssel abgelehnt. Prüfen Sie ihn und versuchen Sie es erneut.",
+      "providerUnavailable": "Der Anbieter war nicht erreichbar. Prüfen Sie den Schlüssel und versuchen Sie es erneut.",
+      "serviceRoleMissing": "Die Serverspeicherung ist nicht konfiguriert. Setzen Sie den Service-Role-Schlüssel und speichern Sie erneut.",
+      "storeUnavailable": "Der private Geheimspeicher ist nicht verfügbar. Versuchen Sie es in wenigen Minuten erneut.",
+      "originBlocked": "Diese Anfrage wurde blockiert, weil sie nicht von der Administrationsseite stammt.",
       "saveFailed": "Der Schlüssel konnte nicht sicher gespeichert werden.",
+      "removedUsingEnvironment": "Der gespeicherte Schlüssel wurde entfernt. Der Umgebungsschlüssel wird weiterhin verwendet.",
       "remove": "Gespeicherten Schlüssel entfernen"
     }
   },

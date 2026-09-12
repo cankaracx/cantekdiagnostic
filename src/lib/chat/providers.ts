@@ -90,7 +90,7 @@ export const AI_PROVIDERS: readonly ProviderDefinition[] = [
 ];
 
 const providerById = new Map(AI_PROVIDERS.map((provider) => [provider.id, provider]));
-const CACHE_TTL_MS = 5 * 60 * 1000;
+const PRESENT_CACHE_TTL_MS = 60_000;
 const PROVIDER_TIMEOUT_MS = 20_000;
 const credentialCache = new Map<
   AiProviderId,
@@ -217,13 +217,27 @@ async function readCredential(provider: AiProviderId): Promise<{
       ? "environment"
       : null;
 
-  credentialCache.set(provider, {
-    key,
-    model,
-    source,
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
+  rememberCredential(provider, { key, model, source });
   return { key, model, source };
+}
+
+function rememberCredential(
+  provider: AiProviderId,
+  credential: {
+    key: string | null;
+    model: string;
+    source: "stored" | "environment" | null;
+  },
+): void {
+  if (!credential.key) {
+    credentialCache.delete(provider);
+    return;
+  }
+
+  credentialCache.set(provider, {
+    ...credential,
+    expiresAt: Date.now() + PRESENT_CACHE_TTL_MS,
+  });
 }
 
 export async function readProviderApiKey(
@@ -323,6 +337,52 @@ function providerErrorCode(error: unknown): string {
     : "provider_unavailable";
 }
 
+async function listProviderModels(
+  provider: AiProviderId,
+  key: string,
+): Promise<string[]> {
+  if (provider === "anthropic") {
+    const page = await new Anthropic({
+      apiKey: key,
+      maxRetries: 0,
+      timeout: PROVIDER_TIMEOUT_MS,
+    }).models.list({ limit: 100 });
+    return page.data.map((item) => item.id);
+  }
+
+  const page = await openAiClient(definition(provider), key).models.list();
+  return page.data.map((item) => item.id);
+}
+
+async function probeDefaultModel(
+  provider: AiProviderId,
+  key: string,
+): Promise<string> {
+  const config = definition(provider);
+  const model = config.defaultModel;
+  const probe = "Reply with ok.";
+
+  if (provider === "anthropic") {
+    await new Anthropic({
+      apiKey: key,
+      maxRetries: 0,
+      timeout: PROVIDER_TIMEOUT_MS,
+    }).messages.create({
+      model,
+      max_tokens: 8,
+      messages: [{ role: "user", content: probe }],
+    });
+    return model;
+  }
+
+  await openAiClient(config, key).chat.completions.create({
+    model,
+    max_tokens: 8,
+    messages: [{ role: "user", content: probe }],
+  });
+  return model;
+}
+
 export async function testProviderApiKey(
   provider: AiProviderId,
   key: string,
@@ -332,21 +392,17 @@ export async function testProviderApiKey(
   }
 
   try {
-    if (provider === "anthropic") {
-      const page = await new Anthropic({
-        apiKey: key,
-        maxRetries: 0,
-        timeout: PROVIDER_TIMEOUT_MS,
-      }).models.list({ limit: 100 });
-      const model = selectModel(provider, page.data.map((item) => item.id));
-      if (!model) throw new Error("provider_unavailable");
-      return model;
+    try {
+      const ids = await listProviderModels(provider, key);
+      const selected = selectModel(provider, ids);
+      if (selected) return selected;
+    } catch (error) {
+      if (providerErrorCode(error) === "invalid_provider_key") {
+        throw new Error("invalid_provider_key");
+      }
     }
 
-    const page = await openAiClient(definition(provider), key).models.list();
-    const model = selectModel(provider, page.data.map((item) => item.id));
-    if (!model) throw new Error("provider_unavailable");
-    return model;
+    return await probeDefaultModel(provider, key);
   } catch (error) {
     if (
       error instanceof Error &&
@@ -366,12 +422,7 @@ export async function storeProviderCredential(
 ): Promise<void> {
   await writeStoredSecret(secretName(provider, "model"), model);
   await writeStoredSecret(secretName(provider, "key"), key);
-  credentialCache.set(provider, {
-    key,
-    model,
-    source: "stored",
-    expiresAt: Date.now() + CACHE_TTL_MS,
-  });
+  rememberCredential(provider, { key, model, source: "stored" });
 }
 
 export async function removeProviderCredential(
@@ -412,12 +463,7 @@ export async function listProviderStatuses(): Promise<ProviderStatus[]> {
         ? "environment"
         : null;
 
-    credentialCache.set(provider.id, {
-      key,
-      model,
-      source,
-      expiresAt: Date.now() + CACHE_TTL_MS,
-    });
+    rememberCredential(provider.id, { key, model, source });
     return {
       id: provider.id,
       label: provider.label,

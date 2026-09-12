@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { composeExtractiveAnswer, formatPassages } from "@/lib/chat/generate";
 import {
+  isGeneralConversation,
+  staticGeneralAnswer,
+} from "@/lib/chat/company-knowledge";
+import {
   DANGER_BLOCK,
   EMERGENCY_BLOCK,
   HAZARD_BOUNDARY,
@@ -43,6 +47,26 @@ describe("hazard policy", () => {
 });
 
 describe("grounding", () => {
+  it("answers greetings and company questions without manuals", () => {
+    expect(isGeneralConversation("hi")).toBe(true);
+    expect(isGeneralConversation("Who is Cantek?")).toBe(true);
+    expect(isGeneralConversation("telefon")).toBe(true);
+    expect(
+      isGeneralConversation(
+        "What is the ZX-9000 evaporator flange bolt torque in newton-metres?",
+      ),
+    ).toBe(false);
+
+    const company = staticGeneralAnswer("Who is Cantek?", "en");
+    expect(company).toMatch(/Antalya/);
+    expect(company).toContain("+90 242 258 17 00");
+    expect(company).not.toMatch(/\b\d+\s*Nm\b/);
+
+    const greeting = staticGeneralAnswer("hi", "en");
+    expect(greeting).toMatch(/Hello|Cantek diagnostic support/i);
+    expect(greeting).not.toMatch(/loaded manuals/i);
+  });
+
   it("does not invent flange torque for a model that is not in the manuals", async () => {
     const query = "What is the ZX-9000 evaporator flange bolt torque in newton-metres?";
     const { body, missingManual } = composeExtractiveAnswer(query, []);
