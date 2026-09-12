@@ -37,6 +37,8 @@
     "you": "Você",
     "assistant": "Suporte Cantek",
     "noDocs": "Nada nos manuais carregados corresponde a esta situação. Contacte a assistência Cantek em vez de tentar adivinhar valores de ajuste ou ligações elétricas.",
+    "greeting": "Olá. Sou o suporte de diagnóstico Cantek para armazenamento frigorífico industrial. Descreva o problema da instalação ou peça os contactos da assistência Cantek.",
+    "companyFacts": "A Cantek Soğutma A.Ş. (Cantek Group) tem sede em Antália, Türkiye: Zona Industrial Organizada, 2.ª secção, Rua 21, n.º 1, Döşemealtı, Antália 07177. Damos apoio a câmaras frigoríficas industriais, grupos de frio e controladores Octosense, IRS e Octopush. Este portal responde a partir de manuais de assistência aprovados quando estão carregados. Assistência Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Configure um ou mais fornecedores suportados. As chaves são validadas antes de serem guardadas, permanecem no esquema privado da base de dados e nunca são devolvidas ao navegador. Se um fornecedor estiver indisponível, o próximo fornecedor configurado é utilizado automaticamente.",
       "connected": "Ligado",
       "notConfigured": "Não configurado",
+      "sourceStored": "Guardada na administração",
+      "sourceEnvironment": "Do ambiente",
       "statusUnavailable": "O estado da ligação não está disponível.",
       "keyLabel": "Chave de API do fornecedor",
       "save": "Testar e guardar a chave",
       "testing": "A testar a ligação…",
       "saved": "O fornecedor está ligado e disponível para diagnóstico.",
       "invalid": "O fornecedor rejeitou esta chave. Verifique-a e tente novamente.",
+      "providerUnavailable": "Não foi possível contactar o fornecedor. Verifique a chave e tente novamente.",
+      "serviceRoleMissing": "O armazenamento do servidor não está configurado. Defina a chave de função de serviço e guarde novamente.",
+      "storeUnavailable": "O repositório privado de segredos está indisponível. Tente novamente dentro de alguns minutos.",
+      "originBlocked": "Este pedido foi bloqueado porque não veio do sítio de administração.",
       "saveFailed": "Não foi possível guardar a chave em segurança.",
+      "removedUsingEnvironment": "A chave guardada foi removida. A chave de ambiente continua em uso.",
       "remove": "Remover chave guardada"
     }
   },

@@ -37,6 +37,8 @@
     "you": "Vous",
     "assistant": "Support Cantek",
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
+    "greeting": "Bonjour. Je suis le support diagnostic Cantek pour le froid industriel. Décrivez le problème de l’installation, ou demandez les contacts du service Cantek.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) est basée à Antalya, Türkiye : Zone industrielle organisée, 2e section, 21e rue, n°1, Döşemealtı, Antalya 07177. Nous prenons en charge le stockage frigorifique industriel, les groupes de froid et les régulateurs Octosense, IRS et Octopush. Ce portail répond à partir des manuels de service approuvés lorsqu’ils sont chargés. Service Cantek : +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Configurez un ou plusieurs fournisseurs compatibles. Les clés sont validées avant stockage, conservées dans le schéma privé et jamais renvoyées au navigateur. Si un fournisseur est indisponible, le suivant est utilisé automatiquement.",
       "connected": "Connecté",
       "notConfigured": "Non configuré",
+      "sourceStored": "Enregistré dans l’administration",
+      "sourceEnvironment": "Depuis l’environnement",
       "statusUnavailable": "L’état de la connexion est indisponible.",
       "keyLabel": "Clé API du fournisseur",
       "save": "Tester et enregistrer la clé",
       "testing": "Test de la connexion…",
       "saved": "Le fournisseur est connecté et disponible pour le diagnostic.",
       "invalid": "Le fournisseur a refusé cette clé. Vérifiez-la et réessayez.",
+      "providerUnavailable": "Le fournisseur n’a pas pu être joint. Vérifiez la clé et réessayez.",
+      "serviceRoleMissing": "Le stockage serveur n’est pas configuré. Définissez la clé de rôle de service, puis enregistrez à nouveau.",
+      "storeUnavailable": "Le magasin privé des secrets est indisponible. Réessayez dans quelques minutes.",
+      "originBlocked": "Cette requête a été bloquée car elle ne provenait pas du site d’administration.",
       "saveFailed": "La clé n’a pas pu être enregistrée de façon sécurisée.",
+      "removedUsingEnvironment": "La clé enregistrée a été supprimée. La clé d’environnement est toujours utilisée.",
       "remove": "Supprimer la clé enregistrée"
     }
   },

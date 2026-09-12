@@ -131,9 +131,12 @@ export function AdminPanel() {
       const res = await fetch("/api/admin-settings", { cache: "no-store" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "settings_unavailable");
-      setProviders(Array.isArray(data.providers) ? data.providers : []);
+      const next = Array.isArray(data.providers) ? data.providers : [];
+      setProviders(next);
+      return next as ProviderStatus[];
     } catch {
       setAiNotice({ tone: "error", message: t("ai.statusUnavailable") });
+      return [] as ProviderStatus[];
     }
   }, [t]);
 
@@ -212,6 +215,15 @@ export function AdminPanel() {
     }
   }
 
+  function aiError(code?: string): string {
+    if (code === "invalid_provider_key") return t("ai.invalid");
+    if (code === "provider_unavailable") return t("ai.providerUnavailable");
+    if (code === "service_role_not_configured") return t("ai.serviceRoleMissing");
+    if (code === "secret_store_unavailable") return t("ai.storeUnavailable");
+    if (code === "invalid_origin") return t("ai.originBlocked");
+    return t("ai.saveFailed");
+  }
+
   async function saveAiKey(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const key = aiKey.trim();
@@ -230,11 +242,10 @@ export function AdminPanel() {
       setAiKey("");
       setAiNotice({ tone: "success", message: t("ai.saved") });
     } catch (error) {
-      const message =
-        error instanceof Error && error.message === "invalid_provider_key"
-          ? t("ai.invalid")
-          : t("ai.saveFailed");
-      setAiNotice({ tone: "error", message });
+      setAiNotice({
+        tone: "error",
+        message: aiError(error instanceof Error ? error.message : undefined),
+      });
     } finally {
       setSavingKey(false);
     }
@@ -251,17 +262,26 @@ export function AdminPanel() {
     setRemovingKey(true);
     setAiNotice(null);
     try {
-      const res = await fetch("/api/admin-settings", {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: selectedProvider }),
-      });
-      if (!res.ok) throw new Error("settings_update_failed");
-      await refreshAiStatus();
+      const res = await fetch(
+        `/api/admin-settings?provider=${encodeURIComponent(selectedProvider)}`,
+        { method: "DELETE" },
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "settings_update_failed");
+      const next = await refreshAiStatus();
+      const current = next.find((provider) => provider.id === selectedProvider);
       setAiKey("");
-      setAiNotice({ tone: "success", message: t("ai.notConfigured") });
-    } catch {
-      setAiNotice({ tone: "error", message: t("ai.saveFailed") });
+      setAiNotice({
+        tone: "success",
+        message: current?.configured
+          ? t("ai.removedUsingEnvironment")
+          : t("ai.notConfigured"),
+      });
+    } catch (error) {
+      setAiNotice({
+        tone: "error",
+        message: aiError(error instanceof Error ? error.message : undefined),
+      });
     } finally {
       setRemovingKey(false);
     }
@@ -483,6 +503,13 @@ export function AdminPanel() {
                       ? `${provider.hint} · ${provider.model}`
                       : t("ai.notConfigured")}
                   </span>
+                  {provider.source ? (
+                    <span className="mt-1 block text-[11px] font-semibold text-cantek-dark">
+                      {provider.source === "stored"
+                        ? t("ai.sourceStored")
+                        : t("ai.sourceEnvironment")}
+                    </span>
+                  ) : null}
                 </button>
               ))}
             </div>

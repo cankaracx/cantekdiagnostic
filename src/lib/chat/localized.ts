@@ -94,6 +94,8 @@ export function localizedChatCopy(locale: string) {
   const selected = supportedLocale(locale);
   return {
     noDocs: messages[selected].chat.noDocs,
+    greeting: messages[selected].chat.greeting,
+    companyFacts: messages[selected].chat.companyFacts,
     dangerTitle: messages[selected].danger.title,
     dangerBody: messages[selected].danger.body,
     emergency: messages[selected].danger.emergency,

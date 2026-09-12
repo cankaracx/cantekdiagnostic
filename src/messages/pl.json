@@ -37,6 +37,8 @@
     "you": "Ty",
     "assistant": "Wsparcie Cantek",
     "noDocs": "Załadowana dokumentacja nie zawiera informacji odpowiadających temu zapytaniu. Zamiast zgadywać nastawy lub sposób okablowania, skontaktuj się z serwisem Cantek.",
+    "greeting": "Dzień dobry. Jestem wsparciem diagnostycznym Cantek dla przemysłowych chłodni. Opisz usterkę na obiekcie albo poproś o dane kontaktowe serwisu Cantek.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ma siedzibę w Antalyi, Türkiye: Organized Industrial Zone, 2. sekcja, 21. ulica, nr 1, Döşemealtı, Antalya 07177. Wspieramy przemysłowe chłodnie, agregaty chłodnicze oraz sterowniki Octosense, IRS i Octopush. Ten portal odpowiada na podstawie zatwierdzonych instrukcji serwisowych, gdy są wczytane. Serwis Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Skonfiguruj jednego lub kilku obsługiwanych dostawców. Klucze są sprawdzane przed zapisaniem, przechowywane w prywatnym schemacie bazy danych i nigdy nie są zwracane do przeglądarki. Gdy jeden dostawca jest niedostępny, automatycznie używany jest następny skonfigurowany.",
       "connected": "Połączono",
       "notConfigured": "Nie skonfigurowano",
+      "sourceStored": "Zapisany w panelu administracyjnym",
+      "sourceEnvironment": "Ze zmiennej środowiskowej",
       "statusUnavailable": "Stan połączenia jest niedostępny.",
       "keyLabel": "Klucz API dostawcy",
       "save": "Przetestuj i zapisz klucz",
       "testing": "Testowanie połączenia…",
       "saved": "Dostawca jest połączony i dostępny dla diagnostyki.",
       "invalid": "Dostawca odrzucił ten klucz. Sprawdź go i spróbuj ponownie.",
+      "providerUnavailable": "Nie udało się połączyć z dostawcą. Sprawdź klucz i spróbuj ponownie.",
+      "serviceRoleMissing": "Magazyn serwera nie jest skonfigurowany. Ustaw klucz roli usługi i zapisz ponownie.",
+      "storeUnavailable": "Prywatny magazyn sekretów jest niedostępny. Spróbuj ponownie za kilka minut.",
+      "originBlocked": "To żądanie zostało zablokowane, ponieważ nie pochodzi ze strony administracyjnej.",
       "saveFailed": "Nie udało się bezpiecznie zapisać klucza.",
+      "removedUsingEnvironment": "Zapisany klucz został usunięty. Klucz środowiskowy jest nadal używany.",
       "remove": "Usuń zapisany klucz"
     }
   },

@@ -5,6 +5,12 @@ import {
   serviceClose,
   wrapHazardAnswer,
 } from "@/lib/chat/hazards";
+import {
+  buildCompanySystemPrompt,
+  isGeneralConversation,
+  isGreetingQuery,
+  staticGeneralAnswer,
+} from "@/lib/chat/company-knowledge";
 import { localizedChatCopy } from "@/lib/chat/localized";
 import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
@@ -147,6 +153,19 @@ export async function answerQuestion(opts: {
         opts.messages,
         formatPassages(grounded),
       );
+  const general =
+    hazard || emergency || hasGrounding || !isGeneralConversation(lastUser)
+      ? null
+      : await generateWithProviders({
+          system: buildCompanySystemPrompt({
+            locale: opts.locale,
+            greeting: isGreetingQuery(lastUser),
+          }),
+          messages: [
+            { role: "user", content: lastUser.slice(0, 8_000) },
+          ],
+          allowFailover: !opts.staffMode,
+        });
 
   let answer: string;
   let missingManual: boolean;
@@ -157,9 +176,25 @@ export async function answerQuestion(opts: {
       locale: opts.locale,
     });
     missingManual = false;
+  } else if (generated) {
+    answer = generated.text;
+    missingManual = false;
+    if (!answer.includes("+90 242") && !answer.includes("info@cantekgroup.com")) {
+      answer = `${answer.trim()}\n\n${serviceClose(opts.locale)}`;
+    }
+  } else if (general || isGeneralConversation(lastUser)) {
+    answer = general?.text ?? staticGeneralAnswer(lastUser, opts.locale);
+    missingManual = false;
+    if (
+      !isGreetingQuery(lastUser) &&
+      !answer.includes("+90 242") &&
+      !answer.includes("info@cantekgroup.com")
+    ) {
+      answer = `${answer.trim()}\n\n${serviceClose(opts.locale)}`;
+    }
   } else {
-    answer = generated?.text ?? extractive.body;
-    missingManual = extractive.missingManual && !generated;
+    answer = extractive.body;
+    missingManual = extractive.missingManual;
     if (!answer.includes("+90 242") && !answer.includes("info@cantekgroup.com")) {
       answer = `${answer.trim()}\n\n${serviceClose(opts.locale)}`;
     }
@@ -173,6 +208,6 @@ export async function answerQuestion(opts: {
     missingManual,
     provider: hazard || emergency
       ? "safety"
-      : generated?.provider ?? "extractive",
+      : generated?.provider ?? general?.provider ?? "extractive",
   };
 }

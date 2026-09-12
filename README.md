@@ -34,11 +34,10 @@ Never commit environment files, credentials, private manuals, generated indexes,
 2. Copy `.env.example` to `.env.local`.
 3. Add the project URL, browser-safe publishable key, server-only service-role key, and `NEXT_PUBLIC_SITE_URL`.
 4. Start the app with `npm run dev`.
-5. Sign in as the super administrator and add the Anthropic key in the protected Admin panel. For local-only development, `ANTHROPIC_API_KEY` remains available as a server-side fallback.
+5. Sign in at `/admin` as the super administrator (username `admin`). On the right, open **Provider connections**, select Anthropic, OpenAI, Google Gemini, xAI, Groq, Mistral, or OpenRouter, paste that provider’s API key, then choose **Test and save key**. Keys are stored in the private database schema and only a masked status is returned to the browser. For local-only development, the matching server environment variable (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `GOOGLE_GENERATIVE_AI_API_KEY`, `XAI_API_KEY`, `GROQ_API_KEY`, `MISTRAL_API_KEY`, or `OPENROUTER_API_KEY`) remains a fallback.
 
-Never expose `SUPABASE_SERVICE_ROLE_KEY` or an Anthropic key through a
-`NEXT_PUBLIC_` variable. The Admin panel stores the Anthropic key in the
-private database schema and only returns a masked status to the browser.
+Never expose `SUPABASE_SERVICE_ROLE_KEY` or a provider API key through a
+`NEXT_PUBLIC_` variable.
 
 An authorized staff account must have `app_metadata.role` set to `technician`, `admin`, or `super_admin`. Role metadata must be assigned through the supported Auth administration interface or Admin API, never by the browser, user-editable metadata, or a direct write to the Auth schema.
 

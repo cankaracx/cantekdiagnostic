@@ -37,6 +37,8 @@
     "you": "Tu",
     "assistant": "Supporto Cantek",
     "noDocs": "Nessun contenuto nei manuali caricati corrisponde alla richiesta. Contatta l'assistenza Cantek invece di procedere per tentativi con setpoint o cablaggi.",
+    "greeting": "Buongiorno. Sono il supporto diagnostico Cantek per la conservazione frigorifera industriale. Descrivi il problema dell'impianto o chiedi i contatti dell'assistenza Cantek.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ha sede ad Antalya, Türkiye: Zona Industriale Organizzata, 2ª sezione, 21ª strada, n. 1, Döşemealtı, Antalya 07177. Supportiamo celle frigorifere industriali, gruppi frigoriferi e controller Octosense, IRS e Octopush. Questo portale risponde dai manuali di assistenza approvati quando sono caricati. Assistenza Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek."
   },
   "account": {
@@ -137,13 +139,20 @@
       "description": "Configura uno o più fornitori supportati. Le chiavi vengono verificate prima del salvataggio, conservate nello schema privato del database e non vengono mai restituite al browser. Se un fornitore non è disponibile, viene usato automaticamente quello configurato successivo.",
       "connected": "Connesso",
       "notConfigured": "Non configurato",
+      "sourceStored": "Salvata in amministrazione",
+      "sourceEnvironment": "Dall'ambiente",
       "statusUnavailable": "Lo stato della connessione non è disponibile.",
       "keyLabel": "Chiave API del fornitore",
       "save": "Verifica e salva la chiave",
       "testing": "Verifica della connessione…",
       "saved": "Il fornitore è connesso e disponibile per la diagnostica.",
       "invalid": "Il fornitore ha rifiutato questa chiave. Controllala e riprova.",
+      "providerUnavailable": "Impossibile raggiungere il fornitore. Controlla la chiave e riprova.",
+      "serviceRoleMissing": "L'archiviazione del server non è configurata. Imposta la chiave del ruolo di servizio e salva di nuovo.",
+      "storeUnavailable": "L'archivio privato dei segreti non è disponibile. Riprova tra qualche minuto.",
+      "originBlocked": "Questa richiesta è stata bloccata perché non proviene dal sito di amministrazione.",
       "saveFailed": "Non è stato possibile salvare la chiave in modo sicuro.",
+      "removedUsingEnvironment": "La chiave salvata è stata rimossa. La chiave d'ambiente è ancora in uso.",
       "remove": "Rimuovi chiave salvata"
     }
   },

@@ -37,6 +37,8 @@
     "you": "You",
     "assistant": "Cantek support",
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
+    "greeting": "Hello. I am Cantek diagnostic support for industrial cold storage. Describe the plant issue, or ask for Cantek service contacts.",
+    "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) is based in Antalya, Türkiye: Organized Industrial Zone, 2nd Section, 21st Street, No:1, Döşemealtı, Antalya 07177. We support industrial cold storage, cooling packs, and controllers including Octosense, IRS, and Octopush. This portal answers from approved service manuals when they are loaded. Cantek service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
     "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
   },
   "account": {
@@ -134,16 +136,23 @@
     "ai": {
       "kicker": "Response providers",
       "title": "Provider connections",
-      "description": "Configure one or more supported providers. Keys are validated before storage, kept in the private database schema, and never returned to the browser. If one provider is unavailable, the next configured provider is used automatically.",
+      "description": "Select a provider, paste its API key, then test and save. Keys are checked before storage, kept in the private database schema, and never returned to the browser. Environment keys remain as a fallback. If one provider is unavailable, the next configured provider is used automatically.",
       "connected": "Connected",
       "notConfigured": "Not configured",
+      "sourceStored": "Stored in admin",
+      "sourceEnvironment": "From environment",
       "statusUnavailable": "Connection status is unavailable.",
       "keyLabel": "Provider API key",
       "save": "Test and save key",
       "testing": "Testing connection…",
       "saved": "The provider is connected and available for diagnostics.",
       "invalid": "The provider rejected this key. Check it and try again.",
+      "providerUnavailable": "The provider could not be reached. Check the key and try again.",
+      "serviceRoleMissing": "Server storage is not configured. Set the service-role key, then save again.",
+      "storeUnavailable": "The private secret store is unavailable. Try again in a few minutes.",
+      "originBlocked": "This request was blocked because it did not come from the admin site.",
       "saveFailed": "The key could not be saved securely.",
+      "removedUsingEnvironment": "The stored key was removed. The environment key is still in use.",
       "remove": "Remove stored key"
     }
   },
