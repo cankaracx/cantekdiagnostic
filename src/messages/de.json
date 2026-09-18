@@ -31,7 +31,45 @@
     "empty": "Fragen Sie zu Temperatur, Alarmen, Eisbildung, Verdichtern, Ammoniak oder Steuerungen.",
     "sources": "Quellen",
     "service": "Cantek-Service",
-    "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften."
+    "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften.",
+    "circuit": {
+      "title": "Was steht vor Ihnen?",
+      "help": "Wählen Sie das Anlagenteil, dann das Symptom. Die Handbuchsuche verwendet diese Formulierung.",
+      "lookUp": "Nachschlagen",
+      "newLookup": "Neue Suche",
+      "symptom": "Was tut es?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Druck",
+      "pipeSuction": "Saug",
+      "pipeLiquid": "Flüssigkeit",
+      "places": {
+        "outdoor": "Dachaggregat",
+        "pack": "Rack",
+        "coil": "Raumverdampfer",
+        "product": "Im Lager",
+        "panel": "Wandtafel"
+      },
+      "stations": {
+        "room": "Produktraum",
+        "evaporator": "Verdampfer",
+        "compressor": "Verdichter",
+        "condenser": "Verflüssiger",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Kühlt nicht ab",
+        "roomWarm": "Ware zu warm",
+        "evapIce": "Register vereist",
+        "evapFan": "Lüfter steht",
+        "compNoStart": "Startet nicht",
+        "compShortCycle": "Kurztakt",
+        "condHp": "Hochdruck",
+        "condFan": "Lüfter steht",
+        "ctrlHp": "HP am Display",
+        "ctrlLp": "LP am Display",
+        "ctrlDef": "Im Abtauen hängen"
+      }
+    }
   },
   "chat": {
     "you": "Sie",
@@ -39,7 +77,8 @@
     "noDocs": "In den geladenen Handbüchern wurde hierzu nichts Passendes gefunden. Wenden Sie sich an den Cantek-Service, anstatt Sollwerte oder Verdrahtungen zu erraten.",
     "greeting": "Guten Tag. Ich bin der Cantek-Diagnosesupport für industrielle Kältelager. Beschreiben Sie die Anlagenstörung oder fragen Sie nach den Cantek-Servicekontakten.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) hat den Sitz in Antalya, Türkiye: Organized Industrial Zone, 2. Abschnitt, 21. Straße, Nr. 1, Döşemealtı, Antalya 07177. Wir unterstützen industrielle Kältelager, Kühlaggregate und Steuerungen wie Octosense, IRS und Octopush. Dieses Portal antwortet aus freigegebenen Servicehandbüchern, sofern sie geladen sind. Cantek-Service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service."
+    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service.",
+    "rateLimited": "Zu viele Suchen gerade. Warten Sie eine Minute und versuchen Sie es erneut, oder rufen Sie den Cantek-Service an."
   },
   "account": {
     "kicker": "Kundenzugang",

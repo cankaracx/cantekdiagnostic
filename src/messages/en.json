@@ -31,7 +31,45 @@
     "empty": "Ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
     "sources": "Sources",
     "service": "Cantek service",
-    "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
+    "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first.",
+    "circuit": {
+      "title": "What stands in front of you?",
+      "help": "Select the plant item, then the symptom. Manual search uses that wording.",
+      "lookUp": "Look up",
+      "newLookup": "New lookup",
+      "symptom": "What is it doing?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Discharge",
+      "pipeSuction": "Suction",
+      "pipeLiquid": "Liquid",
+      "places": {
+        "outdoor": "Roof pack",
+        "pack": "Rack",
+        "coil": "Room coil",
+        "product": "Inside the store",
+        "panel": "Wall panel"
+      },
+      "stations": {
+        "room": "Product room",
+        "evaporator": "Evaporator",
+        "compressor": "Compressor",
+        "condenser": "Condenser",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Not pulling down",
+        "roomWarm": "Product too warm",
+        "evapIce": "Coil iced",
+        "evapFan": "Fan stopped",
+        "compNoStart": "Will not start",
+        "compShortCycle": "Short cycling",
+        "condHp": "High pressure",
+        "condFan": "Fan stopped",
+        "ctrlHp": "HP on the display",
+        "ctrlLp": "LP on the display",
+        "ctrlDef": "Held in defrost"
+      }
+    }
   },
   "chat": {
     "you": "You",
@@ -39,7 +77,8 @@
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
     "greeting": "Hello. I am Cantek diagnostic support for industrial cold storage. Describe the plant issue, or ask for Cantek service contacts.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) is based in Antalya, Türkiye: Organized Industrial Zone, 2nd Section, 21st Street, No:1, Döşemealtı, Antalya 07177. We support industrial cold storage, cooling packs, and controllers including Octosense, IRS, and Octopush. This portal answers from approved service manuals when they are loaded. Cantek service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
+    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service.",
+    "rateLimited": "Too many lookups just now. Wait a minute, then try again, or call Cantek service."
   },
   "account": {
     "kicker": "Customer access",

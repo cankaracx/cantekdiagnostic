@@ -31,7 +31,45 @@
     "empty": "Parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
     "sources": "Sources",
     "service": "Service Cantek",
-    "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
+    "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales.",
+    "circuit": {
+      "title": "Que voyez-vous sur l’installation ?",
+      "help": "Choisissez l’organe, puis le symptôme. La recherche dans les manuels utilise cette formulation.",
+      "lookUp": "Chercher",
+      "newLookup": "Nouvelle recherche",
+      "symptom": "Que fait-il ?",
+      "picked": "{station} : {fault}",
+      "pipeDischarge": "Refoulement",
+      "pipeSuction": "Aspiration",
+      "pipeLiquid": "Liquide",
+      "places": {
+        "outdoor": "Groupe toiture",
+        "pack": "Rack",
+        "coil": "Batterie de chambre",
+        "product": "Intérieur du local",
+        "panel": "Tableau mural"
+      },
+      "stations": {
+        "room": "Chambre produit",
+        "evaporator": "Évaporateur",
+        "compressor": "Compresseur",
+        "condenser": "Condenseur",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Ne descend pas",
+        "roomWarm": "Produit trop chaud",
+        "evapIce": "Batterie givrée",
+        "evapFan": "Ventilateur arrêté",
+        "compNoStart": "Ne démarre pas",
+        "compShortCycle": "Cycles courts",
+        "condHp": "Haute pression",
+        "condFan": "Ventilateur arrêté",
+        "ctrlHp": "HP à l’afficheur",
+        "ctrlLp": "LP à l’afficheur",
+        "ctrlDef": "Bloqué en dégivrage"
+      }
+    }
   },
   "chat": {
     "you": "Vous",
@@ -39,7 +77,8 @@
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
     "greeting": "Bonjour. Je suis le support diagnostic Cantek pour le froid industriel. Décrivez le problème de l’installation, ou demandez les contacts du service Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) est basée à Antalya, Türkiye : Zone industrielle organisée, 2e section, 21e rue, n°1, Döşemealtı, Antalya 07177. Nous prenons en charge le stockage frigorifique industriel, les groupes de froid et les régulateurs Octosense, IRS et Octopush. Ce portail répond à partir des manuels de service approuvés lorsqu’ils sont chargés. Service Cantek : +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek.",
+    "rateLimited": "Trop de recherches pour le moment. Attendez une minute puis réessayez, ou appelez le service Cantek."
   },
   "account": {
     "kicker": "Accès client",

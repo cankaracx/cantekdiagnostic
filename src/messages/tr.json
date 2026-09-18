@@ -31,7 +31,45 @@
     "empty": "Sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
     "sources": "Kaynaklar",
     "service": "Cantek servis",
-    "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
+    "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın.",
+    "circuit": {
+      "title": "Karşınızda ne var?",
+      "help": "Tesis parçasını, ardından belirtisi seçin. Kılavuz araması bu ifadeyi kullanır.",
+      "lookUp": "Kılavuzda ara",
+      "newLookup": "Yeni arama",
+      "symptom": "Ne yapıyor?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Basma",
+      "pipeSuction": "Emme",
+      "pipeLiquid": "Sıvı",
+      "places": {
+        "outdoor": "Çatı ünitesi",
+        "pack": "Rack",
+        "coil": "Oda serpantini",
+        "product": "Depo içi",
+        "panel": "Duvar paneli"
+      },
+      "stations": {
+        "room": "Ürün odası",
+        "evaporator": "Evaporatör",
+        "compressor": "Kompresör",
+        "condenser": "Kondenser",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Sıcaklık düşmüyor",
+        "roomWarm": "Ürün sıcak",
+        "evapIce": "Serpantin buzlu",
+        "evapFan": "Fan durmuş",
+        "compNoStart": "Çalışmıyor",
+        "compShortCycle": "Kısa çevrim",
+        "condHp": "Yüksek basınç",
+        "condFan": "Fan durmuş",
+        "ctrlHp": "Ekranda HP",
+        "ctrlLp": "Ekranda LP",
+        "ctrlDef": "Defrostta kalmış"
+      }
+    }
   },
   "chat": {
     "you": "Siz",
@@ -39,7 +77,8 @@
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
     "greeting": "Merhaba. Endüstriyel soğuk depo için Cantek arıza tanı desteğiyim. Tesisteki sorunu yazın veya Cantek servis iletişimini isteyin.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) Antalya, Türkiye merkezlidir: Organize Sanayi Bölgesi, 2. Kısım, 21. Cadde, No:1, Döşemealtı, Antalya 07177. Endüstriyel soğuk depo, soğutma üniteleri ve Octosense, IRS, Octopush kontrolörleri desteklenir. Bu portal, yüklü onaylı servis kılavuzlarından yanıt verir. Cantek servisi: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
+    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın.",
+    "rateLimited": "Şu anda çok fazla arama yapıldı. Bir dakika bekleyip yeniden deneyin veya Cantek servisini arayın."
   },
   "account": {
     "kicker": "Müşteri erişimi",

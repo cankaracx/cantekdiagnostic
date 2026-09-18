@@ -31,7 +31,45 @@
     "empty": "Pergunte sobre temperatura, alarmes, gelo, compressores, amoníaco ou controladores.",
     "sources": "Fontes",
     "service": "Assistência Cantek",
-    "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais."
+    "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais.",
+    "circuit": {
+      "title": "O que está à sua frente?",
+      "help": "Selecione o órgão da instalação e depois o sintoma. A pesquisa nos manuais usa essa formulação.",
+      "lookUp": "Consultar",
+      "newLookup": "Nova consulta",
+      "symptom": "O que está a fazer?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Descarga",
+      "pipeSuction": "Aspiração",
+      "pipeLiquid": "Líquido",
+      "places": {
+        "outdoor": "Unidade de cobertura",
+        "pack": "Rack",
+        "coil": "Bateria da câmara",
+        "product": "Interior do armazém",
+        "panel": "Quadro de parede"
+      },
+      "stations": {
+        "room": "Câmara de produto",
+        "evaporator": "Evaporador",
+        "compressor": "Compressor",
+        "condenser": "Condensador",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Não baixa a temperatura",
+        "roomWarm": "Produto quente",
+        "evapIce": "Bateria gelada",
+        "evapFan": "Ventoinha parada",
+        "compNoStart": "Não arranca",
+        "compShortCycle": "Ciclos curtos",
+        "condHp": "Alta pressão",
+        "condFan": "Ventoinha parada",
+        "ctrlHp": "HP no visor",
+        "ctrlLp": "LP no visor",
+        "ctrlDef": "Preso no descongelamento"
+      }
+    }
   },
   "chat": {
     "you": "Você",
@@ -39,7 +77,8 @@
     "noDocs": "Nada nos manuais carregados corresponde a esta situação. Contacte a assistência Cantek em vez de tentar adivinhar valores de ajuste ou ligações elétricas.",
     "greeting": "Olá. Sou o suporte de diagnóstico Cantek para armazenamento frigorífico industrial. Descreva o problema da instalação ou peça os contactos da assistência Cantek.",
     "companyFacts": "A Cantek Soğutma A.Ş. (Cantek Group) tem sede em Antália, Türkiye: Zona Industrial Organizada, 2.ª secção, Rua 21, n.º 1, Döşemealtı, Antália 07177. Damos apoio a câmaras frigoríficas industriais, grupos de frio e controladores Octosense, IRS e Octopush. Este portal responde a partir de manuais de assistência aprovados quando estão carregados. Assistência Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek."
+    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek.",
+    "rateLimited": "Demasiadas consultas neste momento. Espere um minuto e tente de novo, ou ligue para a assistência Cantek."
   },
   "account": {
     "kicker": "Acesso de cliente",

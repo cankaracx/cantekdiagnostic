@@ -31,7 +31,45 @@
     "empty": "Zapytaj o temperaturę, alarmy, oblodzenie, sprężarki, amoniak lub sterowniki.",
     "sources": "Źródła",
     "service": "Serwis Cantek",
-    "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych."
+    "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych.",
+    "circuit": {
+      "title": "Co stoi przed tobą na obiekcie?",
+      "help": "Wybierz element instalacji, a potem objaw. Wyszukiwanie w dokumentacji używa tego sformułowania.",
+      "lookUp": "Szukaj w dokumentacji",
+      "newLookup": "Nowe wyszukiwanie",
+      "symptom": "Co robi?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Tłoczenie",
+      "pipeSuction": "Ssanie",
+      "pipeLiquid": "Ciecz",
+      "places": {
+        "outdoor": "Agregat dachowy",
+        "pack": "Rack",
+        "coil": "Chłodnica komory",
+        "product": "Wnętrze chłodni",
+        "panel": "Tablica ścienna"
+      },
+      "stations": {
+        "room": "Komora produktu",
+        "evaporator": "Parownik",
+        "compressor": "Sprężarka",
+        "condenser": "Skraplacz",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Nie schładza",
+        "roomWarm": "Towar zbyt ciepły",
+        "evapIce": "Chłodnica oblodzona",
+        "evapFan": "Wentylator stoi",
+        "compNoStart": "Nie startuje",
+        "compShortCycle": "Krótkie cykle",
+        "condHp": "Wysokie ciśnienie",
+        "condFan": "Wentylator stoi",
+        "ctrlHp": "HP na wyświetlaczu",
+        "ctrlLp": "LP na wyświetlaczu",
+        "ctrlDef": "Zablokowany w odszranianiu"
+      }
+    }
   },
   "chat": {
     "you": "Ty",
@@ -39,7 +77,8 @@
     "noDocs": "Załadowana dokumentacja nie zawiera informacji odpowiadających temu zapytaniu. Zamiast zgadywać nastawy lub sposób okablowania, skontaktuj się z serwisem Cantek.",
     "greeting": "Dzień dobry. Jestem wsparciem diagnostycznym Cantek dla przemysłowych chłodni. Opisz usterkę na obiekcie albo poproś o dane kontaktowe serwisu Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ma siedzibę w Antalyi, Türkiye: Organized Industrial Zone, 2. sekcja, 21. ulica, nr 1, Döşemealtı, Antalya 07177. Wspieramy przemysłowe chłodnie, agregaty chłodnicze oraz sterowniki Octosense, IRS i Octopush. Ten portal odpowiada na podstawie zatwierdzonych instrukcji serwisowych, gdy są wczytane. Serwis Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek."
+    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek.",
+    "rateLimited": "Zbyt wiele zapytań. Odczekaj minutę i spróbuj ponownie albo zadzwoń do serwisu Cantek."
   },
   "account": {
     "kicker": "Dostęp klienta",

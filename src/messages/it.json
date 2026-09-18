@@ -31,7 +31,45 @@
     "empty": "Fai una domanda su temperatura, allarmi, ghiaccio, compressori, ammoniaca o controllori.",
     "sources": "Fonti",
     "service": "Assistenza Cantek",
-    "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali."
+    "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali.",
+    "circuit": {
+      "title": "Cosa hai davanti all'impianto?",
+      "help": "Seleziona il componente, poi il sintomo. La ricerca nei manuali usa questa formulazione.",
+      "lookUp": "Cerca nei manuali",
+      "newLookup": "Nuova ricerca",
+      "symptom": "Cosa sta facendo?",
+      "picked": "{station}: {fault}",
+      "pipeDischarge": "Mandata",
+      "pipeSuction": "Aspirazione",
+      "pipeLiquid": "Liquido",
+      "places": {
+        "outdoor": "Unità a tetto",
+        "pack": "Rack",
+        "coil": "Batteria cella",
+        "product": "Interno magazzino",
+        "panel": "Quadro a parete"
+      },
+      "stations": {
+        "room": "Cella prodotto",
+        "evaporator": "Evaporatore",
+        "compressor": "Compressore",
+        "condenser": "Condensatore",
+        "controller": "Octosense"
+      },
+      "faults": {
+        "roomNotPulling": "Non scende in temperatura",
+        "roomWarm": "Prodotto troppo caldo",
+        "evapIce": "Batteria ghiacciata",
+        "evapFan": "Ventola ferma",
+        "compNoStart": "Non parte",
+        "compShortCycle": "Cicli corti",
+        "condHp": "Alta pressione",
+        "condFan": "Ventola ferma",
+        "ctrlHp": "HP sul display",
+        "ctrlLp": "LP sul display",
+        "ctrlDef": "Bloccato in sbrinamento"
+      }
+    }
   },
   "chat": {
     "you": "Tu",
@@ -39,7 +77,8 @@
     "noDocs": "Nessun contenuto nei manuali caricati corrisponde alla richiesta. Contatta l'assistenza Cantek invece di procedere per tentativi con setpoint o cablaggi.",
     "greeting": "Buongiorno. Sono il supporto diagnostico Cantek per la conservazione frigorifera industriale. Descrivi il problema dell'impianto o chiedi i contatti dell'assistenza Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ha sede ad Antalya, Türkiye: Zona Industriale Organizzata, 2ª sezione, 21ª strada, n. 1, Döşemealtı, Antalya 07177. Supportiamo celle frigorifere industriali, gruppi frigoriferi e controller Octosense, IRS e Octopush. Questo portale risponde dai manuali di assistenza approvati quando sono caricati. Assistenza Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek."
+    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek.",
+    "rateLimited": "Troppe ricerche in questo momento. Attendi un minuto e riprova, oppure chiama l'assistenza Cantek."
   },
   "account": {
     "kicker": "Accesso clienti",
