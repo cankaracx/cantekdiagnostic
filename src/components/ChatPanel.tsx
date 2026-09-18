@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
+import { PlantCircuit } from "@/components/PlantCircuit";
 import type { Citation } from "@/lib/rag/types";
 
 type UiMessage = {
@@ -115,8 +116,19 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
+  function resetLookup() {
+    if (busy) return;
+    setMessages([]);
+    setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.overflowY = "hidden";
+    }
+    textareaRef.current?.focus();
+  }
+
+  async function send(textOverride?: string) {
+    const text = (textOverride ?? input).trim();
     if (!text || busy) return;
     const next = [...messages, { role: "user" as const, content: text }];
     setMessages(next);
@@ -139,6 +151,9 @@ export function ChatPanel(props: {
       });
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 429 || data.error === "rate_limited") {
+          throw new Error("rate_limited");
+        }
         throw new Error(data.error ?? "chat_failed");
       }
       setMessages([
@@ -151,10 +166,15 @@ export function ChatPanel(props: {
           emergency: data.emergency,
         },
       ]);
-    } catch {
+    } catch (error) {
+      const rateLimited =
+        error instanceof Error && error.message === "rate_limited";
       setMessages([
         ...next,
-        { role: "assistant", content: t("chat.error") },
+        {
+          role: "assistant",
+          content: rateLimited ? t("chat.rateLimited") : t("chat.error"),
+        },
       ]);
     } finally {
       setBusy(false);
@@ -164,7 +184,7 @@ export function ChatPanel(props: {
 
   return (
     <div className="chat-shell">
-      <div className="chat-shell-header flex items-center justify-between gap-4 px-5 pb-4 pt-5 sm:px-6">
+      <div className="chat-shell-header flex flex-wrap items-center justify-between gap-3 px-5 pb-4 pt-5 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <span className="chat-badge" aria-hidden="true">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
@@ -183,17 +203,29 @@ export function ChatPanel(props: {
             </svg>
           </span>
           <div className="min-w-0">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-cantek-cyan">
+            <p className="text-[0.75rem] font-semibold text-cantek-cyan">
               Cantek Group
             </p>
-            <h3 className="mt-1 truncate text-lg font-bold text-cantek-dark">
+            <h3 className="mt-1 text-lg font-bold text-cantek-dark">
               {t("home.workspaceTitle")}
             </h3>
           </div>
         </div>
-        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted sm:inline">
-          {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
-        </span>
+        <div className="flex shrink-0 items-center gap-2">
+          {messages.length > 0 && (
+            <button
+              type="button"
+              className="plant-reset"
+              onClick={resetLookup}
+              disabled={busy}
+            >
+              {t("home.circuit.newLookup")}
+            </button>
+          )}
+          <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-semibold text-cantek-muted sm:inline">
+            {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
+          </span>
+        </div>
       </div>
       <div
         className="chat-scroll space-y-4 p-4 sm:p-6"
@@ -201,9 +233,7 @@ export function ChatPanel(props: {
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
-            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
-          </div>
+          <PlantCircuit disabled={busy} onLookup={(query) => void send(query)} />
         )}
         {messages.map((message, index) => {
           const isUser = message.role === "user";
@@ -226,7 +256,7 @@ export function ChatPanel(props: {
                   isUser ? "message-bubble-user" : "message-bubble-assistant"
                 }`}
               >
-                <p className="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                <p className="mb-1.5 text-[0.75rem] font-semibold text-cantek-muted">
                   {isUser ? t("chat.you") : t("chat.assistant")}
                 </p>
                 {message.emergency && (
@@ -246,7 +276,7 @@ export function ChatPanel(props: {
                 <div className="whitespace-pre-wrap">{message.content}</div>
                 {message.citations && message.citations.length > 0 && (
                   <div className="mt-3 border-t border-cantek-border pt-2.5">
-                    <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                    <p className="mb-2 text-[0.75rem] font-semibold text-cantek-muted">
                       {t("home.sources")}
                     </p>
                     <div className="flex flex-wrap gap-1.5">

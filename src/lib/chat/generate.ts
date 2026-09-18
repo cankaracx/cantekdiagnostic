@@ -11,6 +11,10 @@ import {
   isGreetingQuery,
   staticGeneralAnswer,
 } from "@/lib/chat/company-knowledge";
+import {
+  composeLookupQuery,
+  conversationForModel,
+} from "@/lib/chat/context";
 import { localizedChatCopy } from "@/lib/chat/localized";
 import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
@@ -92,6 +96,7 @@ async function generateWithModel(
   staffMode: boolean,
   messages: ChatMessage[],
   passages: string,
+  lookupQuery: string,
 ): Promise<{
   text: string;
   model: string;
@@ -107,18 +112,16 @@ async function generateWithModel(
   const system = `${buildSystemPrompt({
     locale,
     staffMode,
-    documentationRequested: isDocumentationRequest(
-      messages.at(-1)?.content ?? "",
-    ),
+    documentationRequested:
+      isDocumentationRequest(messages.at(-1)?.content ?? "") ||
+      isDocumentationRequest(lookupQuery),
   })}\n\nRETRIEVED PASSAGES:\n${passages}`;
-  const lastUserMessage = [...messages]
-    .reverse()
-    .find((message) => message.role === "user");
-  if (!lastUserMessage) return null;
+  const conversation = conversationForModel(messages);
+  if (!conversation.length) return null;
 
   return generateWithProviders({
     system,
-    messages: [{ role: "user", content: lastUserMessage.content.slice(0, 8_000) }],
+    messages: conversation,
     allowFailover: !staffMode,
   });
 }
@@ -127,10 +130,12 @@ export async function answerQuestion(opts: {
   messages: ChatMessage[];
   locale: string;
   staffMode: boolean;
+  serial?: string;
   database?: SupabaseClient | null;
 }): Promise<AnswerResult> {
   const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-  const retrieved = await searchManuals(lastUser, {
+  const lookupQuery = composeLookupQuery(opts.messages, opts.serial);
+  const retrieved = await searchManuals(lookupQuery || lastUser, {
     includeInternal: opts.staffMode,
     limit: 8,
     database: opts.database,
@@ -152,6 +157,7 @@ export async function answerQuestion(opts: {
         opts.staffMode,
         opts.messages,
         formatPassages(grounded),
+        lookupQuery,
       );
   const general =
     hazard || emergency || hasGrounding || !isGeneralConversation(lastUser)

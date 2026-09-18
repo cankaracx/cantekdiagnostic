@@ -41,6 +41,7 @@ export async function POST(request: Request) {
     messages?: { role: "user" | "assistant"; content: string }[];
     mode?: "public" | "technician";
     locale?: string;
+    serial?: string;
   };
   try {
     body = await readJsonBody<typeof body>(request, 100_000);
@@ -79,7 +80,6 @@ export async function POST(request: Request) {
   const staff = await isStaffSession();
   const staffMode = body.mode === "technician" && staff;
   const database = await createServerSupabase();
-  const currentMessage = messages[messages.length - 1]!;
 
   if (!staffMode) {
     const dailyLimit = await checkGlobalRateLimit(
@@ -99,9 +99,10 @@ export async function POST(request: Request) {
 
   try {
     const result = await answerQuestion({
-      messages: [currentMessage],
+      messages,
       locale,
       staffMode,
+      serial: typeof body.serial === "string" ? body.serial : "",
       database,
     });
     return NextResponse.json(result, {
