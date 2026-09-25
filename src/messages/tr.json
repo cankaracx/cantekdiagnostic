@@ -28,7 +28,7 @@
     "placeholder": "Örnek: soğuk oda düşmüyor, yaz öğleden sonra HP alarmı, Octosense kontrolör…",
     "send": "Sor",
     "thinking": "Kılavuzlar aranıyor…",
-    "empty": "Sıcaklık, alarm, buz, kompresör, amonyak veya kontrolör sorun.",
+    "empty": "Odayı ve tesiste görünen arızayı işaretleyip arayın. Gerekirse aşağıya ayrıntı ekleyin.",
     "sources": "Kaynaklar",
     "service": "Cantek servis",
     "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
@@ -39,7 +39,8 @@
     "noDocs": "Yüklü kılavuzlarda eşleşme yok. Setpoint veya kablo uydurmayın; Cantek servisi arayın.",
     "greeting": "Merhaba. Endüstriyel soğuk depo için Cantek arıza tanı desteğiyim. Tesisteki sorunu yazın veya Cantek servis iletişimini isteyin.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) Antalya, Türkiye merkezlidir: Organize Sanayi Bölgesi, 2. Kısım, 21. Cadde, No:1, Döşemealtı, Antalya 07177. Endüstriyel soğuk depo, soğutma üniteleri ve Octosense, IRS, Octopush kontrolörleri desteklenir. Bu portal, yüklü onaylı servis kılavuzlarından yanıt verir. Cantek servisi: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın."
+    "error": "Arıza tanı servisi geçici olarak kullanılamıyor. Lütfen yeniden deneyin veya Cantek servisine ulaşın.",
+    "rateLimited": "Şu anda çok fazla arıza sorusu gönderildi. Bir dakika bekleyip yeniden deneyin veya Cantek servisini arayın."
   },
   "account": {
     "kicker": "Müşteri erişimi",
@@ -160,5 +161,41 @@
     "title": "Tehlike",
     "body": "Çalışmayı durdurun. Tehlikeli servis işleri, sahaya özel prosedürü kullanan yetkili ve uygun sertifikalı bir teknisyen gerektirir.",
     "emergency": "Tehlikeden uzaklaşın, alanı tahliye edin ve yerel acil servislerle tesis acil durum ekibini arayın."
+  },
+  "plant": {
+    "title": "Tesis çağrısı",
+    "lead": "Cantek servisine telefonda söylediğiniz bilgileri yazın. Kılavuzlar bu karta ve sonraki sorularınıza göre aranır.",
+    "duty": "Oda görevi",
+    "fault": "Ne görünüyor",
+    "refrigerant": "Soğutucu",
+    "serial": "Ünite veya kontrolör seri no",
+    "serialHint": "Varsa etiket üzerindeki numara",
+    "lookup": "Bu çağrıyı ara",
+    "newCall": "Yeni çağrı",
+    "openExcerpt": "Alıntıyı göster",
+    "closeExcerpt": "Alıntıyı gizle",
+    "excerpt": "Kılavuz alıntısı",
+    "logged": "Bu çağrıda",
+    "duties": {
+      "chill": "Soğuk oda",
+      "freeze": "Donmuş depo",
+      "blast": "Şok tüneli",
+      "pack": "Soğutma ünitesi",
+      "unknown": "Emin değilim"
+    },
+    "faults": {
+      "pulldown": "Sıcaklık düşmüyor",
+      "hp": "HP / yüksek basınç",
+      "ice": "Evaporatör buzlu",
+      "alarm": "Kontrolör alarmı",
+      "oil": "Yağ veya yağlama"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Bilinmiyor"
+    }
   }
 }

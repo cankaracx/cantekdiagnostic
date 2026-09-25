@@ -28,7 +28,7 @@
     "placeholder": "Beispiel: Kühlraum erreicht die Solltemperatur nicht, HP-Alarm an einem Sommernachmittag, Octosense-Steuerung…",
     "send": "Fragen",
     "thinking": "Handbücher werden durchsucht…",
-    "empty": "Fragen Sie zu Temperatur, Alarmen, Eisbildung, Verdichtern, Ammoniak oder Steuerungen.",
+    "empty": "Markieren Sie den Raum und das, was an der Anlage sichtbar ist, und suchen Sie danach. Extraangaben können Sie darunter eintragen.",
     "sources": "Quellen",
     "service": "Cantek-Service",
     "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften."
@@ -39,7 +39,8 @@
     "noDocs": "In den geladenen Handbüchern wurde hierzu nichts Passendes gefunden. Wenden Sie sich an den Cantek-Service, anstatt Sollwerte oder Verdrahtungen zu erraten.",
     "greeting": "Guten Tag. Ich bin der Cantek-Diagnosesupport für industrielle Kältelager. Beschreiben Sie die Anlagenstörung oder fragen Sie nach den Cantek-Servicekontakten.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) hat den Sitz in Antalya, Türkiye: Organized Industrial Zone, 2. Abschnitt, 21. Straße, Nr. 1, Döşemealtı, Antalya 07177. Wir unterstützen industrielle Kältelager, Kühlaggregate und Steuerungen wie Octosense, IRS und Octopush. Dieses Portal antwortet aus freigegebenen Servicehandbüchern, sofern sie geladen sind. Cantek-Service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service."
+    "error": "Der Diagnosedienst ist vorübergehend nicht verfügbar. Versuchen Sie es erneut oder wenden Sie sich an den Cantek-Service.",
+    "rateLimited": "Zu viele Diagnoseanfragen in kurzer Zeit. Warten Sie eine Minute und versuchen Sie es erneut, oder rufen Sie den Cantek-Service an."
   },
   "account": {
     "kicker": "Kundenzugang",
@@ -160,5 +161,41 @@
     "title": "Gefahr",
     "body": "Stellen Sie die Arbeiten ein. Gefährliche Servicearbeiten dürfen nur von einer autorisierten, entsprechend zertifizierten Fachkraft unter Anwendung des standortspezifischen Verfahrens durchgeführt werden.",
     "emergency": "Entfernen Sie sich aus dem Gefahrenbereich, evakuieren Sie und rufen Sie die örtlichen Rettungsdienste sowie das Notfallteam des Standorts."
+  },
+  "plant": {
+    "title": "Anlagenanruf",
+    "lead": "Tragen Sie dieselben Angaben ein, die Sie dem Cantek-Service telefonisch geben. Die Handbücher werden über diese Karte und Folgefragen durchsucht.",
+    "duty": "Raumaufgabe",
+    "fault": "Was zeigt sich",
+    "refrigerant": "Kältemittel",
+    "serial": "Seriennummer Aggregat oder Steuerung",
+    "serialHint": "Vom Typenschild, falls vorhanden",
+    "lookup": "Diesen Anruf suchen",
+    "newCall": "Neuer Anruf",
+    "openExcerpt": "Auszug zeigen",
+    "closeExcerpt": "Auszug ausblenden",
+    "excerpt": "Handbuchauszug",
+    "logged": "Bei diesem Anruf",
+    "duties": {
+      "chill": "Kühlraum",
+      "freeze": "Tiefkühlraum",
+      "blast": "Schockfroster",
+      "pack": "Kühlaggregat",
+      "unknown": "Unsicher"
+    },
+    "faults": {
+      "pulldown": "Temperatur fällt nicht",
+      "hp": "HP / Hochdruck",
+      "ice": "Verdampfer vereist",
+      "alarm": "Steuerungsalarm",
+      "oil": "Öl oder Schmierung"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Unbekannt"
+    }
   }
 }

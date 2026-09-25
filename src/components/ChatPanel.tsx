@@ -1,8 +1,16 @@
 "use client";
 
-import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { PlantLog } from "@/components/PlantLog";
+import {
+  describePlantCall,
+  EMPTY_PLANT_CALL,
+  plantCallHasLookup,
+  sanitizePlantCall,
+  type PlantCall,
+} from "@/lib/chat/plant-log";
 import type { Citation } from "@/lib/rag/types";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type UiMessage = {
   role: "user" | "assistant";
@@ -89,6 +97,60 @@ function resizeComposer(textarea: HTMLTextAreaElement) {
   textarea.style.overflowY = textarea.scrollHeight > 160 ? "auto" : "hidden";
 }
 
+function CitationList(props: {
+  citations: Citation[];
+  locale: string;
+  sourcesLabel: string;
+  openLabel: string;
+  closeLabel: string;
+  excerptLabel: string;
+}) {
+  const [openId, setOpenId] = useState<string | null>(null);
+
+  return (
+    <div className="mt-3 border-t border-cantek-border pt-2.5">
+      <p className="mb-2 text-[0.8rem] font-semibold text-cantek-muted">
+        {props.sourcesLabel}
+      </p>
+      <div className="grid gap-1.5">
+        {props.citations.map((citation) => {
+          const open = openId === citation.chunkId;
+          return (
+            <div key={citation.chunkId} className="citation-block">
+              <button
+                type="button"
+                className="citation-chip"
+                title={citation.documentTitle}
+                aria-expanded={open}
+                onClick={() =>
+                  setOpenId(open ? null : citation.chunkId)
+                }
+              >
+                <DocumentIcon />
+                <span className="truncate">
+                  {citation.documentTitle}
+                  {citation.page
+                    ? ` ${PAGE_LABELS[props.locale] ?? "p."}${citation.page}`
+                    : ""}
+                </span>
+                <span className="citation-toggle">
+                  {open ? props.closeLabel : props.openLabel}
+                </span>
+              </button>
+              {open && citation.excerpt && (
+                <blockquote className="citation-excerpt">
+                  <p className="citation-excerpt-label">{props.excerptLabel}</p>
+                  <p>{citation.excerpt}</p>
+                </blockquote>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function ChatPanel(props: {
   mode: "public" | "technician";
   serial?: string;
@@ -102,8 +164,17 @@ export function ChatPanel(props: {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [plant, setPlant] = useState<PlantCall>(EMPTY_PLANT_CALL);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const activePlant = useMemo(
+    () =>
+      sanitizePlantCall({
+        ...plant,
+        serial: plant.serial.trim() || props.serial?.trim() || "",
+      }),
+    [plant, props.serial],
+  );
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -115,10 +186,17 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send() {
-    const text = input.trim();
-    if (!text || busy) return;
-    const next = [...messages, { role: "user" as const, content: text }];
+  async function send(nextContent?: string) {
+    const typed = (nextContent ?? input).trim();
+    const card = describePlantCall(activePlant);
+    const content =
+      messages.length === 0 && card && typed && typed !== card
+        ? `${card}\n\n${typed}`
+        : typed || card;
+    if (!content || busy) return;
+    if (!typed && !plantCallHasLookup(activePlant)) return;
+
+    const next = [...messages, { role: "user" as const, content }];
     setMessages(next);
     setInput("");
     if (textareaRef.current) {
@@ -131,15 +209,23 @@ export function ChatPanel(props: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: next.map(({ role, content }) => ({ role, content })),
+          messages: next.map(({ role, content: line }) => ({
+            role,
+            content: line,
+          })),
           mode: props.mode,
-          serial: props.serial,
+          serial: activePlant.serial,
+          plant: activePlant,
           locale,
         }),
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? "chat_failed");
+        throw new Error(
+          data.error === "rate_limited" || res.status === 429
+            ? "rate_limited"
+            : (data.error ?? "chat_failed"),
+        );
       }
       setMessages([
         ...next,
@@ -151,16 +237,29 @@ export function ChatPanel(props: {
           emergency: data.emergency,
         },
       ]);
-    } catch {
+    } catch (error) {
+      const limited =
+        error instanceof Error && error.message === "rate_limited";
       setMessages([
         ...next,
-        { role: "assistant", content: t("chat.error") },
+        {
+          role: "assistant",
+          content: limited ? t("chat.rateLimited") : t("chat.error"),
+        },
       ]);
     } finally {
       setBusy(false);
       textareaRef.current?.focus();
     }
   }
+
+  function resetCall() {
+    setMessages([]);
+    setPlant(EMPTY_PLANT_CALL);
+    setInput("");
+  }
+
+  const compactLog = messages.length > 0;
 
   return (
     <div className="chat-shell">
@@ -183,7 +282,7 @@ export function ChatPanel(props: {
             </svg>
           </span>
           <div className="min-w-0">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-cantek-cyan">
+            <p className="text-[0.8rem] font-semibold text-cantek-cyan">
               Cantek Group
             </p>
             <h3 className="mt-1 truncate text-lg font-bold text-cantek-dark">
@@ -191,19 +290,28 @@ export function ChatPanel(props: {
             </h3>
           </div>
         </div>
-        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted sm:inline">
+        <span className="hidden border border-cantek-border bg-cantek-light px-3 py-1.5 text-[0.78rem] font-semibold text-cantek-muted sm:inline">
           {props.mode === "technician" ? t("nav.technician") : t("nav.diagnostics")}
         </span>
       </div>
+      <PlantLog
+        plant={activePlant}
+        serialLocked={Boolean(props.serial?.trim()) && props.mode === "technician"}
+        compact={compactLog}
+        busy={busy}
+        onChange={setPlant}
+        onLookup={() => void send()}
+        onNewCall={resetCall}
+      />
       <div
         className="chat-scroll space-y-4 p-4 sm:p-6"
         aria-live="polite"
         aria-busy={busy}
       >
         {messages.length === 0 && (
-          <div className="border border-cantek-border border-s-4 border-s-cantek-cyan bg-white px-5 py-4 shadow-[0_3px_12px_rgb(39_50_58_/_5%)]">
-            <p className="text-sm leading-6 text-cantek-muted">{t("home.empty")}</p>
-          </div>
+          <p className="px-1 text-sm leading-6 text-cantek-muted">
+            {t("home.empty")}
+          </p>
         )}
         {messages.map((message, index) => {
           const isUser = message.role === "user";
@@ -226,7 +334,7 @@ export function ChatPanel(props: {
                   isUser ? "message-bubble-user" : "message-bubble-assistant"
                 }`}
               >
-                <p className="mb-1.5 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
+                <p className="mb-1.5 text-[0.78rem] font-semibold text-cantek-muted">
                   {isUser ? t("chat.you") : t("chat.assistant")}
                 </p>
                 {message.emergency && (
@@ -245,28 +353,14 @@ export function ChatPanel(props: {
                 )}
                 <div className="whitespace-pre-wrap">{message.content}</div>
                 {message.citations && message.citations.length > 0 && (
-                  <div className="mt-3 border-t border-cantek-border pt-2.5">
-                    <p className="mb-2 text-[0.68rem] font-bold uppercase tracking-[0.1em] text-cantek-muted">
-                      {t("home.sources")}
-                    </p>
-                    <div className="flex flex-wrap gap-1.5">
-                      {message.citations.map((citation) => (
-                        <span
-                          key={citation.chunkId}
-                          className="citation-chip"
-                          title={citation.documentTitle}
-                        >
-                          <DocumentIcon />
-                          <span className="truncate">
-                            {citation.documentTitle}
-                            {citation.page
-                              ? ` · ${PAGE_LABELS[locale] ?? "p."}${citation.page}`
-                              : ""}
-                          </span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <CitationList
+                    citations={message.citations}
+                    locale={locale}
+                    sourcesLabel={t("home.sources")}
+                    openLabel={t("plant.openExcerpt")}
+                    closeLabel={t("plant.closeExcerpt")}
+                    excerptLabel={t("plant.excerpt")}
+                  />
                 )}
               </article>
             </div>
@@ -326,7 +420,7 @@ export function ChatPanel(props: {
         />
         <button
           type="submit"
-          disabled={busy || !input.trim()}
+          disabled={busy || (!input.trim() && !plantCallHasLookup(activePlant))}
           className="send-button"
           aria-label={t("home.send")}
         >

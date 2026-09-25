@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { IBM_Plex_Sans, IBM_Plex_Sans_Condensed } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { hasLocale } from "next-intl";
@@ -8,6 +9,20 @@ import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { RTL_LOCALES } from "@/lib/geo/locales";
 import type { AppLocale } from "@/i18n/routing";
+
+const plex = IBM_Plex_Sans({
+  subsets: ["latin", "latin-ext", "cyrillic"],
+  weight: ["400", "600", "700"],
+  variable: "--font-plex",
+  display: "swap",
+});
+
+const plexCondensed = IBM_Plex_Sans_Condensed({
+  subsets: ["latin", "latin-ext"],
+  weight: ["500", "600"],
+  variable: "--font-plex-condensed",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -38,7 +53,7 @@ export default async function LocaleLayout({
   const dir = RTL_LOCALES.has(locale as AppLocale) ? "rtl" : "ltr";
 
   return (
-    <html lang={locale} dir={dir} className="h-full">
+    <html lang={locale} dir={dir} className={`h-full ${plex.variable} ${plexCondensed.variable}`}>
       <body className="flex min-h-full flex-col antialiased">
         <NextIntlClientProvider messages={messages}>
           <AppHeader />

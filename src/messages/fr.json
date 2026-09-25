@@ -28,7 +28,7 @@
     "placeholder": "Exemple : chambre qui ne descend pas, alarme HP un après-midi d’été, régulateur Octosense…",
     "send": "Demander",
     "thinking": "Recherche dans les manuels…",
-    "empty": "Parlez température, alarmes, glace, compresseurs, ammoniac ou régulateurs.",
+    "empty": "Cochez la chambre et ce qui apparaît sur l’installation, puis lancez la recherche. Ajoutez un détail en dessous si besoin.",
     "sources": "Sources",
     "service": "Service Cantek",
     "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
@@ -39,7 +39,8 @@
     "noDocs": "Aucun passage correspondant dans les manuels chargés. Contactez le service Cantek plutôt que d’inventer consignes ou câblage.",
     "greeting": "Bonjour. Je suis le support diagnostic Cantek pour le froid industriel. Décrivez le problème de l’installation, ou demandez les contacts du service Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) est basée à Antalya, Türkiye : Zone industrielle organisée, 2e section, 21e rue, n°1, Döşemealtı, Antalya 07177. Nous prenons en charge le stockage frigorifique industriel, les groupes de froid et les régulateurs Octosense, IRS et Octopush. Ce portail répond à partir des manuels de service approuvés lorsqu’ils sont chargés. Service Cantek : +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek."
+    "error": "Le service de diagnostic est temporairement indisponible. Réessayez ou contactez le service Cantek.",
+    "rateLimited": "Trop de demandes de diagnostic pour le moment. Attendez une minute puis réessayez, ou appelez le service Cantek."
   },
   "account": {
     "kicker": "Accès client",
@@ -160,5 +161,41 @@
     "title": "Danger",
     "body": "Arrêtez le travail. Toute intervention dangereuse exige un technicien autorisé et dûment certifié utilisant la procédure propre au site.",
     "emergency": "Éloignez-vous du danger, évacuez et appelez les secours locaux ainsi que l’équipe d’urgence du site."
+  },
+  "plant": {
+    "title": "Appel installation",
+    "lead": "Indiquez les mêmes faits qu’au service Cantek par téléphone. Les manuels sont cherchés à partir de cette fiche, y compris pour les questions suivantes.",
+    "duty": "Type de chambre",
+    "fault": "Ce qui apparaît",
+    "refrigerant": "Fluide",
+    "serial": "N° de série groupe ou régulateur",
+    "serialHint": "Sur la plaque signalétique si vous l’avez",
+    "lookup": "Chercher cet appel",
+    "newCall": "Nouvel appel",
+    "openExcerpt": "Voir l’extrait",
+    "closeExcerpt": "Masquer l’extrait",
+    "excerpt": "Extrait du manuel",
+    "logged": "Sur cet appel",
+    "duties": {
+      "chill": "Chambre positive",
+      "freeze": "Chambre négative",
+      "blast": "Tunnel de surgélation",
+      "pack": "Groupe de froid",
+      "unknown": "Pas sûr"
+    },
+    "faults": {
+      "pulldown": "Ne descend pas",
+      "hp": "HP / haute pression",
+      "ice": "Évaporateur givré",
+      "alarm": "Alarme régulateur",
+      "oil": "Huile ou lubrification"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Inconnu"
+    }
   }
 }

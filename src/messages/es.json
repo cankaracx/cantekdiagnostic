@@ -28,7 +28,7 @@
     "placeholder": "Ejemplo: la cámara no baja, alarma HP en una tarde de verano, controlador Octosense…",
     "send": "Preguntar",
     "thinking": "Buscando en los manuales…",
-    "empty": "Pregunte por temperatura, alarmas, hielo, compresores, amoníaco o controladores.",
+    "empty": "Marque la cámara y lo que se ve en la planta, y búsquelo. Añada detalle abajo si hace falta.",
     "sources": "Fuentes",
     "service": "Servicio Cantek",
     "disclaimer": "La guía proviene de documentos Cantek. No sustituye a un técnico frigorista certificado. Siga primero las normas locales de emergencia."
@@ -39,7 +39,8 @@
     "noDocs": "No hay coincidencias en los manuales cargados. Contacte a Cantek; no invente consignas ni cableado.",
     "greeting": "Hola. Soy el soporte de diagnóstico Cantek para almacenamiento frigorífico industrial. Describa el problema de la planta o pida los contactos de servicio Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) tiene sede en Antalya, Türkiye: Zona Industrial Organizada, 2.ª sección, calle 21, n.º 1, Döşemealtı, Antalya 07177. Damos soporte a cámaras frigoríficas industriales, grupos de frío y controladores Octosense, IRS y Octopush. Este portal responde a partir de manuales de servicio aprobados cuando están cargados. Servicio Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek."
+    "error": "El servicio de diagnóstico no está disponible temporalmente. Inténtelo de nuevo o contacte con Cantek.",
+    "rateLimited": "Hay demasiadas consultas de diagnóstico ahora. Espere un minuto e inténtelo de nuevo, o llame a Cantek."
   },
   "account": {
     "kicker": "Acceso de clientes",
@@ -160,5 +161,41 @@
     "title": "Peligro",
     "body": "Detenga el trabajo. El servicio peligroso requiere un técnico autorizado y debidamente certificado que use el procedimiento específico del sitio.",
     "emergency": "Aléjese del peligro, evacúe y llame a los servicios de emergencia locales y al equipo de emergencia del sitio."
+  },
+  "plant": {
+    "title": "Aviso de planta",
+    "lead": "Escriba los mismos datos que da al servicio Cantek por teléfono. Los manuales se buscan desde esta ficha, también en las preguntas siguientes.",
+    "duty": "Tipo de cámara",
+    "fault": "Qué se observa",
+    "refrigerant": "Refrigerante",
+    "serial": "Serie del grupo o controlador",
+    "serialHint": "De la placa si la tiene",
+    "lookup": "Buscar este aviso",
+    "newCall": "Aviso nuevo",
+    "openExcerpt": "Ver extracto",
+    "closeExcerpt": "Ocultar extracto",
+    "excerpt": "Extracto del manual",
+    "logged": "En este aviso",
+    "duties": {
+      "chill": "Cámara positiva",
+      "freeze": "Cámara de congelación",
+      "blast": "Túnel de ultracongelación",
+      "pack": "Grupo de frío",
+      "unknown": "No seguro"
+    },
+    "faults": {
+      "pulldown": "No baja la temperatura",
+      "hp": "HP / alta presión",
+      "ice": "Evaporador helado",
+      "alarm": "Alarma del controlador",
+      "oil": "Aceite o lubricación"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Desconocido"
+    }
   }
 }

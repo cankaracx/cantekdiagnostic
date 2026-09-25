@@ -28,7 +28,7 @@
     "placeholder": "Przykład: komora chłodnicza nie osiąga zadanej temperatury, alarm HP w letnie popołudnie, sterownik Octosense…",
     "send": "Zapytaj",
     "thinking": "Przeszukiwanie dokumentacji…",
-    "empty": "Zapytaj o temperaturę, alarmy, oblodzenie, sprężarki, amoniak lub sterowniki.",
+    "empty": "Zaznacz komorę i objaw na obiekcie, a następnie wyszukaj. Szczegóły dopisz poniżej, jeśli trzeba.",
     "sources": "Źródła",
     "service": "Serwis Cantek",
     "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych."
@@ -39,7 +39,8 @@
     "noDocs": "Załadowana dokumentacja nie zawiera informacji odpowiadających temu zapytaniu. Zamiast zgadywać nastawy lub sposób okablowania, skontaktuj się z serwisem Cantek.",
     "greeting": "Dzień dobry. Jestem wsparciem diagnostycznym Cantek dla przemysłowych chłodni. Opisz usterkę na obiekcie albo poproś o dane kontaktowe serwisu Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ma siedzibę w Antalyi, Türkiye: Organized Industrial Zone, 2. sekcja, 21. ulica, nr 1, Döşemealtı, Antalya 07177. Wspieramy przemysłowe chłodnie, agregaty chłodnicze oraz sterowniki Octosense, IRS i Octopush. Ten portal odpowiada na podstawie zatwierdzonych instrukcji serwisowych, gdy są wczytane. Serwis Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek."
+    "error": "Usługa diagnostyczna jest tymczasowo niedostępna. Spróbuj ponownie lub skontaktuj się z serwisem Cantek.",
+    "rateLimited": "Zbyt wiele zapytań diagnostycznych. Poczekaj minutę i spróbuj ponownie albo zadzwoń do serwisu Cantek."
   },
   "account": {
     "kicker": "Dostęp klienta",
@@ -160,5 +161,41 @@
     "title": "Niebezpieczeństwo",
     "body": "Przerwij pracę. Niebezpieczne czynności serwisowe wymagają udziału upoważnionego technika z odpowiednimi certyfikatami, stosującego procedurę właściwą dla danego obiektu.",
     "emergency": "Oddal się od zagrożenia, przeprowadź ewakuację i zadzwoń do lokalnych służb ratunkowych oraz zakładowego zespołu reagowania kryzysowego."
+  },
+  "plant": {
+    "title": "Zgłoszenie z obiektu",
+    "lead": "Wpisz te same dane, które podajesz serwisowi Cantek telefonicznie. Instrukcje są wyszukiwane z tej karty, także przy pytaniach uzupełniających.",
+    "duty": "Przeznaczenie komory",
+    "fault": "Co widać",
+    "refrigerant": "Czynnik",
+    "serial": "Numer seryjny agregatu lub sterownika",
+    "serialHint": "Z tabliczki znamionowej, jeśli jest",
+    "lookup": "Szukaj tego zgłoszenia",
+    "newCall": "Nowe zgłoszenie",
+    "openExcerpt": "Pokaż fragment",
+    "closeExcerpt": "Ukryj fragment",
+    "excerpt": "Fragment instrukcji",
+    "logged": "W tym zgłoszeniu",
+    "duties": {
+      "chill": "Chłodnia plusowa",
+      "freeze": "Mroźnia",
+      "blast": "Tunele szokowe",
+      "pack": "Agregat chłodniczy",
+      "unknown": "Niepewne"
+    },
+    "faults": {
+      "pulldown": "Nie schładza",
+      "hp": "HP / wysokie ciśnienie",
+      "ice": "Oszroniony parownik",
+      "alarm": "Alarm sterownika",
+      "oil": "Olej lub smarowanie"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Nieznany"
+    }
   }
 }

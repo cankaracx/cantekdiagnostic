@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isStaffSession } from "@/lib/auth/staff";
 import { answerQuestion } from "@/lib/chat/generate";
+import { sanitizePlantCall } from "@/lib/chat/plant-log";
 import { localeCookieName } from "@/i18n/routing";
 import { cookies } from "next/headers";
 import { isAppLocale } from "@/lib/geo/locales";
@@ -41,6 +42,8 @@ export async function POST(request: Request) {
     messages?: { role: "user" | "assistant"; content: string }[];
     mode?: "public" | "technician";
     locale?: string;
+    serial?: string;
+    plant?: unknown;
   };
   try {
     body = await readJsonBody<typeof body>(request, 100_000);
@@ -79,7 +82,6 @@ export async function POST(request: Request) {
   const staff = await isStaffSession();
   const staffMode = body.mode === "technician" && staff;
   const database = await createServerSupabase();
-  const currentMessage = messages[messages.length - 1]!;
 
   if (!staffMode) {
     const dailyLimit = await checkGlobalRateLimit(
@@ -99,10 +101,15 @@ export async function POST(request: Request) {
 
   try {
     const result = await answerQuestion({
-      messages: [currentMessage],
+      messages,
       locale,
       staffMode,
       database,
+      plant: sanitizePlantCall(
+        body.plant,
+        typeof body.serial === "string" ? body.serial : "",
+      ),
+      serial: typeof body.serial === "string" ? body.serial : undefined,
     });
     return NextResponse.json(result, {
       headers: { "Cache-Control": "no-store" },

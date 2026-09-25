@@ -28,7 +28,7 @@
     "placeholder": "Esempio: la cella frigorifera non raggiunge la temperatura, allarme HP in un pomeriggio estivo, controllore Octosense…",
     "send": "Chiedi",
     "thinking": "Ricerca nei manuali…",
-    "empty": "Fai una domanda su temperatura, allarmi, ghiaccio, compressori, ammoniaca o controllori.",
+    "empty": "Segna la cella e ciò che si vede sull'impianto, poi cerca. Aggiungi dettagli sotto se serve.",
     "sources": "Fonti",
     "service": "Assistenza Cantek",
     "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali."
@@ -39,7 +39,8 @@
     "noDocs": "Nessun contenuto nei manuali caricati corrisponde alla richiesta. Contatta l'assistenza Cantek invece di procedere per tentativi con setpoint o cablaggi.",
     "greeting": "Buongiorno. Sono il supporto diagnostico Cantek per la conservazione frigorifera industriale. Descrivi il problema dell'impianto o chiedi i contatti dell'assistenza Cantek.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) ha sede ad Antalya, Türkiye: Zona Industriale Organizzata, 2ª sezione, 21ª strada, n. 1, Döşemealtı, Antalya 07177. Supportiamo celle frigorifere industriali, gruppi frigoriferi e controller Octosense, IRS e Octopush. Questo portale risponde dai manuali di assistenza approvati quando sono caricati. Assistenza Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek."
+    "error": "Il servizio di diagnostica è temporaneamente non disponibile. Riprova o contatta l'assistenza Cantek.",
+    "rateLimited": "Troppe richieste di diagnostica in questo momento. Attendi un minuto e riprova, oppure chiama l'assistenza Cantek."
   },
   "account": {
     "kicker": "Accesso clienti",
@@ -160,5 +161,41 @@
     "title": "Pericolo",
     "body": "Interrompi il lavoro. Gli interventi pericolosi richiedono un tecnico autorizzato, in possesso delle certificazioni appropriate, che segua la procedura specifica del sito.",
     "emergency": "Allontanati dal pericolo, evacua l'area e chiama i servizi di emergenza locali e la squadra di emergenza del sito."
+  },
+  "plant": {
+    "title": "Chiamata impianto",
+    "lead": "Indica gli stessi dati che dai all'assistenza Cantek al telefono. I manuali vengono cercati da questa scheda, anche per le domande successive.",
+    "duty": "Tipo di cella",
+    "fault": "Cosa si vede",
+    "refrigerant": "Refrigerante",
+    "serial": "Matricola gruppo o controllore",
+    "serialHint": "Dalla targhetta, se ce l'hai",
+    "lookup": "Cerca questa chiamata",
+    "newCall": "Nuova chiamata",
+    "openExcerpt": "Mostra estratto",
+    "closeExcerpt": "Nascondi estratto",
+    "excerpt": "Estratto del manuale",
+    "logged": "In questa chiamata",
+    "duties": {
+      "chill": "Cella positiva",
+      "freeze": "Cella negativa",
+      "blast": "Abbattitore",
+      "pack": "Gruppo frigorifero",
+      "unknown": "Non sicuro"
+    },
+    "faults": {
+      "pulldown": "Non raffredda",
+      "hp": "HP / alta pressione",
+      "ice": "Evaporatore ghiacciato",
+      "alarm": "Allarme controllore",
+      "oil": "Olio o lubrificazione"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Sconosciuto"
+    }
   }
 }

@@ -11,6 +11,8 @@
   --cantek-surface-raised: #ffffff;
   --cantek-border: #dee2e6;
   --cantek-red: #b3202e;
+  --rack-fascia: #0e3a4a;
+  --steel-deck: #e8eef0;
   --cantek-shadow: rgb(39 50 58 / 12%);
   --navy: var(--cantek-dark);
   --navy-2: var(--cantek-dark-deep);
@@ -39,8 +41,9 @@
   --color-cantek-surface: var(--cantek-surface);
   --color-cantek-border: var(--cantek-border);
   --color-cantek-red: var(--cantek-red);
-  --font-sans: "Segoe UI", Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-plex), "Segoe UI", Arial, Helvetica, sans-serif;
   --font-arabic: Tahoma, Arial, sans-serif;
+  --font-nameplate: var(--font-plex-condensed), "Segoe UI", Arial, Helvetica, sans-serif;
 }
 
 html,
@@ -51,7 +54,7 @@ body {
 body {
   background: #fff;
   color: var(--cantek-text);
-  font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+  font-family: var(--font-plex), "Segoe UI", Arial, Helvetica, sans-serif;
   font-size: 15px;
   font-weight: 400;
   line-height: 1.5;
@@ -527,6 +530,232 @@ textarea {
 .send-button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.plant-log {
+  border-bottom: 1px solid var(--cantek-border);
+  background: var(--steel-deck);
+}
+
+.plant-log-fascia {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--rack-fascia);
+  padding: 0.95rem 1.15rem 0.9rem;
+  color: #fff;
+}
+
+.plant-log-kicker {
+  font-family: var(--font-nameplate);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #8bd0ea;
+}
+
+.plant-log-title {
+  margin-top: 0.2rem;
+  font-family: var(--font-nameplate);
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.plant-log-site {
+  font-family: var(--font-nameplate);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #d5e4ea;
+}
+
+.plant-log-body {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.plant-log-lead {
+  max-width: 40rem;
+  color: var(--cantek-text);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.plant-log-fieldset {
+  min-width: 0;
+}
+
+.plant-log-legend,
+.plant-log-serial span {
+  display: block;
+  margin-bottom: 0.45rem;
+  color: var(--rack-fascia);
+  font-family: var(--font-nameplate);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.plant-log-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.plant-log-option {
+  display: inline-flex;
+  min-height: 2.4rem;
+  align-items: center;
+  border: 1px solid #b7c4ca;
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  color: var(--cantek-text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.plant-log-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.plant-log-option-on {
+  border-color: var(--rack-fascia);
+  background: var(--rack-fascia);
+  color: #fff;
+}
+
+.plant-log-option:hover:not(.plant-log-option-on) {
+  border-color: var(--cantek-cyan);
+  color: var(--ice-dim);
+}
+
+.plant-log-option:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--cantek-cyan) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.plant-log-split {
+  display: grid;
+  gap: 1rem;
+}
+
+.plant-log-serial input {
+  width: 100%;
+  min-height: 2.5rem;
+  border: 1px solid #b7c4ca;
+  background: #fff;
+  padding: 0.5rem 0.7rem;
+  color: var(--cantek-text);
+}
+
+.plant-log-serial input:focus {
+  border-color: var(--cantek-cyan);
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(0 160 221 / 18%);
+}
+
+.plant-log-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.plant-log-lookup,
+.plant-log-ghost {
+  min-height: 2.6rem;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.plant-log-lookup {
+  border: 1px solid var(--rack-fascia);
+  background: var(--rack-fascia);
+  color: #fff;
+}
+
+.plant-log-lookup:hover:not(:disabled) {
+  background: var(--cantek-dark);
+  border-color: var(--cantek-dark);
+}
+
+.plant-log-lookup:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.plant-log-ghost {
+  border: 1px solid #b7c4ca;
+  background: #fff;
+  color: var(--rack-fascia);
+}
+
+.plant-log-ghost:hover {
+  border-color: var(--cantek-cyan);
+  color: var(--ice-dim);
+}
+
+.plant-log-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.75rem 1.15rem;
+}
+
+.plant-log-summary {
+  color: var(--cantek-text);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.citation-block {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.citation-chip {
+  width: 100%;
+  justify-content: flex-start;
+  text-align: start;
+  cursor: pointer;
+}
+
+.citation-toggle {
+  margin-inline-start: auto;
+  color: var(--ice-dim);
+  font-size: 0.68rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.citation-excerpt {
+  margin: 0;
+  border-inline-start: 3px solid var(--rack-fascia);
+  background: var(--steel-deck);
+  padding: 0.65rem 0.75rem;
+  color: var(--cantek-text);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.citation-excerpt-label {
+  margin-bottom: 0.25rem;
+  color: var(--rack-fascia);
+  font-family: var(--font-nameplate);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+@media (min-width: 720px) {
+  .plant-log-split {
+    grid-template-columns: 1.3fr 0.9fr;
+    align-items: start;
+  }
 }
 
 @media (max-width: 639px) {

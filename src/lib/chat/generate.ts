@@ -14,6 +14,13 @@ import {
 import { localizedChatCopy } from "@/lib/chat/localized";
 import { generateWithProviders } from "@/lib/chat/providers";
 import { buildSystemPrompt } from "@/lib/chat/system-prompt";
+import {
+  composePlantQuery,
+  excerptFrom,
+  formatPlantContext,
+  sanitizePlantCall,
+  type PlantCall,
+} from "@/lib/chat/plant-log";
 import { searchManuals } from "@/lib/rag/search";
 import { isDocumentationRequest } from "@/lib/rag/retrieve";
 import type { AnswerResult, ChatMessage, Citation, RetrievedChunk } from "@/lib/rag/types";
@@ -41,6 +48,7 @@ function citationsFrom(chunks: RetrievedChunk[]): Citation[] {
       documentTitle: chunk.documentTitle,
       page: chunk.page,
       chunkId: chunk.id,
+      excerpt: excerptFrom(chunk.content),
     });
   }
   return out;
@@ -92,6 +100,7 @@ async function generateWithModel(
   staffMode: boolean,
   messages: ChatMessage[],
   passages: string,
+  plantContext: string,
 ): Promise<{
   text: string;
   model: string;
@@ -104,21 +113,31 @@ async function generateWithModel(
     | "mistral"
     | "openrouter";
 } | null> {
-  const system = `${buildSystemPrompt({
-    locale,
-    staffMode,
-    documentationRequested: isDocumentationRequest(
-      messages.at(-1)?.content ?? "",
-    ),
-  })}\n\nRETRIEVED PASSAGES:\n${passages}`;
   const lastUserMessage = [...messages]
     .reverse()
     .find((message) => message.role === "user");
   if (!lastUserMessage) return null;
 
+  const recent = messages.slice(-6).map((message) => ({
+    role: message.role,
+    content: message.content.slice(0, 4_000),
+  }));
+  const conversation =
+    recent.at(-1)?.role === "user"
+      ? recent
+      : [...recent, { role: "user" as const, content: lastUserMessage.content.slice(0, 4_000) }];
+
+  const system = `${buildSystemPrompt({
+    locale,
+    staffMode,
+    documentationRequested: isDocumentationRequest(
+      lastUserMessage.content,
+    ),
+  })}${plantContext ? `\n\nPLANT CALL CARD:\n${plantContext}` : ""}\n\nRETRIEVED PASSAGES:\n${passages}`;
+
   return generateWithProviders({
     system,
-    messages: [{ role: "user", content: lastUserMessage.content.slice(0, 8_000) }],
+    messages: conversation,
     allowFailover: !staffMode,
   });
 }
@@ -128,9 +147,18 @@ export async function answerQuestion(opts: {
   locale: string;
   staffMode: boolean;
   database?: SupabaseClient | null;
+  plant?: PlantCall | null;
+  serial?: string;
 }): Promise<AnswerResult> {
   const lastUser = [...opts.messages].reverse().find((m) => m.role === "user")?.content ?? "";
-  const retrieved = await searchManuals(lastUser, {
+  const plant = sanitizePlantCall(opts.plant, opts.serial);
+  const plantContext = formatPlantContext(plant, opts.serial);
+  const retrievalQuery = composePlantQuery({
+    messages: opts.messages,
+    plant,
+    serial: opts.serial,
+  });
+  const retrieved = await searchManuals(retrievalQuery || lastUser, {
     includeInternal: opts.staffMode,
     limit: 8,
     database: opts.database,
@@ -152,6 +180,7 @@ export async function answerQuestion(opts: {
         opts.staffMode,
         opts.messages,
         formatPassages(grounded),
+        plantContext,
       );
   const general =
     hazard || emergency || hasGrounding || !isGeneralConversation(lastUser)

@@ -28,7 +28,7 @@
     "placeholder": "Example: cold room not pulling down, HP alarm on a summer afternoon, Octosense controller…",
     "send": "Ask",
     "thinking": "Searching manuals…",
-    "empty": "Ask about temperature, alarms, ice, compressors, ammonia, or controllers.",
+    "empty": "Mark the room and what is showing on the plant, then look it up. Add extra detail below if needed.",
     "sources": "Sources",
     "service": "Cantek service",
     "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
@@ -39,7 +39,8 @@
     "noDocs": "Nothing in the loaded manuals matches this. Contact Cantek service rather than guessing setpoints or wiring.",
     "greeting": "Hello. I am Cantek diagnostic support for industrial cold storage. Describe the plant issue, or ask for Cantek service contacts.",
     "companyFacts": "Cantek Soğutma A.Ş. (Cantek Group) is based in Antalya, Türkiye: Organized Industrial Zone, 2nd Section, 21st Street, No:1, Döşemealtı, Antalya 07177. We support industrial cold storage, cooling packs, and controllers including Octosense, IRS, and Octopush. This portal answers from approved service manuals when they are loaded. Cantek service: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service."
+    "error": "The diagnostic service is temporarily unavailable. Please try again or contact Cantek service.",
+    "rateLimited": "Too many diagnostic requests just now. Wait a minute and try again, or call Cantek service."
   },
   "account": {
     "kicker": "Customer access",
@@ -160,5 +161,41 @@
     "title": "Danger",
     "body": "Stop work. Hazardous service requires an authorized, appropriately certified technician using the site-specific procedure.",
     "emergency": "Move away from the hazard, evacuate, and call local emergency services and the site emergency team."
+  },
+  "plant": {
+    "title": "Plant call",
+    "lead": "Write the same facts you give Cantek service on the phone. Manuals are searched from this card, including follow-up questions.",
+    "duty": "Room duty",
+    "fault": "What is showing",
+    "refrigerant": "Refrigerant",
+    "serial": "Pack or controller serial",
+    "serialHint": "From the nameplate if you have it",
+    "lookup": "Look up this call",
+    "newCall": "New call",
+    "openExcerpt": "Show excerpt",
+    "closeExcerpt": "Hide excerpt",
+    "excerpt": "Manual excerpt",
+    "logged": "On this call",
+    "duties": {
+      "chill": "Chill room",
+      "freeze": "Freeze room",
+      "blast": "Blast freezer",
+      "pack": "Cooling pack",
+      "unknown": "Not sure"
+    },
+    "faults": {
+      "pulldown": "Not pulling down",
+      "hp": "HP / high pressure",
+      "ice": "Evaporator iced",
+      "alarm": "Controller alarm",
+      "oil": "Oil or lubrication"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Unknown"
+    }
   }
 }

@@ -28,7 +28,7 @@
     "placeholder": "Exemplo: a câmara frigorífica não baixa a temperatura, alarme HP numa tarde de verão, controlador Octosense…",
     "send": "Perguntar",
     "thinking": "A pesquisar nos manuais…",
-    "empty": "Pergunte sobre temperatura, alarmes, gelo, compressores, amoníaco ou controladores.",
+    "empty": "Marque a câmara e o que se vê na instalação e pesquise. Acrescente pormenores abaixo se precisar.",
     "sources": "Fontes",
     "service": "Assistência Cantek",
     "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais."
@@ -39,7 +39,8 @@
     "noDocs": "Nada nos manuais carregados corresponde a esta situação. Contacte a assistência Cantek em vez de tentar adivinhar valores de ajuste ou ligações elétricas.",
     "greeting": "Olá. Sou o suporte de diagnóstico Cantek para armazenamento frigorífico industrial. Descreva o problema da instalação ou peça os contactos da assistência Cantek.",
     "companyFacts": "A Cantek Soğutma A.Ş. (Cantek Group) tem sede em Antália, Türkiye: Zona Industrial Organizada, 2.ª secção, Rua 21, n.º 1, Döşemealtı, Antália 07177. Damos apoio a câmaras frigoríficas industriais, grupos de frio e controladores Octosense, IRS e Octopush. Este portal responde a partir de manuais de assistência aprovados quando estão carregados. Assistência Cantek: +90 242 258 17 00 / +90 549 743 87 21 · info@cantekgroup.com",
-    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek."
+    "error": "O serviço de diagnóstico está temporariamente indisponível. Tente novamente ou contacte a assistência Cantek.",
+    "rateLimited": "Há demasiados pedidos de diagnóstico neste momento. Aguarde um minuto e tente novamente, ou ligue para a assistência Cantek."
   },
   "account": {
     "kicker": "Acesso de cliente",
@@ -160,5 +161,41 @@
     "title": "Perigo",
     "body": "Interrompa o trabalho. A assistência em condições perigosas exige um técnico autorizado, devidamente certificado, que siga o procedimento específico da instalação.",
     "emergency": "Afaste-se do perigo, evacue o local e contacte os serviços de emergência locais e a equipa de emergência da instalação."
+  },
+  "plant": {
+    "title": "Chamada da instalação",
+    "lead": "Escreva os mesmos dados que dá à assistência Cantek ao telefone. Os manuais são pesquisados a partir deste cartão, inclusive nas perguntas seguintes.",
+    "duty": "Função da câmara",
+    "fault": "O que se observa",
+    "refrigerant": "Refrigerante",
+    "serial": "Série do grupo ou controlador",
+    "serialHint": "Da chapa de características, se tiver",
+    "lookup": "Procurar esta chamada",
+    "newCall": "Nova chamada",
+    "openExcerpt": "Mostrar excerto",
+    "closeExcerpt": "Ocultar excerto",
+    "excerpt": "Excerto do manual",
+    "logged": "Nesta chamada",
+    "duties": {
+      "chill": "Câmara positiva",
+      "freeze": "Câmara de congelação",
+      "blast": "Túnel de ultracongelação",
+      "pack": "Grupo de frio",
+      "unknown": "Não tenho a certeza"
+    },
+    "faults": {
+      "pulldown": "Não baixa a temperatura",
+      "hp": "HP / alta pressão",
+      "ice": "Evaporador com gelo",
+      "alarm": "Alarme do controlador",
+      "oil": "Óleo ou lubrificação"
+    },
+    "gases": {
+      "r744": "R744",
+      "r717": "R717",
+      "r404a": "R404A",
+      "r134a": "R134a",
+      "unknown": "Desconhecido"
+    }
   }
 }
