@@ -604,6 +604,7 @@ textarea {
 }
 
 .plant-log-option {
+  position: relative;
   display: inline-flex;
   min-height: 2.4rem;
   align-items: center;
@@ -617,7 +618,12 @@ textarea {
 }
 
 .plant-log-option input {
+  appearance: none;
   position: absolute;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0;
   pointer-events: none;
 }
