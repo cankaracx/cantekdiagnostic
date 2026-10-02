@@ -5,6 +5,8 @@ import {
   describePlantCall,
   excerptFrom,
   plantCallHasLookup,
+  sanitizePlantCall,
+  toggleObservation,
 } from "@/lib/chat/plant-log";
 import {
   isGeneralConversation,
@@ -111,6 +113,8 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/SAFETY BOUNDARY/);
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
+    expect(prompt).toMatch(/plant call card lists observations/);
+    expect(prompt).toMatch(/service bulletin/);
   });
 
   it("requires all Turkish responses and fallback text to stay Turkish", () => {
@@ -151,6 +155,7 @@ describe("plant call retrieval", () => {
         fault: "hp",
         refrigerant: "r744",
         serial: "PK-1842",
+        observations: ["fans", "blocked"],
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -165,6 +170,7 @@ describe("plant call retrieval", () => {
     expect(query).toContain("PK-1842");
     expect(query).toMatch(/condenser/i);
     expect(query).toMatch(/fans/i);
+    expect(query).toMatch(/blocked/i);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
@@ -174,6 +180,7 @@ describe("plant call retrieval", () => {
         fault: "ice",
         refrigerant: "unknown",
         serial: "",
+        observations: [],
       }),
     ).toBe(true);
     expect(
@@ -182,6 +189,7 @@ describe("plant call retrieval", () => {
         fault: "hp",
         refrigerant: "r717",
         serial: "",
+        observations: [],
       }),
     ).toBe(false);
     expect(describePlantCall({
@@ -189,7 +197,66 @@ describe("plant call retrieval", () => {
       fault: "pulldown",
       refrigerant: "r404a",
       serial: "BT-9",
+      observations: ["loaded"],
     })).toMatch(/blast freezer/i);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+    })).toMatch(/warm product/i);
+  });
+
+  it("keeps only observations that belong to the selected fault", () => {
+    const cleaned = sanitizePlantCall({
+      duty: "chill",
+      fault: "hp",
+      refrigerant: "r744",
+      serial: "PK-1",
+      observations: ["fans", "door", "blocked", "fans"],
+    });
+    expect(cleaned.observations).toEqual(["fans", "blocked"]);
+    expect(
+      toggleObservation(cleaned, "ambient").observations,
+    ).toContain("ambient");
+    expect(
+      sanitizePlantCall({
+        duty: "chill",
+        fault: "ice",
+        observations: ["fans"],
+      }).observations,
+    ).toEqual([]);
+  });
+
+  it("describes the call in the UI language when labels are provided", () => {
+    expect(
+      describePlantCall(
+        {
+          duty: "chill",
+          fault: "hp",
+          refrigerant: "r744",
+          serial: "PK-1842",
+          observations: ["fans"],
+        },
+        {
+          duty: {
+            chill: "soğuk oda",
+            freeze: "freeze",
+            blast: "blast",
+            pack: "pack",
+            unknown: "unknown",
+          },
+          fault: {
+            pulldown: "pulldown",
+            hp: "HP / yüksek basınç",
+            ice: "ice",
+            alarm: "alarm",
+            oil: "oil",
+          },
+        },
+      ),
+    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, serial PK-1842/i);
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {

@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 :root {
+  /* Cantek plant-floor palette
+     #323e48 steel cabinet
+     #00a0dd pack cyan
+     #212529 nameplate ink
+     #0e3a4a rack fascia
+     #b3202e stop
+     #e8eef0 service-deck paper
+     Type: IBM Plex Sans / Condensed — engineering bulletin, not a marketing sans
+     Bold moment: the returned service bulletin, same fascia as the plant-call card */
   --cantek-dark: #323e48;
   --cantek-dark-deep: #27323a;
   --cantek-cyan: #00a0dd;
@@ -255,7 +264,7 @@ textarea {
 
 .cantek-hero-mosaic {
   position: relative;
-  min-height: 30rem;
+  min-height: 22rem;
   overflow: hidden;
   border-bottom: 5px solid var(--cantek-cyan);
   background: var(--cantek-dark-deep);
@@ -764,9 +773,61 @@ textarea {
   }
 }
 
+.service-bulletin {
+  overflow: hidden;
+  border: 1px solid #b7c4ca;
+  background: #fff;
+}
+
+.service-bulletin-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--rack-fascia);
+  padding: 0.85rem 1.05rem 0.8rem;
+  color: #fff;
+}
+
+.service-bulletin-ref {
+  font-family: var(--font-nameplate);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8bd0ea;
+}
+
+.service-bulletin-title {
+  margin-top: 0.2rem;
+  font-family: var(--font-nameplate);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.service-bulletin-site {
+  flex: none;
+  font-family: var(--font-nameplate);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #d5e4ea;
+}
+
+.service-bulletin-body {
+  padding: 1rem 1.05rem 1.1rem;
+  color: var(--cantek-text);
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.service-bulletin-asks {
+  border-top: 1px solid #b7c4ca;
+  background: var(--steel-deck);
+  padding: 0.85rem 1.05rem 1rem;
+}
+
 @media (max-width: 639px) {
   .cantek-hero-mosaic {
-    min-height: 34rem;
+    min-height: 24rem;
   }
 
   .cantek-hero-mosaic::after {

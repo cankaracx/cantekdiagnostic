@@ -4,9 +4,17 @@ import { PlantLog } from "@/components/PlantLog";
 import {
   describePlantCall,
   EMPTY_PLANT_CALL,
+  OBSERVATIONS_BY_FAULT,
+  PLANT_DUTIES,
+  PLANT_FAULTS,
+  PLANT_GASES,
+  PLANT_OBSERVATIONS,
   plantCallHasLookup,
   sanitizePlantCall,
+  toggleObservation,
   type PlantCall,
+  type PlantCallLabels,
+  type PlantObservation,
 } from "@/lib/chat/plant-log";
 import type { Citation } from "@/lib/rag/types";
 import { useLocale, useTranslations } from "next-intl";
@@ -151,6 +159,28 @@ function CitationList(props: {
   );
 }
 
+function usePlantLabels(): PlantCallLabels {
+  const t = useTranslations("plant");
+  return {
+    duty: Object.fromEntries(
+      PLANT_DUTIES.map((duty) => [duty, t(`duties.${duty}`)]),
+    ) as PlantCallLabels["duty"],
+    fault: Object.fromEntries(
+      PLANT_FAULTS.map((fault) => [fault, t(`faults.${fault}`)]),
+    ) as PlantCallLabels["fault"],
+    gas: Object.fromEntries(
+      PLANT_GASES.map((gas) => [gas, t(`gases.${gas}`)]),
+    ) as PlantCallLabels["gas"],
+    observation: Object.fromEntries(
+      PLANT_OBSERVATIONS.map((observation) => [
+        observation,
+        t(`observations.${observation}`),
+      ]),
+    ) as PlantCallLabels["observation"],
+    serial: (value) => `${t("serial")} ${value}`,
+  };
+}
+
 export function ChatPanel(props: {
   mode: "public" | "technician";
   serial?: string;
@@ -160,6 +190,7 @@ export function ChatPanel(props: {
 }) {
   const t = useTranslations();
   const locale = useLocale();
+  const labels = usePlantLabels();
   const { onTranscriptChange } = props;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
@@ -175,6 +206,14 @@ export function ChatPanel(props: {
       }),
     [plant, props.serial],
   );
+  const remainingObservations = useMemo(() => {
+    const options = activePlant.fault
+      ? OBSERVATIONS_BY_FAULT[activePlant.fault]
+      : [];
+    return options.filter(
+      (observation) => !activePlant.observations.includes(observation),
+    );
+  }, [activePlant]);
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -186,15 +225,22 @@ export function ChatPanel(props: {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }, [messages, busy]);
 
-  async function send(nextContent?: string) {
+  async function send(nextContent?: string, nextPlant?: PlantCall) {
+    const call = sanitizePlantCall({
+      ...(nextPlant ?? activePlant),
+      serial:
+        (nextPlant ?? activePlant).serial.trim() ||
+        props.serial?.trim() ||
+        "",
+    });
     const typed = (nextContent ?? input).trim();
-    const card = describePlantCall(activePlant);
+    const card = describePlantCall(call, labels);
     const content =
       messages.length === 0 && card && typed && typed !== card
         ? `${card}\n\n${typed}`
         : typed || card;
     if (!content || busy) return;
-    if (!typed && !plantCallHasLookup(activePlant)) return;
+    if (!typed && !plantCallHasLookup(call)) return;
 
     const next = [...messages, { role: "user" as const, content }];
     setMessages(next);
@@ -214,8 +260,8 @@ export function ChatPanel(props: {
             content: line,
           })),
           mode: props.mode,
-          serial: activePlant.serial,
-          plant: activePlant,
+          serial: call.serial,
+          plant: call,
           locale,
         }),
       });
@@ -253,6 +299,12 @@ export function ChatPanel(props: {
     }
   }
 
+  function sendObservation(observation: PlantObservation) {
+    const nextPlant = toggleObservation(activePlant, observation);
+    setPlant(nextPlant);
+    void send(t(`plant.observations.${observation}`), nextPlant);
+  }
+
   function resetCall() {
     setMessages([]);
     setPlant(EMPTY_PLANT_CALL);
@@ -260,6 +312,7 @@ export function ChatPanel(props: {
   }
 
   const compactLog = messages.length > 0;
+  const plantSummary = describePlantCall(activePlant, labels);
 
   return (
     <div className="chat-shell">
@@ -310,41 +363,56 @@ export function ChatPanel(props: {
       >
         {messages.length === 0 && (
           <p className="px-1 text-sm leading-6 text-cantek-muted">
-            {t("home.empty")}
+            {activePlant.fault ? t("plant.asksHint") : t("home.empty")}
           </p>
         )}
         {messages.map((message, index) => {
           const isUser = message.role === "user";
+          const isLastAssistant =
+            !isUser &&
+            index === messages.length - 1 &&
+            !busy &&
+            remainingObservations.length > 0;
+
+          if (isUser) {
+            return (
+              <div key={index} className="message-row flex-row-reverse">
+                <div
+                  className="message-avatar message-avatar-user"
+                  aria-hidden="true"
+                >
+                  {t("chat.you").slice(0, 1).toUpperCase()}
+                </div>
+                <article className="message-bubble message-bubble-user">
+                  <p className="mb-1.5 text-[0.78rem] font-semibold text-cantek-muted">
+                    {t("chat.you")}
+                  </p>
+                  <div className="whitespace-pre-wrap">{message.content}</div>
+                </article>
+              </div>
+            );
+          }
 
           return (
-            <div
-              key={index}
-              className={`message-row ${isUser ? "flex-row-reverse" : ""}`}
-            >
-              <div
-                className={`message-avatar ${
-                  isUser ? "message-avatar-user" : "message-avatar-assistant"
-                }`}
-                aria-hidden="true"
-              >
-                {isUser ? t("chat.you").slice(0, 1).toUpperCase() : "C"}
-              </div>
-              <article
-                className={`message-bubble ${
-                  isUser ? "message-bubble-user" : "message-bubble-assistant"
-                }`}
-              >
-                <p className="mb-1.5 text-[0.78rem] font-semibold text-cantek-muted">
-                  {isUser ? t("chat.you") : t("chat.assistant")}
-                </p>
+            <article key={index} className="service-bulletin">
+              <header className="service-bulletin-head">
+                <div className="min-w-0">
+                  <p className="service-bulletin-ref">{t("plant.bulletin")}</p>
+                  <p className="service-bulletin-title">
+                    {plantSummary || t("home.workspaceTitle")}
+                  </p>
+                </div>
+                <p className="service-bulletin-site">Antalya</p>
+              </header>
+              <div className="service-bulletin-body">
                 {message.emergency && (
-                  <div className="alert-card alert-card-danger mb-2">
+                  <div className="alert-card alert-card-danger mb-3">
                     <WarningIcon />
                     <span>{t("danger.emergency")}</span>
                   </div>
                 )}
                 {message.hazard && (
-                  <div className="alert-card alert-card-warning mb-2">
+                  <div className="alert-card alert-card-warning mb-3">
                     <WarningIcon />
                     <span>
                       {t("danger.title")}: {t("danger.body")}
@@ -362,8 +430,25 @@ export function ChatPanel(props: {
                     excerptLabel={t("plant.excerpt")}
                   />
                 )}
-              </article>
-            </div>
+              </div>
+              {isLastAssistant && (
+                <div className="service-bulletin-asks">
+                  <p className="plant-log-legend">{t("plant.asks")}</p>
+                  <div className="plant-log-options">
+                    {remainingObservations.map((observation) => (
+                      <button
+                        key={observation}
+                        type="button"
+                        className="plant-log-option"
+                        onClick={() => sendObservation(observation)}
+                      >
+                        {t(`plant.observations.${observation}`)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </article>
           );
         })}
         {busy && (

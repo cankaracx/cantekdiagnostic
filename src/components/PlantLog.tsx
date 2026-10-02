@@ -2,14 +2,17 @@
 
 import { useTranslations } from "next-intl";
 import {
+  OBSERVATIONS_BY_FAULT,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
   plantCallHasLookup,
+  toggleObservation,
   type PlantCall,
   type PlantDuty,
   type PlantFault,
   type PlantGas,
+  type PlantObservation,
 } from "@/lib/chat/plant-log";
 
 function OptionRow<T extends string>(props: {
@@ -47,6 +50,46 @@ function OptionRow<T extends string>(props: {
   );
 }
 
+function ObservationRow(props: {
+  plant: PlantCall;
+  onChange: (plant: PlantCall) => void;
+  legend: string;
+  labelFor: (value: PlantObservation) => string;
+}) {
+  const options = props.plant.fault
+    ? OBSERVATIONS_BY_FAULT[props.plant.fault]
+    : [];
+  if (!options.length) return null;
+
+  return (
+    <fieldset className="plant-log-fieldset">
+      <legend className="plant-log-legend">{props.legend}</legend>
+      <div className="plant-log-options">
+        {options.map((option) => {
+          const selected = props.plant.observations.includes(option);
+          return (
+            <label
+              key={option}
+              className={`plant-log-option ${selected ? "plant-log-option-on" : ""}`}
+            >
+              <input
+                type="checkbox"
+                name="plant-observation"
+                value={option}
+                checked={selected}
+                onChange={() =>
+                  props.onChange(toggleObservation(props.plant, option))
+                }
+              />
+              <span>{props.labelFor(option)}</span>
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
 export function PlantLog(props: {
   plant: PlantCall;
   serialLocked?: boolean;
@@ -66,6 +109,9 @@ export function PlantLog(props: {
       plant.duty ? t(`duties.${plant.duty}`) : null,
       plant.fault ? t(`faults.${plant.fault}`) : null,
       plant.refrigerant !== "unknown" ? t(`gases.${plant.refrigerant}`) : null,
+      ...plant.observations.map((observation) =>
+        t(`observations.${observation}`),
+      ),
       plant.serial.trim() || null,
     ].filter(Boolean);
 
@@ -109,7 +155,15 @@ export function PlantLog(props: {
           values={PLANT_FAULTS}
           value={plant.fault}
           labelFor={(value) => t(`faults.${value}`)}
-          onChange={(fault: PlantFault) => props.onChange({ ...plant, fault })}
+          onChange={(fault: PlantFault) =>
+            props.onChange({ ...plant, fault, observations: [] })
+          }
+        />
+        <ObservationRow
+          plant={plant}
+          onChange={props.onChange}
+          legend={t("asks")}
+          labelFor={(value) => t(`observations.${value}`)}
         />
         <div className="plant-log-split">
           <OptionRow
