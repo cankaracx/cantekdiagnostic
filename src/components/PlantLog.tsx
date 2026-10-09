@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import {
+  EMPTY_READINGS,
   OBSERVATIONS_BY_FAULT,
   PLANT_DUTIES,
   PLANT_FAULTS,
@@ -13,6 +14,7 @@ import {
   type PlantFault,
   type PlantGas,
   type PlantObservation,
+  type PlantReadings,
 } from "@/lib/chat/plant-log";
 
 function OptionRow<T extends string>(props: {
@@ -45,6 +47,82 @@ function OptionRow<T extends string>(props: {
             </label>
           );
         })}
+      </div>
+    </fieldset>
+  );
+}
+
+function ReadingsPlate(props: {
+  plant: PlantCall;
+  onChange: (plant: PlantCall) => void;
+  legend: string;
+  roomLabel: string;
+  setLabel: string;
+  codeLabel: string;
+  unit: string;
+  codeHint: string;
+}) {
+  const readings = props.plant.readings ?? EMPTY_READINGS;
+
+  function patch(partial: Partial<PlantReadings>) {
+    props.onChange({
+      ...props.plant,
+      readings: { ...readings, ...partial },
+    });
+  }
+
+  return (
+    <fieldset className="plant-log-fieldset">
+      <legend className="plant-log-legend">{props.legend}</legend>
+      <div className="plant-readings-plate">
+        <label className="plant-reading">
+          <span className="plant-reading-key">{props.roomLabel}</span>
+          <span className="plant-reading-value">
+            <input
+              inputMode="decimal"
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={6}
+              placeholder="—"
+              aria-label={props.roomLabel}
+              value={readings.roomC}
+              onChange={(event) => patch({ roomC: event.target.value })}
+            />
+            <span className="plant-reading-unit">{props.unit}</span>
+          </span>
+        </label>
+        <label className="plant-reading">
+          <span className="plant-reading-key">{props.setLabel}</span>
+          <span className="plant-reading-value">
+            <input
+              inputMode="decimal"
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={6}
+              placeholder="—"
+              aria-label={props.setLabel}
+              value={readings.setC}
+              onChange={(event) => patch({ setC: event.target.value })}
+            />
+            <span className="plant-reading-unit">{props.unit}</span>
+          </span>
+        </label>
+        <label className="plant-reading">
+          <span className="plant-reading-key">{props.codeLabel}</span>
+          <span className="plant-reading-value">
+            <input
+              autoComplete="off"
+              spellCheck={false}
+              maxLength={8}
+              placeholder={props.codeHint}
+              aria-label={props.codeLabel}
+              value={readings.displayCode}
+              onChange={(event) =>
+                patch({ displayCode: event.target.value.toUpperCase() })
+              }
+            />
+          </span>
+        </label>
       </div>
     </fieldset>
   );
@@ -104,6 +182,19 @@ export function PlantLog(props: {
   const { plant } = props;
   const canLookup = plantCallHasLookup(plant);
 
+  const readingsPlate = (
+    <ReadingsPlate
+      plant={plant}
+      onChange={props.onChange}
+      legend={t("readings")}
+      roomLabel={t("room")}
+      setLabel={t("set")}
+      codeLabel={t("code")}
+      unit={t("roomUnit")}
+      codeHint={t("codeHint")}
+    />
+  );
+
   if (props.compact) {
     const summary = [
       plant.duty ? t(`duties.${plant.duty}`) : null,
@@ -116,16 +207,31 @@ export function PlantLog(props: {
     ].filter(Boolean);
 
     return (
-      <div className="plant-log plant-log-compact">
-        <div className="min-w-0">
-          <p className="plant-log-kicker">{t("logged")}</p>
-          <p className="plant-log-summary">
-            {summary.length ? summary.join(" — ") : t("title")}
-          </p>
+      <div className="plant-log">
+        <div className="plant-log-compact">
+          <div className="min-w-0">
+            <p className="plant-log-kicker">{t("logged")}</p>
+            <p className="plant-log-summary">
+              {summary.length ? summary.join(" — ") : t("title")}
+            </p>
+          </div>
+          <button type="button" className="plant-log-ghost" onClick={props.onNewCall}>
+            {t("newCall")}
+          </button>
         </div>
-        <button type="button" className="plant-log-ghost" onClick={props.onNewCall}>
-          {t("newCall")}
-        </button>
+        <div className="plant-log-body plant-log-body-compact">
+          {readingsPlate}
+          <div className="plant-log-actions">
+            <button
+              type="button"
+              className="plant-log-lookup"
+              disabled={props.busy || !canLookup}
+              onClick={props.onLookup}
+            >
+              {t("lookup")}
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -165,6 +271,7 @@ export function PlantLog(props: {
           legend={t("asks")}
           labelFor={(value) => t(`observations.${value}`)}
         />
+        {readingsPlate}
         <div className="plant-log-split">
           <OptionRow
             name="plant-gas"

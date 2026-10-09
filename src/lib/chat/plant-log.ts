@@ -47,12 +47,19 @@ export type PlantFault = (typeof PLANT_FAULTS)[number];
 export type PlantGas = (typeof PLANT_GASES)[number];
 export type PlantObservation = (typeof PLANT_OBSERVATIONS)[number];
 
+export type PlantReadings = {
+  roomC: string;
+  setC: string;
+  displayCode: string;
+};
+
 export type PlantCall = {
   duty: PlantDuty | null;
   fault: PlantFault | null;
   refrigerant: PlantGas;
   serial: string;
   observations: PlantObservation[];
+  readings?: PlantReadings;
 };
 
 export type PlantCallLabels = {
@@ -63,12 +70,19 @@ export type PlantCallLabels = {
   serial?: (value: string) => string;
 };
 
+export const EMPTY_READINGS: PlantReadings = {
+  roomC: "",
+  setC: "",
+  displayCode: "",
+};
+
 export const EMPTY_PLANT_CALL: PlantCall = {
   duty: null,
   fault: null,
   refrigerant: "unknown",
   serial: "",
   observations: [],
+  readings: { ...EMPTY_READINGS },
 };
 
 export const OBSERVATIONS_BY_FAULT: Record<
@@ -148,6 +162,21 @@ const GAS_LABEL: Record<PlantGas, string> = {
   unknown: "unknown refrigerant",
 };
 
+const DISPLAY_CODE_QUERY: Record<string, string> = {
+  HP: "HP high pressure HPS",
+  HPS: "HP high pressure HPS",
+  HI: "HI high temperature alarm",
+  LP: "LP low pressure LPS suction",
+  LPS: "LP low pressure LPS",
+  LO: "LO low temperature alarm",
+  DEF: "DEF defrost evaporator frost",
+  DDEF: "DEF defrost evaporator frost",
+  E0: "E0 room probe fault",
+  E1: "E1 defrost probe fault",
+  CHT: "CHT condenser high temperature",
+  EE: "EE EEPROM controller error",
+};
+
 const OBSERVATION_LABEL: Record<PlantObservation, string> = {
   fans: "condenser fans running",
   blocked: "condenser dirty or blocked",
@@ -191,6 +220,52 @@ export function observationsForFault(
   return fault ? OBSERVATIONS_BY_FAULT[fault] : [];
 }
 
+export function sanitizeCelsius(value: unknown): string {
+  const raw = String(value ?? "")
+    .trim()
+    .replace(",", ".");
+  if (!raw) return "";
+  const n = Number(raw);
+  if (!Number.isFinite(n) || n < -70 || n > 60) return "";
+  const rounded = Math.round(n * 10) / 10;
+  return Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(1);
+}
+
+export function sanitizeDisplayCode(value: unknown): string {
+  return String(value ?? "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, 8);
+}
+
+export function sanitizeReadings(input: unknown): PlantReadings {
+  const raw =
+    input && typeof input === "object" ? (input as Record<string, unknown>) : {};
+  return {
+    roomC: sanitizeCelsius(raw.roomC),
+    setC: sanitizeCelsius(raw.setC),
+    displayCode: sanitizeDisplayCode(raw.displayCode),
+  };
+}
+
+export function hasPlantReadings(plant: PlantCall | null | undefined): boolean {
+  const readings = sanitizeReadings(plant?.readings);
+  return Boolean(readings.roomC || readings.setC || readings.displayCode);
+}
+
+export function formatPlantReadings(plant: PlantCall | null | undefined): string {
+  const readings = sanitizeReadings(plant?.readings);
+  const parts: string[] = [];
+  if (readings.roomC) parts.push(`ROOM ${readings.roomC}°C`);
+  if (readings.setC) parts.push(`SET ${readings.setC}°C`);
+  if (readings.displayCode) parts.push(readings.displayCode);
+  return parts.join("  ");
+}
+
+function displayCodeQuery(code: string): string {
+  return DISPLAY_CODE_QUERY[code] ?? `controller display ${code} alarm`;
+}
+
 export function sanitizePlantCall(
   input: unknown,
   fallbackSerial = "",
@@ -217,6 +292,7 @@ export function sanitizePlantCall(
     refrigerant: isPlantGas(raw.refrigerant) ? raw.refrigerant : "unknown",
     serial,
     observations,
+    readings: sanitizeReadings(raw.readings),
   };
 }
 
@@ -259,6 +335,10 @@ export function describePlantCall(
   for (const observation of plant.observations) {
     parts.push(observationLabels[observation]);
   }
+  const readingLine = formatPlantReadings(plant);
+  if (readingLine) {
+    parts.push(readingLine);
+  }
   if (plant.serial.trim()) {
     parts.push(serialLabel(plant.serial.trim()));
   }
@@ -276,11 +356,27 @@ export function formatPlantContext(
   const observationLine = resolved.observations
     .map((observation) => OBSERVATION_LABEL[observation])
     .join("; ");
+  const readings = resolved.readings ?? EMPTY_READINGS;
+  const room = Number(readings.roomC);
+  const set = Number(readings.setC);
+  const delta =
+    readings.roomC &&
+    readings.setC &&
+    Number.isFinite(room) &&
+    Number.isFinite(set)
+      ? `${room - set > 0 ? "+" : ""}${(Math.round((room - set) * 10) / 10).toFixed(1).replace(/\.0$/, "")} K`
+      : null;
   const lines = [
     resolved.duty ? `Duty: ${DUTY_LABEL[resolved.duty]}` : null,
     resolved.fault ? `Showing: ${FAULT_LABEL[resolved.fault]}` : null,
     `Refrigerant: ${GAS_LABEL[resolved.refrigerant]}`,
     observationLine ? `Seen on plant: ${observationLine}` : null,
+    readings.roomC ? `ROOM: ${readings.roomC} C (operator reading)` : null,
+    readings.setC ? `SET: ${readings.setC} C (operator reading)` : null,
+    delta ? `ROOM vs SET: ${delta}` : null,
+    readings.displayCode
+      ? `DISPLAY: ${readings.displayCode} (operator reading)`
+      : null,
     resolved.serial ? `Serial: ${resolved.serial}` : null,
   ].filter(Boolean);
   return lines.join("\n");
@@ -300,11 +396,15 @@ export function composePlantQuery(opts: {
     .filter(Boolean)
     .join(" ");
   const plant = sanitizePlantCall(opts.plant, opts.serial);
+  const readings = plant.readings ?? EMPTY_READINGS;
   const tokens = [
     plant.duty ? DUTY_QUERY[plant.duty] : "",
     plant.fault ? FAULT_QUERY[plant.fault] : "",
     GAS_QUERY[plant.refrigerant],
     ...plant.observations.map((observation) => OBSERVATION_QUERY[observation]),
+    readings.roomC ? `room temperature ${readings.roomC} C ROOM` : "",
+    readings.setC ? `setpoint ${readings.setC} C SET` : "",
+    readings.displayCode ? displayCodeQuery(readings.displayCode) : "",
     plant.serial ? `serial ${plant.serial}` : "",
     prior,
     lastUser,
