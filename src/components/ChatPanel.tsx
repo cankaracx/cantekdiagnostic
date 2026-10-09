@@ -4,6 +4,8 @@ import { PlantLog } from "@/components/PlantLog";
 import {
   describePlantCall,
   EMPTY_PLANT_CALL,
+  formatPlantReadings,
+  hasPlantReadings,
   OBSERVATIONS_BY_FAULT,
   PLANT_DUTIES,
   PLANT_FAULTS,
@@ -198,13 +200,21 @@ export function ChatPanel(props: {
   const [plant, setPlant] = useState<PlantCall>(EMPTY_PLANT_CALL);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const activePlant = useMemo(
-    () =>
-      sanitizePlantCall({
-        ...plant,
-        serial: plant.serial.trim() || props.serial?.trim() || "",
-      }),
+  const editorPlant = useMemo(
+    () => ({
+      ...plant,
+      serial: plant.serial.trim() || props.serial?.trim() || plant.serial,
+      readings: plant.readings ?? {
+        roomC: "",
+        setC: "",
+        displayCode: "",
+      },
+    }),
     [plant, props.serial],
+  );
+  const activePlant = useMemo(
+    () => sanitizePlantCall(editorPlant),
+    [editorPlant],
   );
   const remainingObservations = useMemo(() => {
     const options = activePlant.fault
@@ -313,6 +323,7 @@ export function ChatPanel(props: {
 
   const compactLog = messages.length > 0;
   const plantSummary = describePlantCall(activePlant, labels);
+  const readingStamp = formatPlantReadings(activePlant);
 
   return (
     <div className="chat-shell">
@@ -348,7 +359,7 @@ export function ChatPanel(props: {
         </span>
       </div>
       <PlantLog
-        plant={activePlant}
+        plant={editorPlant}
         serialLocked={Boolean(props.serial?.trim()) && props.mode === "technician"}
         compact={compactLog}
         busy={busy}
@@ -363,7 +374,11 @@ export function ChatPanel(props: {
       >
         {messages.length === 0 && (
           <p className="px-1 text-sm leading-6 text-cantek-muted">
-            {activePlant.fault ? t("plant.asksHint") : t("home.empty")}
+            {activePlant.fault
+              ? readingStamp
+                ? t("plant.asksHint")
+                : t("plant.readingsHint")
+              : t("home.empty")}
           </p>
         )}
         {messages.map((message, index) => {
@@ -404,6 +419,34 @@ export function ChatPanel(props: {
                 </div>
                 <p className="service-bulletin-site">Antalya</p>
               </header>
+              {hasPlantReadings(activePlant) && (
+                <dl className="service-bulletin-readings">
+                  {activePlant.readings?.roomC ? (
+                    <div className="service-bulletin-reading">
+                      <dt>{t("plant.room")}</dt>
+                      <dd>
+                        {activePlant.readings.roomC}
+                        <span>{t("plant.roomUnit")}</span>
+                      </dd>
+                    </div>
+                  ) : null}
+                  {activePlant.readings?.setC ? (
+                    <div className="service-bulletin-reading">
+                      <dt>{t("plant.set")}</dt>
+                      <dd>
+                        {activePlant.readings.setC}
+                        <span>{t("plant.roomUnit")}</span>
+                      </dd>
+                    </div>
+                  ) : null}
+                  {activePlant.readings?.displayCode ? (
+                    <div className="service-bulletin-reading">
+                      <dt>{t("plant.code")}</dt>
+                      <dd>{activePlant.readings.displayCode}</dd>
+                    </div>
+                  ) : null}
+                </dl>
+              )}
               <div className="service-bulletin-body">
                 {message.emergency && (
                   <div className="alert-card alert-card-danger mb-3">

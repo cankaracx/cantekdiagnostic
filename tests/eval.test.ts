@@ -4,7 +4,11 @@ import {
   composePlantQuery,
   describePlantCall,
   excerptFrom,
+  formatPlantContext,
+  formatPlantReadings,
   plantCallHasLookup,
+  sanitizeCelsius,
+  sanitizeDisplayCode,
   sanitizePlantCall,
   toggleObservation,
 } from "@/lib/chat/plant-log";
@@ -114,6 +118,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
+    expect(prompt).toMatch(/ROOM, SET, or a DISPLAY code/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -156,6 +161,7 @@ describe("plant call retrieval", () => {
         refrigerant: "r744",
         serial: "PK-1842",
         observations: ["fans", "blocked"],
+        readings: { roomC: "8.4", setC: "2", displayCode: "hp" },
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -171,6 +177,35 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/condenser/i);
     expect(query).toMatch(/fans/i);
     expect(query).toMatch(/blocked/i);
+    expect(query).toMatch(/8\.4/);
+    expect(query).toMatch(/setpoint 2 C/i);
+    expect(query).toMatch(/\bHP\b/);
+  });
+
+  it("keeps operator ROOM, SET, and display code as plant facts", () => {
+    expect(sanitizeCelsius("8,4")).toBe("8.4");
+    expect(sanitizeCelsius("99")).toBe("");
+    expect(sanitizeDisplayCode("hp-1")).toBe("HP1");
+    expect(
+      formatPlantReadings({
+        duty: "chill",
+        fault: "pulldown",
+        refrigerant: "unknown",
+        serial: "",
+        observations: [],
+        readings: { roomC: "8.4", setC: "2", displayCode: "HP" },
+      }),
+    ).toBe("ROOM 8.4°C  SET 2°C  HP");
+    expect(
+      formatPlantContext({
+        duty: "chill",
+        fault: "pulldown",
+        refrigerant: "r404a",
+        serial: "",
+        observations: ["loaded"],
+        readings: { roomC: "8.4", setC: "2.0", displayCode: "HI" },
+      }),
+    ).toMatch(/ROOM vs SET: \+6\.4 K/);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
