@@ -28,7 +28,7 @@
     "placeholder": "Example: cold room not pulling down, HP alarm on a summer afternoon, Octosense controller…",
     "send": "Ask",
     "thinking": "Searching manuals…",
-    "empty": "Mark the room and what is showing on the plant, then look it up. Add extra detail below if needed.",
+    "empty": "Mark the room, what is showing, and how long, then look it up. Extra detail can go below.",
     "sources": "Sources",
     "service": "Cantek service",
     "disclaimer": "Guidance is taken from Cantek documents. It is not a substitute for a certified refrigeration technician. Follow local emergency rules first."
@@ -179,6 +179,18 @@
     "asks": "What you can already see",
     "asksHint": "Mark anything you can see on the pack or room, then look it up. Extra detail can go below.",
     "bulletin": "Service bulletin",
+    "since": "How long",
+    "copyCall": "Copy for Cantek service",
+    "copied": "Copied",
+    "callCantek": "Call Cantek",
+    "serviceClose": "Cantek service: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "This hour",
+      "shift": "This shift",
+      "yesterday": "Since yesterday",
+      "days": "For days",
+      "unknown": "Not timed"
+    },
     "observations": {
       "fans": "Condenser fans running",
       "blocked": "Condenser dirty or blocked",

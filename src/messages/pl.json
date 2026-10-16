@@ -28,7 +28,7 @@
     "placeholder": "Przykład: komora chłodnicza nie osiąga zadanej temperatury, alarm HP w letnie popołudnie, sterownik Octosense…",
     "send": "Zapytaj",
     "thinking": "Przeszukiwanie dokumentacji…",
-    "empty": "Zaznacz komorę i objaw na obiekcie, a następnie wyszukaj. Szczegóły dopisz poniżej, jeśli trzeba.",
+    "empty": "Zaznacz komorę, objaw i od kiedy tak jest, a następnie wyszukaj. Szczegóły dopisz poniżej.",
     "sources": "Źródła",
     "service": "Serwis Cantek",
     "disclaimer": "Wskazówki pochodzą z dokumentacji Cantek. Nie zastępują pomocy certyfikowanego technika chłodnictwa. W pierwszej kolejności należy przestrzegać lokalnych procedur awaryjnych."
@@ -179,6 +179,18 @@
     "asks": "Co już widać na obiekcie",
     "asksHint": "Zaznacz, co widać na agregacie lub w komorze, potem szukaj. Szczegóły można dopisać niżej.",
     "bulletin": "Biuletyn serwisowy",
+    "since": "Od kiedy",
+    "copyCall": "Kopiuj dla serwisu Cantek",
+    "copied": "Skopiowano",
+    "callCantek": "Zadzwoń do Cantek",
+    "serviceClose": "Serwis Cantek: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "W tej godzinie",
+      "shift": "Na tej zmianie",
+      "yesterday": "Od wczoraj",
+      "days": "Od dni",
+      "unknown": "Bez czasu"
+    },
     "observations": {
       "fans": "Wentylatory skraplacza pracują",
       "blocked": "Skraplacz brudny lub zatkany",

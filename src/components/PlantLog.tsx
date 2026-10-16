@@ -3,12 +3,14 @@
 import { useTranslations } from "next-intl";
 import {
   OBSERVATIONS_BY_FAULT,
+  PLANT_DURATIONS,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
   plantCallHasLookup,
   toggleObservation,
   type PlantCall,
+  type PlantDuration,
   type PlantDuty,
   type PlantFault,
   type PlantGas,
@@ -33,6 +35,7 @@ function OptionRow<T extends string>(props: {
             <label
               key={option}
               className={`plant-log-option ${selected ? "plant-log-option-on" : ""}`}
+              onClick={() => props.onChange(option)}
             >
               <input
                 type="radio"
@@ -97,6 +100,8 @@ export function PlantLog(props: {
   onChange: (plant: PlantCall) => void;
   onLookup: () => void;
   onNewCall: () => void;
+  onCopyCall?: () => void;
+  copied?: boolean;
   busy?: boolean;
 }) {
   const t = useTranslations("plant");
@@ -105,27 +110,81 @@ export function PlantLog(props: {
   const canLookup = plantCallHasLookup(plant);
 
   if (props.compact) {
-    const summary = [
-      plant.duty ? t(`duties.${plant.duty}`) : null,
-      plant.fault ? t(`faults.${plant.fault}`) : null,
-      plant.refrigerant !== "unknown" ? t(`gases.${plant.refrigerant}`) : null,
-      ...plant.observations.map((observation) =>
-        t(`observations.${observation}`),
-      ),
-      plant.serial.trim() || null,
-    ].filter(Boolean);
+    const seen = plant.observations
+      .map((observation) => t(`observations.${observation}`))
+      .join("; ");
 
     return (
-      <div className="plant-log plant-log-compact">
-        <div className="min-w-0">
-          <p className="plant-log-kicker">{t("logged")}</p>
-          <p className="plant-log-summary">
-            {summary.length ? summary.join(" — ") : t("title")}
-          </p>
+      <div className="plant-log plant-log-slip">
+        <div className="plant-log-fascia">
+          <div>
+            <p className="plant-log-kicker">{service("service")}</p>
+            <h3 className="plant-log-title">{t("logged")}</h3>
+          </div>
+          <p className="plant-log-site">Antalya</p>
         </div>
-        <button type="button" className="plant-log-ghost" onClick={props.onNewCall}>
-          {t("newCall")}
-        </button>
+        <div className="dispatch-slip">
+          <div className="dispatch-clock">
+            <p className="dispatch-clock-label">{t("since")}</p>
+            <p className="dispatch-clock-value">
+              {plant.duration
+                ? t(`durations.${plant.duration}`)
+                : t("durations.unknown")}
+            </p>
+          </div>
+          <dl className="dispatch-facts">
+            {plant.duty && plant.duty !== "unknown" ? (
+              <div>
+                <dt>{t("duty")}</dt>
+                <dd>{t(`duties.${plant.duty}`)}</dd>
+              </div>
+            ) : null}
+            {plant.fault ? (
+              <div>
+                <dt>{t("fault")}</dt>
+                <dd>{t(`faults.${plant.fault}`)}</dd>
+              </div>
+            ) : null}
+            {plant.refrigerant !== "unknown" ? (
+              <div>
+                <dt>{t("refrigerant")}</dt>
+                <dd>{t(`gases.${plant.refrigerant}`)}</dd>
+              </div>
+            ) : null}
+            {plant.serial.trim() ? (
+              <div>
+                <dt>{t("serial")}</dt>
+                <dd>{plant.serial.trim()}</dd>
+              </div>
+            ) : null}
+            {seen ? (
+              <div className="dispatch-facts-span">
+                <dt>{t("asks")}</dt>
+                <dd>{seen}</dd>
+              </div>
+            ) : null}
+          </dl>
+        </div>
+        <div className="dispatch-actions">
+          <a className="plant-log-lookup" href="tel:+902422581700">
+            {t("callCantek")}
+          </a>
+          <button
+            type="button"
+            className="plant-log-ghost"
+            onClick={props.onCopyCall}
+            aria-live="polite"
+          >
+            {props.copied ? t("copied") : t("copyCall")}
+          </button>
+          <button
+            type="button"
+            className="plant-log-quiet"
+            onClick={props.onNewCall}
+          >
+            {t("newCall")}
+          </button>
+        </div>
       </div>
     );
   }
@@ -157,6 +216,16 @@ export function PlantLog(props: {
           labelFor={(value) => t(`faults.${value}`)}
           onChange={(fault: PlantFault) =>
             props.onChange({ ...plant, fault, observations: [] })
+          }
+        />
+        <OptionRow
+          name="plant-duration"
+          legend={t("since")}
+          values={PLANT_DURATIONS}
+          value={plant.duration}
+          labelFor={(value) => t(`durations.${value}`)}
+          onChange={(duration: PlantDuration) =>
+            props.onChange({ ...plant, duration })
           }
         />
         <ObservationRow

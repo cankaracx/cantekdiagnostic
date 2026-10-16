@@ -4,6 +4,7 @@ import {
   composePlantQuery,
   describePlantCall,
   excerptFrom,
+  formatDispatchReadback,
   plantCallHasLookup,
   sanitizePlantCall,
   toggleObservation,
@@ -114,6 +115,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
+    expect(prompt).toMatch(/how long the fault has been showing/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -156,6 +158,7 @@ describe("plant call retrieval", () => {
         refrigerant: "r744",
         serial: "PK-1842",
         observations: ["fans", "blocked"],
+        duration: "shift",
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -171,6 +174,7 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/condenser/i);
     expect(query).toMatch(/fans/i);
     expect(query).toMatch(/blocked/i);
+    expect(query).toMatch(/this shift/i);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
@@ -181,6 +185,7 @@ describe("plant call retrieval", () => {
         refrigerant: "unknown",
         serial: "",
         observations: [],
+        duration: null,
       }),
     ).toBe(true);
     expect(
@@ -190,6 +195,7 @@ describe("plant call retrieval", () => {
         refrigerant: "r717",
         serial: "",
         observations: [],
+        duration: "hour",
       }),
     ).toBe(false);
     expect(describePlantCall({
@@ -198,6 +204,7 @@ describe("plant call retrieval", () => {
       refrigerant: "r404a",
       serial: "BT-9",
       observations: ["loaded"],
+      duration: "days",
     })).toMatch(/blast freezer/i);
     expect(describePlantCall({
       duty: "blast",
@@ -205,7 +212,16 @@ describe("plant call retrieval", () => {
       refrigerant: "r404a",
       serial: "BT-9",
       observations: ["loaded"],
+      duration: "days",
     })).toMatch(/warm product/i);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+      duration: "days",
+    })).toMatch(/for days/i);
   });
 
   it("keeps only observations that belong to the selected fault", () => {
@@ -215,6 +231,7 @@ describe("plant call retrieval", () => {
       refrigerant: "r744",
       serial: "PK-1",
       observations: ["fans", "door", "blocked", "fans"],
+      duration: "hour",
     });
     expect(cleaned.observations).toEqual(["fans", "blocked"]);
     expect(
@@ -238,6 +255,7 @@ describe("plant call retrieval", () => {
           refrigerant: "r744",
           serial: "PK-1842",
           observations: ["fans"],
+          duration: "yesterday",
         },
         {
           duty: {
@@ -256,7 +274,30 @@ describe("plant call retrieval", () => {
           },
         },
       ),
-    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, serial PK-1842/i);
+    ).toMatch(/soğuk oda: HP \/ yüksek basınç, since yesterday, R744, condenser fans running, serial PK-1842/i);
+  });
+
+  it("drops unknown duration values and writes a phone readback", () => {
+    const cleaned = sanitizePlantCall({
+      duty: "chill",
+      fault: "hp",
+      refrigerant: "r744",
+      serial: "PK-1842",
+      observations: ["fans"],
+      duration: "forever",
+    });
+    expect(cleaned.duration).toBeNull();
+
+    const slip = formatDispatchReadback({
+      ...cleaned,
+      duration: "shift",
+    });
+    expect(slip).toMatch(/^Cantek plant call/m);
+    expect(slip).toMatch(/chill room/i);
+    expect(slip).toMatch(/this shift/i);
+    expect(slip).toMatch(/Seen on plant: condenser fans running/);
+    expect(slip).toContain("+90 242 258 17 00");
+    expect(slip).not.toMatch(/ · /);
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {

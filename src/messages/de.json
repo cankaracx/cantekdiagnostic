@@ -28,7 +28,7 @@
     "placeholder": "Beispiel: Kühlraum erreicht die Solltemperatur nicht, HP-Alarm an einem Sommernachmittag, Octosense-Steuerung…",
     "send": "Fragen",
     "thinking": "Handbücher werden durchsucht…",
-    "empty": "Markieren Sie den Raum und das, was an der Anlage sichtbar ist, und suchen Sie danach. Extraangaben können Sie darunter eintragen.",
+    "empty": "Markieren Sie Raum, Befund und wie lange es schon so ist, und suchen Sie danach. Extraangaben darunter.",
     "sources": "Quellen",
     "service": "Cantek-Service",
     "disclaimer": "Die Anleitungen stammen aus Cantek-Dokumenten. Sie ersetzen keinen zertifizierten Kälteanlagentechniker. Befolgen Sie zuerst die örtlichen Notfallvorschriften."
@@ -179,6 +179,18 @@
     "asks": "Was an der Anlage zu sehen ist",
     "asksHint": "Markieren Sie, was Sie am Aggregat oder im Raum sehen, und suchen Sie dann. Zusätzliche Angaben können darunter stehen.",
     "bulletin": "Servicebulletin",
+    "since": "Seit wann",
+    "copyCall": "Für Cantek-Service kopieren",
+    "copied": "Kopiert",
+    "callCantek": "Cantek anrufen",
+    "serviceClose": "Cantek-Service: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Diese Stunde",
+      "shift": "Diese Schicht",
+      "yesterday": "Seit gestern",
+      "days": "Seit Tagen",
+      "unknown": "Keine Zeit"
+    },
     "observations": {
       "fans": "Verflüssigerlüfter laufen",
       "blocked": "Verflüssiger schmutzig oder verlegt",

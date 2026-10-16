@@ -42,10 +42,18 @@ export const PLANT_OBSERVATIONS = [
   "cycling",
 ] as const;
 
+export const PLANT_DURATIONS = [
+  "hour",
+  "shift",
+  "yesterday",
+  "days",
+] as const;
+
 export type PlantDuty = (typeof PLANT_DUTIES)[number];
 export type PlantFault = (typeof PLANT_FAULTS)[number];
 export type PlantGas = (typeof PLANT_GASES)[number];
 export type PlantObservation = (typeof PLANT_OBSERVATIONS)[number];
+export type PlantDuration = (typeof PLANT_DURATIONS)[number];
 
 export type PlantCall = {
   duty: PlantDuty | null;
@@ -53,6 +61,7 @@ export type PlantCall = {
   refrigerant: PlantGas;
   serial: string;
   observations: PlantObservation[];
+  duration: PlantDuration | null;
 };
 
 export type PlantCallLabels = {
@@ -60,7 +69,10 @@ export type PlantCallLabels = {
   fault?: Record<PlantFault, string>;
   gas?: Record<PlantGas, string>;
   observation?: Record<PlantObservation, string>;
+  duration?: Record<PlantDuration, string>;
   serial?: (value: string) => string;
+  seen?: string;
+  serviceClose?: string;
 };
 
 export const EMPTY_PLANT_CALL: PlantCall = {
@@ -69,6 +81,7 @@ export const EMPTY_PLANT_CALL: PlantCall = {
   refrigerant: "unknown",
   serial: "",
   observations: [],
+  duration: null,
 };
 
 export const OBSERVATIONS_BY_FAULT: Record<
@@ -124,6 +137,13 @@ const OBSERVATION_QUERY: Record<PlantObservation, string> = {
   cycling: "short cycling compressor cut-out",
 };
 
+const DURATION_QUERY: Record<PlantDuration, string> = {
+  hour: "just tripped recent started this hour",
+  shift: "this shift since morning persistent",
+  yesterday: "since yesterday overnight still present",
+  days: "prolonged days persistent recurring",
+};
+
 const DUTY_LABEL: Record<PlantDuty, string> = {
   chill: "chill room",
   freeze: "freeze room",
@@ -166,6 +186,13 @@ const OBSERVATION_LABEL: Record<PlantObservation, string> = {
   cycling: "compressor short-cycling",
 };
 
+const DURATION_LABEL: Record<PlantDuration, string> = {
+  hour: "this hour",
+  shift: "this shift",
+  yesterday: "since yesterday",
+  days: "for days",
+};
+
 export function isPlantDuty(value: unknown): value is PlantDuty {
   return typeof value === "string" && PLANT_DUTIES.includes(value as PlantDuty);
 }
@@ -182,6 +209,13 @@ export function isPlantObservation(value: unknown): value is PlantObservation {
   return (
     typeof value === "string" &&
     PLANT_OBSERVATIONS.includes(value as PlantObservation)
+  );
+}
+
+export function isPlantDuration(value: unknown): value is PlantDuration {
+  return (
+    typeof value === "string" &&
+    PLANT_DURATIONS.includes(value as PlantDuration)
   );
 }
 
@@ -217,6 +251,7 @@ export function sanitizePlantCall(
     refrigerant: isPlantGas(raw.refrigerant) ? raw.refrigerant : "unknown",
     serial,
     observations,
+    duration: isPlantDuration(raw.duration) ? raw.duration : null,
   };
 }
 
@@ -244,6 +279,7 @@ export function describePlantCall(
   const faultLabels = labels?.fault ?? FAULT_LABEL;
   const gasLabels = labels?.gas ?? GAS_LABEL;
   const observationLabels = labels?.observation ?? OBSERVATION_LABEL;
+  const durationLabels = labels?.duration ?? DURATION_LABEL;
   const serialLabel =
     labels?.serial ?? ((value: string) => `serial ${value}`);
   const parts: string[] = [];
@@ -252,6 +288,9 @@ export function describePlantCall(
   }
   if (plant.fault) {
     parts.push(faultLabels[plant.fault]);
+  }
+  if (plant.duration) {
+    parts.push(durationLabels[plant.duration]);
   }
   if (plant.refrigerant !== "unknown") {
     parts.push(gasLabels[plant.refrigerant]);
@@ -279,6 +318,7 @@ export function formatPlantContext(
   const lines = [
     resolved.duty ? `Duty: ${DUTY_LABEL[resolved.duty]}` : null,
     resolved.fault ? `Showing: ${FAULT_LABEL[resolved.fault]}` : null,
+    resolved.duration ? `How long: ${DURATION_LABEL[resolved.duration]}` : null,
     `Refrigerant: ${GAS_LABEL[resolved.refrigerant]}`,
     observationLine ? `Seen on plant: ${observationLine}` : null,
     resolved.serial ? `Serial: ${resolved.serial}` : null,
@@ -303,6 +343,7 @@ export function composePlantQuery(opts: {
   const tokens = [
     plant.duty ? DUTY_QUERY[plant.duty] : "",
     plant.fault ? FAULT_QUERY[plant.fault] : "",
+    plant.duration ? DURATION_QUERY[plant.duration] : "",
     GAS_QUERY[plant.refrigerant],
     ...plant.observations.map((observation) => OBSERVATION_QUERY[observation]),
     plant.serial ? `serial ${plant.serial}` : "",
@@ -319,4 +360,47 @@ export function excerptFrom(content: string, limit = 280): string {
   const compact = content.replace(/\s+/g, " ").trim();
   if (compact.length <= limit) return compact;
   return `${compact.slice(0, limit).trimEnd()}…`;
+}
+
+export function formatDispatchReadback(
+  plant: PlantCall,
+  labels?: PlantCallLabels,
+): string {
+  const dutyLabels = labels?.duty ?? DUTY_LABEL;
+  const faultLabels = labels?.fault ?? FAULT_LABEL;
+  const gasLabels = labels?.gas ?? GAS_LABEL;
+  const observationLabels = labels?.observation ?? OBSERVATION_LABEL;
+  const durationLabels = labels?.duration ?? DURATION_LABEL;
+  const serialLabel =
+    labels?.serial ?? ((value: string) => `serial ${value}`);
+  const seen = labels?.seen ?? "Seen on plant";
+  const serviceClose =
+    labels?.serviceClose ??
+    "Cantek service: +90 242 258 17 00 / +90 549 743 87 21";
+  const resolved = sanitizePlantCall(plant);
+  const lines: string[] = ["Cantek plant call"];
+  if (resolved.duty && resolved.duty !== "unknown") {
+    lines.push(dutyLabels[resolved.duty]);
+  }
+  if (resolved.fault) {
+    lines.push(faultLabels[resolved.fault]);
+  }
+  if (resolved.duration) {
+    lines.push(durationLabels[resolved.duration]);
+  }
+  if (resolved.refrigerant !== "unknown") {
+    lines.push(gasLabels[resolved.refrigerant]);
+  }
+  if (resolved.serial.trim()) {
+    lines.push(serialLabel(resolved.serial.trim()));
+  }
+  if (resolved.observations.length) {
+    lines.push(
+      `${seen}: ${resolved.observations
+        .map((observation) => observationLabels[observation])
+        .join("; ")}`,
+    );
+  }
+  lines.push("", serviceClose);
+  return lines.join("\n");
 }

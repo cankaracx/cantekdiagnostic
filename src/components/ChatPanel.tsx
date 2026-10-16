@@ -4,7 +4,9 @@ import { PlantLog } from "@/components/PlantLog";
 import {
   describePlantCall,
   EMPTY_PLANT_CALL,
+  formatDispatchReadback,
   OBSERVATIONS_BY_FAULT,
+  PLANT_DURATIONS,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
@@ -159,6 +161,76 @@ function CitationList(props: {
   );
 }
 
+const OPEN_CALL_KEY = "cantek-open-call";
+
+type StoredCall = { plant: PlantCall; messages: UiMessage[] };
+
+const EMPTY_STORED_CALL: StoredCall = {
+  plant: EMPTY_PLANT_CALL,
+  messages: [],
+};
+
+let storedCallCache: { raw: string | null; value: StoredCall } = {
+  raw: null,
+  value: EMPTY_STORED_CALL,
+};
+
+function parseStoredMessages(value: unknown): UiMessage[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter(
+      (message): message is UiMessage =>
+        !!message &&
+        (message.role === "user" || message.role === "assistant") &&
+        typeof message.content === "string" &&
+        message.content.trim().length > 0,
+    )
+    .slice(0, 24)
+    .map((message) => ({
+      role: message.role,
+      content: message.content.slice(0, 4_000),
+      citations: message.citations,
+      hazard: message.hazard,
+      emergency: message.emergency,
+    }));
+}
+
+function readStoredCall(): StoredCall {
+  let raw: string | null = null;
+  try {
+    raw = window.sessionStorage.getItem(OPEN_CALL_KEY);
+  } catch {
+    return EMPTY_STORED_CALL;
+  }
+  if (raw === storedCallCache.raw) return storedCallCache.value;
+  if (!raw) {
+    storedCallCache = { raw, value: EMPTY_STORED_CALL };
+    return EMPTY_STORED_CALL;
+  }
+  try {
+    const saved = JSON.parse(raw) as { plant?: unknown; messages?: unknown };
+    const value = {
+      plant: sanitizePlantCall(saved.plant),
+      messages: parseStoredMessages(saved.messages),
+    };
+    storedCallCache = { raw, value };
+    return value;
+  } catch {
+    storedCallCache = { raw: null, value: EMPTY_STORED_CALL };
+    return EMPTY_STORED_CALL;
+  }
+}
+
+function writeStoredCall(next: StoredCall) {
+  const raw = JSON.stringify(next);
+  storedCallCache = { raw, value: next };
+  try {
+    window.sessionStorage.setItem(OPEN_CALL_KEY, raw);
+  } catch {
+    /* private mode */
+  }
+}
+
 function usePlantLabels(): PlantCallLabels {
   const t = useTranslations("plant");
   return {
@@ -177,7 +249,12 @@ function usePlantLabels(): PlantCallLabels {
         t(`observations.${observation}`),
       ]),
     ) as PlantCallLabels["observation"],
+    duration: Object.fromEntries(
+      PLANT_DURATIONS.map((duration) => [duration, t(`durations.${duration}`)]),
+    ) as PlantCallLabels["duration"],
     serial: (value) => `${t("serial")} ${value}`,
+    seen: t("asks"),
+    serviceClose: t("serviceClose"),
   };
 }
 
@@ -194,8 +271,10 @@ export function ChatPanel(props: {
   const { onTranscriptChange } = props;
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
-  const [messages, setMessages] = useState<UiMessage[]>([]);
   const [plant, setPlant] = useState<PlantCall>(EMPTY_PLANT_CALL);
+  const [messages, setMessages] = useState<UiMessage[]>([]);
+  const [copied, setCopied] = useState(false);
+  const persistReady = useRef(false);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const activePlant = useMemo(
@@ -214,6 +293,28 @@ export function ChatPanel(props: {
       (observation) => !activePlant.observations.includes(observation),
     );
   }, [activePlant]);
+
+  useEffect(() => {
+    const saved = readStoredCall();
+    const id = window.setTimeout(() => {
+      if (
+        saved.messages.length > 0 ||
+        saved.plant.duty ||
+        saved.plant.fault ||
+        saved.plant.duration
+      ) {
+        setPlant(saved.plant);
+        setMessages(saved.messages);
+      }
+      persistReady.current = true;
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    if (!persistReady.current) return;
+    writeStoredCall({ plant: activePlant, messages });
+  }, [activePlant, messages]);
 
   useEffect(() => {
     onTranscriptChange?.(
@@ -309,6 +410,27 @@ export function ChatPanel(props: {
     setMessages([]);
     setPlant(EMPTY_PLANT_CALL);
     setInput("");
+    setCopied(false);
+    writeStoredCall(EMPTY_STORED_CALL);
+  }
+
+  async function copyCall() {
+    const text = formatDispatchReadback(activePlant, labels);
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const field = document.createElement("textarea");
+      field.value = text;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.left = "-9999px";
+      document.body.appendChild(field);
+      field.select();
+      document.execCommand("copy");
+      field.remove();
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2_000);
   }
 
   const compactLog = messages.length > 0;
@@ -352,9 +474,11 @@ export function ChatPanel(props: {
         serialLocked={Boolean(props.serial?.trim()) && props.mode === "technician"}
         compact={compactLog}
         busy={busy}
+        copied={copied}
         onChange={setPlant}
         onLookup={() => void send()}
         onNewCall={resetCall}
+        onCopyCall={() => void copyCall()}
       />
       <div
         className="chat-scroll space-y-4 p-4 sm:p-6"
