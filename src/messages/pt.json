@@ -28,7 +28,7 @@
     "placeholder": "Exemplo: a câmara frigorífica não baixa a temperatura, alarme HP numa tarde de verão, controlador Octosense…",
     "send": "Perguntar",
     "thinking": "A pesquisar nos manuais…",
-    "empty": "Marque a câmara e o que se vê na instalação e pesquise. Acrescente pormenores abaixo se precisar.",
+    "empty": "Marque a câmara, o que se vê e há quanto tempo, e pesquise. Os pormenores podem ir abaixo.",
     "sources": "Fontes",
     "service": "Assistência Cantek",
     "disclaimer": "As orientações são extraídas de documentos Cantek. Não substituem um técnico frigorista certificado. Siga primeiro os procedimentos de emergência locais."
@@ -179,6 +179,18 @@
     "asks": "O que já se vê na instalação",
     "asksHint": "Marque o que vê no grupo ou na câmara e depois procure. Os pormenores podem ir abaixo.",
     "bulletin": "Boletim de serviço",
+    "since": "Há quanto tempo",
+    "copyCall": "Copiar para a assistência Cantek",
+    "copied": "Copiado",
+    "callCantek": "Ligar à Cantek",
+    "serviceClose": "Assistência Cantek: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Esta hora",
+      "shift": "Este turno",
+      "yesterday": "Desde ontem",
+      "days": "Há dias",
+      "unknown": "Sem tempo"
+    },
     "observations": {
       "fans": "Ventiladores do condensador a trabalhar",
       "blocked": "Condensador sujo ou entupido",

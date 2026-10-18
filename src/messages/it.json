@@ -28,7 +28,7 @@
     "placeholder": "Esempio: la cella frigorifera non raggiunge la temperatura, allarme HP in un pomeriggio estivo, controllore Octosense…",
     "send": "Chiedi",
     "thinking": "Ricerca nei manuali…",
-    "empty": "Segna la cella e ciò che si vede sull'impianto, poi cerca. Aggiungi dettagli sotto se serve.",
+    "empty": "Segna la cella, ciò che si vede e da quanto, poi cerca. I dettagli extra possono stare sotto.",
     "sources": "Fonti",
     "service": "Assistenza Cantek",
     "disclaimer": "Le indicazioni provengono dai documenti Cantek. Non sostituiscono l'intervento di un tecnico frigorista certificato. Segui innanzitutto le procedure di emergenza locali."
@@ -179,6 +179,18 @@
     "asks": "Cosa si vede già in impianto",
     "asksHint": "Segna ciò che vedi sul gruppo o in cella, poi cerca. I dettagli extra possono stare sotto.",
     "bulletin": "Bollettino di servizio",
+    "since": "Da quanto",
+    "copyCall": "Copia per l'assistenza Cantek",
+    "copied": "Copiato",
+    "callCantek": "Chiama Cantek",
+    "serviceClose": "Assistenza Cantek: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Quest'ora",
+      "shift": "Questo turno",
+      "yesterday": "Da ieri",
+      "days": "Da giorni",
+      "unknown": "Senza orario"
+    },
     "observations": {
       "fans": "Ventole condensatore in marcia",
       "blocked": "Condensatore sporco o ostruito",

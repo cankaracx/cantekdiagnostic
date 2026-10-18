@@ -50,7 +50,7 @@ export default async function HomePage({
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-[30rem] max-w-[74rem] items-end px-4 py-8 sm:items-center sm:px-6 sm:py-12">
+        <div className="relative z-10 mx-auto flex min-h-[16rem] max-w-[74rem] items-end px-4 py-6 sm:min-h-[18rem] sm:items-center sm:px-6 sm:py-8">
           <div className="cantek-hero-panel">
             <p className="cantek-status">
               {t("kicker")}
@@ -66,7 +66,7 @@ export default async function HomePage({
       </section>
 
       <section className="border-b border-cantek-border bg-cantek-surface">
-        <div className="mx-auto w-full max-w-[74rem] px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto w-full max-w-[74rem] px-4 py-8 sm:px-6 sm:py-10">
           <div className="mx-auto max-w-2xl text-center">
             <p className="cantek-kicker text-cantek-cyan">{t("kicker")}</p>
             <h2 className="section-heading mt-2 text-2xl font-semibold text-cantek-text after:mx-auto sm:text-3xl">

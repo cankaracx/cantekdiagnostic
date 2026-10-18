@@ -28,7 +28,7 @@
     "placeholder": "Exemple : chambre qui ne descend pas, alarme HP un après-midi d’été, régulateur Octosense…",
     "send": "Demander",
     "thinking": "Recherche dans les manuels…",
-    "empty": "Cochez la chambre et ce qui apparaît sur l’installation, puis lancez la recherche. Ajoutez un détail en dessous si besoin.",
+    "empty": "Cochez la chambre, ce qui apparaît et depuis quand, puis cherchez. Le détail peut aller en dessous.",
     "sources": "Sources",
     "service": "Service Cantek",
     "disclaimer": "Ces conseils viennent des documents Cantek. Ils ne remplacent pas un frigoriste certifié. Appliquez d’abord les règles d’urgence locales."
@@ -179,6 +179,18 @@
     "asks": "Ce que vous voyez déjà",
     "asksHint": "Cochez ce que vous voyez sur le groupe ou dans la chambre, puis cherchez. Le détail peut aller en dessous.",
     "bulletin": "Bulletin de service",
+    "since": "Depuis quand",
+    "copyCall": "Copier pour le service Cantek",
+    "copied": "Copié",
+    "callCantek": "Appeler Cantek",
+    "serviceClose": "Service Cantek : +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Cette heure",
+      "shift": "Ce poste",
+      "yesterday": "Depuis hier",
+      "days": "Depuis des jours",
+      "unknown": "Non horodaté"
+    },
     "observations": {
       "fans": "Ventilateurs condenseur en marche",
       "blocked": "Condenseur sale ou obstrué",

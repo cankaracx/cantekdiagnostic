@@ -28,7 +28,7 @@
     "placeholder": "Ejemplo: la cámara no baja, alarma HP en una tarde de verano, controlador Octosense…",
     "send": "Preguntar",
     "thinking": "Buscando en los manuales…",
-    "empty": "Marque la cámara y lo que se ve en la planta, y búsquelo. Añada detalle abajo si hace falta.",
+    "empty": "Marque la cámara, lo que se ve y desde cuándo, y búsquelo. El detalle extra puede ir abajo.",
     "sources": "Fuentes",
     "service": "Servicio Cantek",
     "disclaimer": "La guía proviene de documentos Cantek. No sustituye a un técnico frigorista certificado. Siga primero las normas locales de emergencia."
@@ -179,6 +179,18 @@
     "asks": "Lo que ya se ve en planta",
     "asksHint": "Marque lo que ve en el grupo o la cámara y busque. El detalle extra puede ir abajo.",
     "bulletin": "Boletín de servicio",
+    "since": "Desde cuándo",
+    "copyCall": "Copiar para el servicio Cantek",
+    "copied": "Copiado",
+    "callCantek": "Llamar a Cantek",
+    "serviceClose": "Servicio Cantek: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Esta hora",
+      "shift": "Este turno",
+      "yesterday": "Desde ayer",
+      "days": "Desde hace días",
+      "unknown": "Sin tiempo"
+    },
     "observations": {
       "fans": "Ventiladores del condensador en marcha",
       "blocked": "Condensador sucio o tapado",

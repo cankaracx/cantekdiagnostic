@@ -28,7 +28,7 @@
     "placeholder": "Örnek: soğuk oda düşmüyor, yaz öğleden sonra HP alarmı, Octosense kontrolör…",
     "send": "Sor",
     "thinking": "Kılavuzlar aranıyor…",
-    "empty": "Odayı ve tesiste görünen arızayı işaretleyip arayın. Gerekirse aşağıya ayrıntı ekleyin.",
+    "empty": "Odayı, ne göründüğünü ve ne zamandır olduğunu işaretleyip arayın. Ek ayrıntı alta yazılabilir.",
     "sources": "Kaynaklar",
     "service": "Cantek servis",
     "disclaimer": "Bu rehber Cantek belgelerine dayanır; sertifikalı soğutma teknisyeninin yerini tutmaz. Önce yerel acil durum kurallarını uygulayın."
@@ -179,6 +179,18 @@
     "asks": "Tesiste gördüğünüz",
     "asksHint": "Ünitede veya odada gördüğünüz işaretleri işaretleyin, sonra arayın. Ek ayrıntıyı alta yazabilirsiniz.",
     "bulletin": "Servis bülteni",
+    "since": "Ne zamandır",
+    "copyCall": "Cantek servisine kopyala",
+    "copied": "Kopyalandı",
+    "callCantek": "Cantek'i ara",
+    "serviceClose": "Cantek servisi: +90 242 258 17 00 / +90 549 743 87 21 / info@cantekgroup.com",
+    "durations": {
+      "hour": "Bu saat",
+      "shift": "Bu vardiya",
+      "yesterday": "Dünden beri",
+      "days": "Gündür",
+      "unknown": "Süre yok"
+    },
     "observations": {
       "fans": "Kondenser fanları çalışıyor",
       "blocked": "Kondenser kirli veya tıkalı",
