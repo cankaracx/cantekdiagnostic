@@ -168,6 +168,9 @@
     "duty": "Type de chambre",
     "fault": "Ce qui apparaît",
     "refrigerant": "Fluide",
+    "controller": "Régulateur sur la porte",
+    "controllerAlarm": "Nom sur le régulateur en alarme",
+    "controllerHint": "Pointez la famille imprimée sur le régulateur de chambre ou de groupe. Les manuels sont cherchés pour cet appareil.",
     "serial": "N° de série groupe ou régulateur",
     "serialHint": "Sur la plaque signalétique si vous l’avez",
     "lookup": "Chercher cet appel",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Inconnu"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Pas imprimé sur la porte"
+    },
+    "controllerLines": {
+      "octosense": "Façade AIO chambre",
+      "irs": "Réfrigération intelligente",
+      "octopush": "Technologie d’installation"
     }
   }
 }

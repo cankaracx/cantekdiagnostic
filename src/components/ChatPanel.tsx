@@ -5,6 +5,7 @@ import {
   describePlantCall,
   EMPTY_PLANT_CALL,
   OBSERVATIONS_BY_FAULT,
+  PLANT_CONTROLLERS,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
@@ -171,6 +172,12 @@ function usePlantLabels(): PlantCallLabels {
     gas: Object.fromEntries(
       PLANT_GASES.map((gas) => [gas, t(`gases.${gas}`)]),
     ) as PlantCallLabels["gas"],
+    controller: Object.fromEntries(
+      PLANT_CONTROLLERS.map((controller) => [
+        controller,
+        t(`controllers.${controller}`),
+      ]),
+    ) as PlantCallLabels["controller"],
     observation: Object.fromEntries(
       PLANT_OBSERVATIONS.map((observation) => [
         observation,

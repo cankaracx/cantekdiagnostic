@@ -168,6 +168,9 @@
     "duty": "وظيفة الغرفة",
     "fault": "ما الذي يظهر",
     "refrigerant": "وسيط التبريد",
+    "controller": "المتحكم على الباب",
+    "controllerAlarm": "الاسم على المتحكم في الإنذار",
+    "controllerHint": "علّم العائلة المطبوعة على متحكم الغرفة أو الوحدة. تُبحث الكتيبات لتلك الوحدة.",
     "serial": "الرقم التسلسلي للوحدة أو المتحكم",
     "serialHint": "من لوحة البيانات إن وُجد",
     "lookup": "ابحث عن هذا النداء",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "غير معروف"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "غير مطبوع على الباب"
+    },
+    "controllerLines": {
+      "octosense": "واجهة الغرفة AIO",
+      "irs": "تبريد ذكي",
+      "octopush": "تقنية المنشأة"
     }
   }
 }

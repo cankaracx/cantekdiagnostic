@@ -168,6 +168,9 @@
     "duty": "Raumaufgabe",
     "fault": "Was zeigt sich",
     "refrigerant": "Kältemittel",
+    "controller": "Regler an der Tür",
+    "controllerAlarm": "Name am Regler im Alarm",
+    "controllerHint": "Stempeln Sie die Familie, die am Raum- oder Aggregatregler steht. Die Handbücher werden dafür durchsucht.",
     "serial": "Seriennummer Aggregat oder Steuerung",
     "serialHint": "Vom Typenschild, falls vorhanden",
     "lookup": "Diesen Anruf suchen",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Unbekannt"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Nicht an der Tür"
+    },
+    "controllerLines": {
+      "octosense": "AIO Raumfront",
+      "irs": "Intelligente Kälte",
+      "octopush": "Anlagentechnik"
     }
   }
 }

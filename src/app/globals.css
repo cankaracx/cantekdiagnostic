@@ -658,6 +658,150 @@ textarea {
   gap: 1rem;
 }
 
+/* One bold moment: the three Cantek door plates, not another chip row.
+   Palette stays the plant-floor set already named above. */
+.controller-fieldset {
+  min-width: 0;
+}
+
+.controller-hint {
+  max-width: 38rem;
+  margin: -0.15rem 0 0.65rem;
+  color: var(--cantek-text);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.controller-bay {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.controller-plate {
+  position: relative;
+  display: grid;
+  min-height: 4.6rem;
+  align-content: center;
+  gap: 0.12rem;
+  border: 1px solid #8a9aa2;
+  background: #dce6ea;
+  padding-block: 0.65rem 0.7rem;
+  padding-inline: 1.15rem 0.7rem;
+  color: var(--rack-fascia);
+  cursor: pointer;
+}
+
+.controller-plate input {
+  appearance: none;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.controller-led {
+  position: absolute;
+  inset-inline-start: 0.45rem;
+  top: 50%;
+  width: 0.42rem;
+  height: 0.42rem;
+  border: 1px solid #7d9098;
+  background: #c5d2d7;
+  transform: translateY(-50%);
+}
+
+.controller-mark {
+  font-family: var(--font-nameplate);
+  font-size: 0.98rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--rack-fascia);
+  line-height: 1.1;
+}
+
+.controller-line {
+  color: #4a6570;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.controller-plate-on {
+  border-color: var(--rack-fascia);
+  background: var(--rack-fascia);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px #8bd0ea;
+}
+
+.controller-plate-on .controller-led {
+  border-color: #8bd0ea;
+  background: #00a0dd;
+}
+
+.controller-plate-on .controller-mark {
+  color: #fff;
+}
+
+.controller-plate-on .controller-line {
+  color: #8bd0ea;
+}
+
+.controller-plate:hover:not(.controller-plate-on) {
+  border-color: var(--cantek-cyan);
+}
+
+.controller-plate:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--cantek-cyan) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.controller-unknown {
+  position: relative;
+  display: inline-flex;
+  margin-top: 0.55rem;
+  min-height: 2rem;
+  align-items: center;
+  color: var(--cantek-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.controller-unknown input {
+  appearance: none;
+  width: 0.7rem;
+  height: 0.7rem;
+  margin: 0;
+  margin-inline-end: 0.4rem;
+  border: 1px solid #8a9aa2;
+  background: #fff;
+}
+
+.controller-unknown-on {
+  color: var(--rack-fascia);
+}
+
+.controller-unknown-on input {
+  border-color: var(--rack-fascia);
+  background: var(--rack-fascia);
+  box-shadow: inset 0 0 0 2px #fff;
+}
+
+.controller-unknown:has(input:focus-visible) {
+  outline: 3px solid color-mix(in srgb, var(--cantek-cyan) 55%, transparent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 560px) {
+  .controller-bay {
+    grid-template-columns: 1fr;
+  }
+}
+
 .plant-log-serial input {
   width: 100%;
   min-height: 2.5rem;

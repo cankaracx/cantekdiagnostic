@@ -168,6 +168,9 @@
     "duty": "Tipo de cámara",
     "fault": "Qué se observa",
     "refrigerant": "Refrigerante",
+    "controller": "Controlador en la puerta",
+    "controllerAlarm": "Nombre en el controlador en alarma",
+    "controllerHint": "Marque la familia impresa en el controlador de la cámara o del grupo. Los manuales se buscan para ese equipo.",
     "serial": "Serie del grupo o controlador",
     "serialHint": "De la placa si la tiene",
     "lookup": "Buscar este aviso",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Desconocido"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "No está en la puerta"
+    },
+    "controllerLines": {
+      "octosense": "Frente AIO de cámara",
+      "irs": "Refrigeración inteligente",
+      "octopush": "Tecnología de planta"
     }
   }
 }

@@ -168,6 +168,9 @@
     "duty": "Przeznaczenie komory",
     "fault": "Co widać",
     "refrigerant": "Czynnik",
+    "controller": "Sterownik na drzwiach",
+    "controllerAlarm": "Nazwa na sterowniku w alarmie",
+    "controllerHint": "Oznacz rodzinę nadrukowaną na sterowniku komory lub agregatu. Instrukcje są szukane pod to urządzenie.",
     "serial": "Numer seryjny agregatu lub sterownika",
     "serialHint": "Z tabliczki znamionowej, jeśli jest",
     "lookup": "Szukaj tego zgłoszenia",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Nieznany"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Brak nadruku na drzwiach"
+    },
+    "controllerLines": {
+      "octosense": "Panel AIO komory",
+      "irs": "Inteligentne chłodzenie",
+      "octopush": "Technologia obiektu"
     }
   }
 }
