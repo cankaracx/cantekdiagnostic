@@ -168,6 +168,9 @@
     "duty": "Room duty",
     "fault": "What is showing",
     "refrigerant": "Refrigerant",
+    "controller": "Controller on the door",
+    "controllerAlarm": "Name on the controller in alarm",
+    "controllerHint": "Stamp the family printed on the room or pack controller. Manuals are searched for that unit.",
     "serial": "Pack or controller serial",
     "serialHint": "From the nameplate if you have it",
     "lookup": "Look up this call",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Unknown"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Not printed on the door"
+    },
+    "controllerLines": {
+      "octosense": "AIO room face",
+      "irs": "Intelligent refrigeration",
+      "octopush": "Plant technology"
     }
   }
 }

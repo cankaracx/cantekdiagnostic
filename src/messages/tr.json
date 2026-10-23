@@ -168,6 +168,9 @@
     "duty": "Oda görevi",
     "fault": "Ne görünüyor",
     "refrigerant": "Soğutucu",
+    "controller": "Kapıdaki kontrolör",
+    "controllerAlarm": "Alarmdaki kontrolörün adı",
+    "controllerHint": "Oda veya ünite kontrolöründe basılı aileyi işaretleyin. Kılavuzlar o üniteye göre aranır.",
     "serial": "Ünite veya kontrolör seri no",
     "serialHint": "Varsa etiket üzerindeki numara",
     "lookup": "Bu çağrıyı ara",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Bilinmiyor"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Kapıda yazmıyor"
+    },
+    "controllerLines": {
+      "octosense": "AIO oda yüzü",
+      "irs": "Akıllı soğutma",
+      "octopush": "Tesis teknolojisi"
     }
   }
 }

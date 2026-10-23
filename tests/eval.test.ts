@@ -114,6 +114,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
+    expect(prompt).toMatch(/controller family on the door/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -154,6 +155,7 @@ describe("plant call retrieval", () => {
         duty: "chill",
         fault: "hp",
         refrigerant: "r744",
+        controller: "octosense",
         serial: "PK-1842",
         observations: ["fans", "blocked"],
       },
@@ -167,6 +169,7 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/chill room/i);
     expect(query).toMatch(/\bHP\b/);
     expect(query).toMatch(/R744/);
+    expect(query).toMatch(/Octosense/);
     expect(query).toContain("PK-1842");
     expect(query).toMatch(/condenser/i);
     expect(query).toMatch(/fans/i);
@@ -179,6 +182,7 @@ describe("plant call retrieval", () => {
         duty: "freeze",
         fault: "ice",
         refrigerant: "unknown",
+        controller: "unknown",
         serial: "",
         observations: [],
       }),
@@ -188,6 +192,7 @@ describe("plant call retrieval", () => {
         duty: null,
         fault: "hp",
         refrigerant: "r717",
+        controller: "irs",
         serial: "",
         observations: [],
       }),
@@ -196,6 +201,7 @@ describe("plant call retrieval", () => {
       duty: "blast",
       fault: "pulldown",
       refrigerant: "r404a",
+      controller: "octopush",
       serial: "BT-9",
       observations: ["loaded"],
     })).toMatch(/blast freezer/i);
@@ -203,6 +209,15 @@ describe("plant call retrieval", () => {
       duty: "blast",
       fault: "pulldown",
       refrigerant: "r404a",
+      controller: "octopush",
+      serial: "BT-9",
+      observations: ["loaded"],
+    })).toMatch(/Octopush/);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      controller: "octopush",
       serial: "BT-9",
       observations: ["loaded"],
     })).toMatch(/warm product/i);
@@ -213,9 +228,11 @@ describe("plant call retrieval", () => {
       duty: "chill",
       fault: "hp",
       refrigerant: "r744",
+      controller: "octosense",
       serial: "PK-1",
       observations: ["fans", "door", "blocked", "fans"],
     });
+    expect(cleaned.controller).toBe("octosense");
     expect(cleaned.observations).toEqual(["fans", "blocked"]);
     expect(
       toggleObservation(cleaned, "ambient").observations,
@@ -227,6 +244,39 @@ describe("plant call retrieval", () => {
         observations: ["fans"],
       }).observations,
     ).toEqual([]);
+    expect(
+      sanitizePlantCall({
+        duty: "chill",
+        fault: "alarm",
+        controller: "dixell",
+      }).controller,
+    ).toBe("unknown");
+  });
+
+  it("keeps a stamped controller family in context and drops the unknown door plate", () => {
+    expect(
+      describePlantCall({
+        duty: "chill",
+        fault: "alarm",
+        refrigerant: "unknown",
+        controller: "unknown",
+        serial: "",
+        observations: [],
+      }),
+    ).not.toMatch(/Octosense|IRS|Octopush|unknown controller/i);
+    expect(
+      composePlantQuery({
+        plant: {
+          duty: "freeze",
+          fault: "alarm",
+          refrigerant: "unknown",
+          controller: "irs",
+          serial: "",
+          observations: ["code"],
+        },
+        messages: [{ role: "user", content: "controller alarm" }],
+      }),
+    ).toMatch(/Intelligent Refrigeration System/);
   });
 
   it("describes the call in the UI language when labels are provided", () => {
@@ -236,6 +286,7 @@ describe("plant call retrieval", () => {
           duty: "chill",
           fault: "hp",
           refrigerant: "r744",
+          controller: "irs",
           serial: "PK-1842",
           observations: ["fans"],
         },
@@ -256,7 +307,7 @@ describe("plant call retrieval", () => {
           },
         },
       ),
-    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, serial PK-1842/i);
+    ).toMatch(/soğuk oda: HP \/ yüksek basınç, IRS, R744, condenser fans running, serial PK-1842/i);
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {

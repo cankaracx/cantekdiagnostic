@@ -3,12 +3,14 @@
 import { useTranslations } from "next-intl";
 import {
   OBSERVATIONS_BY_FAULT,
+  PLANT_CONTROLLERS,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
   plantCallHasLookup,
   toggleObservation,
   type PlantCall,
+  type PlantController,
   type PlantDuty,
   type PlantFault,
   type PlantGas,
@@ -46,6 +48,69 @@ function OptionRow<T extends string>(props: {
           );
         })}
       </div>
+    </fieldset>
+  );
+}
+
+const CONTROLLER_MARK: Record<
+  Exclude<PlantController, "unknown">,
+  { mark: string; lineKey: "octosense" | "irs" | "octopush" }
+> = {
+  octosense: { mark: "OCTOSENSE", lineKey: "octosense" },
+  irs: { mark: "IRS", lineKey: "irs" },
+  octopush: { mark: "OCTOPUSH", lineKey: "octopush" },
+};
+
+function ControllerBay(props: {
+  value: PlantController;
+  onChange: (value: PlantController) => void;
+  legend: string;
+  hint: string;
+  unknownLabel: string;
+  lineFor: (value: Exclude<PlantController, "unknown">) => string;
+}) {
+  return (
+    <fieldset className="controller-fieldset">
+      <legend className="plant-log-legend">{props.legend}</legend>
+      <p className="controller-hint">{props.hint}</p>
+      <div className="controller-bay">
+        {PLANT_CONTROLLERS.filter(
+          (controller): controller is Exclude<PlantController, "unknown"> =>
+            controller !== "unknown",
+        ).map((controller) => {
+          const selected = props.value === controller;
+          const plate = CONTROLLER_MARK[controller];
+          return (
+            <label
+              key={controller}
+              className={`controller-plate ${selected ? "controller-plate-on" : ""}`}
+            >
+              <input
+                type="radio"
+                name="plant-controller"
+                value={controller}
+                checked={selected}
+                onChange={() => props.onChange(controller)}
+              />
+              <span className="controller-led" aria-hidden="true" />
+              <span className="controller-mark">{plate.mark}</span>
+              <span className="controller-line">{props.lineFor(controller)}</span>
+            </label>
+          );
+        })}
+      </div>
+      <label
+        className={`controller-unknown ${props.value === "unknown" ? "controller-unknown-on" : ""}`}
+      >
+        <input
+          type="radio"
+          name="plant-controller"
+          value="unknown"
+          checked={props.value === "unknown"}
+          onChange={() => props.onChange("unknown")}
+        />
+        <span>{props.unknownLabel}</span>
+      </label>
     </fieldset>
   );
 }
@@ -108,6 +173,9 @@ export function PlantLog(props: {
     const summary = [
       plant.duty ? t(`duties.${plant.duty}`) : null,
       plant.fault ? t(`faults.${plant.fault}`) : null,
+      plant.controller !== "unknown"
+        ? t(`controllers.${plant.controller}`)
+        : null,
       plant.refrigerant !== "unknown" ? t(`gases.${plant.refrigerant}`) : null,
       ...plant.observations.map((observation) =>
         t(`observations.${observation}`),
@@ -157,6 +225,16 @@ export function PlantLog(props: {
           labelFor={(value) => t(`faults.${value}`)}
           onChange={(fault: PlantFault) =>
             props.onChange({ ...plant, fault, observations: [] })
+          }
+        />
+        <ControllerBay
+          value={plant.controller}
+          legend={plant.fault === "alarm" ? t("controllerAlarm") : t("controller")}
+          hint={t("controllerHint")}
+          unknownLabel={t("controllers.unknown")}
+          lineFor={(value) => t(`controllerLines.${value}`)}
+          onChange={(controller: PlantController) =>
+            props.onChange({ ...plant, controller })
           }
         />
         <ObservationRow

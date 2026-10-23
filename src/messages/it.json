@@ -168,6 +168,9 @@
     "duty": "Tipo di cella",
     "fault": "Cosa si vede",
     "refrigerant": "Refrigerante",
+    "controller": "Controllore sulla porta",
+    "controllerAlarm": "Nome sul controllore in allarme",
+    "controllerHint": "Segna la famiglia stampata sul controllore della cella o del gruppo. I manuali vengono cercati per quell’apparecchio.",
     "serial": "Matricola gruppo o controllore",
     "serialHint": "Dalla targhetta, se ce l'hai",
     "lookup": "Cerca questa chiamata",
@@ -216,6 +219,17 @@
       "r404a": "R404A",
       "r134a": "R134a",
       "unknown": "Sconosciuto"
+    },
+    "controllers": {
+      "octosense": "Octosense",
+      "irs": "IRS",
+      "octopush": "Octopush",
+      "unknown": "Non è sulla porta"
+    },
+    "controllerLines": {
+      "octosense": "Fronte AIO cella",
+      "irs": "Refrigerazione intelligente",
+      "octopush": "Tecnologia d’impianto"
     }
   }
 }

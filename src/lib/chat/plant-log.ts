@@ -24,6 +24,13 @@ export const PLANT_GASES = [
   "unknown",
 ] as const;
 
+export const PLANT_CONTROLLERS = [
+  "octosense",
+  "irs",
+  "octopush",
+  "unknown",
+] as const;
+
 export const PLANT_OBSERVATIONS = [
   "fans",
   "blocked",
@@ -45,12 +52,14 @@ export const PLANT_OBSERVATIONS = [
 export type PlantDuty = (typeof PLANT_DUTIES)[number];
 export type PlantFault = (typeof PLANT_FAULTS)[number];
 export type PlantGas = (typeof PLANT_GASES)[number];
+export type PlantController = (typeof PLANT_CONTROLLERS)[number];
 export type PlantObservation = (typeof PLANT_OBSERVATIONS)[number];
 
 export type PlantCall = {
   duty: PlantDuty | null;
   fault: PlantFault | null;
   refrigerant: PlantGas;
+  controller: PlantController;
   serial: string;
   observations: PlantObservation[];
 };
@@ -59,6 +68,7 @@ export type PlantCallLabels = {
   duty?: Record<PlantDuty, string>;
   fault?: Record<PlantFault, string>;
   gas?: Record<PlantGas, string>;
+  controller?: Record<PlantController, string>;
   observation?: Record<PlantObservation, string>;
   serial?: (value: string) => string;
 };
@@ -67,6 +77,7 @@ export const EMPTY_PLANT_CALL: PlantCall = {
   duty: null,
   fault: null,
   refrigerant: "unknown",
+  controller: "unknown",
   serial: "",
   observations: [],
 };
@@ -103,6 +114,13 @@ const GAS_QUERY: Record<PlantGas, string> = {
   r717: "R717",
   r404a: "R404A",
   r134a: "R134a",
+  unknown: "",
+};
+
+const CONTROLLER_QUERY: Record<PlantController, string> = {
+  octosense: "Octosense Octosense AIO room controller",
+  irs: "Octosense IRS Intelligent Refrigeration System",
+  octopush: "Octopush storage management technology",
   unknown: "",
 };
 
@@ -148,6 +166,13 @@ const GAS_LABEL: Record<PlantGas, string> = {
   unknown: "unknown refrigerant",
 };
 
+const CONTROLLER_LABEL: Record<PlantController, string> = {
+  octosense: "Octosense",
+  irs: "IRS",
+  octopush: "Octopush",
+  unknown: "unknown controller",
+};
+
 const OBSERVATION_LABEL: Record<PlantObservation, string> = {
   fans: "condenser fans running",
   blocked: "condenser dirty or blocked",
@@ -176,6 +201,13 @@ export function isPlantFault(value: unknown): value is PlantFault {
 
 export function isPlantGas(value: unknown): value is PlantGas {
   return typeof value === "string" && PLANT_GASES.includes(value as PlantGas);
+}
+
+export function isPlantController(value: unknown): value is PlantController {
+  return (
+    typeof value === "string" &&
+    PLANT_CONTROLLERS.includes(value as PlantController)
+  );
 }
 
 export function isPlantObservation(value: unknown): value is PlantObservation {
@@ -215,6 +247,7 @@ export function sanitizePlantCall(
     duty: isPlantDuty(raw.duty) ? raw.duty : null,
     fault,
     refrigerant: isPlantGas(raw.refrigerant) ? raw.refrigerant : "unknown",
+    controller: isPlantController(raw.controller) ? raw.controller : "unknown",
     serial,
     observations,
   };
@@ -243,6 +276,7 @@ export function describePlantCall(
   const dutyLabels = labels?.duty ?? DUTY_LABEL;
   const faultLabels = labels?.fault ?? FAULT_LABEL;
   const gasLabels = labels?.gas ?? GAS_LABEL;
+  const controllerLabels = labels?.controller ?? CONTROLLER_LABEL;
   const observationLabels = labels?.observation ?? OBSERVATION_LABEL;
   const serialLabel =
     labels?.serial ?? ((value: string) => `serial ${value}`);
@@ -252,6 +286,9 @@ export function describePlantCall(
   }
   if (plant.fault) {
     parts.push(faultLabels[plant.fault]);
+  }
+  if (plant.controller !== "unknown") {
+    parts.push(controllerLabels[plant.controller]);
   }
   if (plant.refrigerant !== "unknown") {
     parts.push(gasLabels[plant.refrigerant]);
@@ -279,6 +316,9 @@ export function formatPlantContext(
   const lines = [
     resolved.duty ? `Duty: ${DUTY_LABEL[resolved.duty]}` : null,
     resolved.fault ? `Showing: ${FAULT_LABEL[resolved.fault]}` : null,
+    resolved.controller !== "unknown"
+      ? `Controller on the door: ${CONTROLLER_LABEL[resolved.controller]}`
+      : null,
     `Refrigerant: ${GAS_LABEL[resolved.refrigerant]}`,
     observationLine ? `Seen on plant: ${observationLine}` : null,
     resolved.serial ? `Serial: ${resolved.serial}` : null,
@@ -303,6 +343,7 @@ export function composePlantQuery(opts: {
   const tokens = [
     plant.duty ? DUTY_QUERY[plant.duty] : "",
     plant.fault ? FAULT_QUERY[plant.fault] : "",
+    CONTROLLER_QUERY[plant.controller],
     GAS_QUERY[plant.refrigerant],
     ...plant.observations.map((observation) => OBSERVATION_QUERY[observation]),
     plant.serial ? `serial ${plant.serial}` : "",
