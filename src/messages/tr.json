@@ -179,6 +179,13 @@
     "asks": "Tesiste gördüğünüz",
     "asksHint": "Ünitede veya odada gördüğünüz işaretleri işaretleyin, sonra arayın. Ek ayrıntıyı alta yazabilirsiniz.",
     "bulletin": "Servis bülteni",
+    "gauges": "Ünite manometreleri",
+    "gaugesLead": "Ünite kapağındaki LP ve HP manometrelerini yazın. Okuyamıyorsanız boş bırakın.",
+    "suction": "LP emiş",
+    "discharge": "HP basma",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Kondenser fanları çalışıyor",
       "blocked": "Kondenser kirli veya tıkalı",

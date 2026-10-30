@@ -179,6 +179,13 @@
     "asks": "Was an der Anlage zu sehen ist",
     "asksHint": "Markieren Sie, was Sie am Aggregat oder im Raum sehen, und suchen Sie dann. Zusätzliche Angaben können darunter stehen.",
     "bulletin": "Servicebulletin",
+    "gauges": "Aggregat-Manometer",
+    "gaugesLead": "LP und HP von den Manometern an der Aggregattür übernehmen. Leer lassen, wenn sie nicht ablesbar sind.",
+    "suction": "LP Saugdruck",
+    "discharge": "HP Hochdruck",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Verflüssigerlüfter laufen",
       "blocked": "Verflüssiger schmutzig oder verlegt",

@@ -4,11 +4,13 @@ import { PlantLog } from "@/components/PlantLog";
 import {
   describePlantCall,
   EMPTY_PLANT_CALL,
+  formatBar,
   OBSERVATIONS_BY_FAULT,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
   PLANT_OBSERVATIONS,
+  plantCallHasGauges,
   plantCallHasLookup,
   sanitizePlantCall,
   toggleObservation,
@@ -178,6 +180,8 @@ function usePlantLabels(): PlantCallLabels {
       ]),
     ) as PlantCallLabels["observation"],
     serial: (value) => `${t("serial")} ${value}`,
+    suction: (bar) => `${t("suction")} ${formatBar(bar)} ${t("bar")}`,
+    discharge: (bar) => `${t("discharge")} ${formatBar(bar)} ${t("bar")}`,
   };
 }
 
@@ -196,6 +200,7 @@ export function ChatPanel(props: {
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const [plant, setPlant] = useState<PlantCall>(EMPTY_PLANT_CALL);
+  const [callKey, setCallKey] = useState(0);
   const endRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const activePlant = useMemo(
@@ -309,6 +314,7 @@ export function ChatPanel(props: {
     setMessages([]);
     setPlant(EMPTY_PLANT_CALL);
     setInput("");
+    setCallKey((key) => key + 1);
   }
 
   const compactLog = messages.length > 0;
@@ -348,6 +354,7 @@ export function ChatPanel(props: {
         </span>
       </div>
       <PlantLog
+        key={callKey}
         plant={activePlant}
         serialLocked={Boolean(props.serial?.trim()) && props.mode === "technician"}
         compact={compactLog}
@@ -402,7 +409,30 @@ export function ChatPanel(props: {
                     {plantSummary || t("home.workspaceTitle")}
                   </p>
                 </div>
-                <p className="service-bulletin-site">Antalya</p>
+                {plantCallHasGauges(activePlant) ? (
+                  <div className="service-bulletin-gauges" aria-label={t("plant.gauges")}>
+                    <p className="service-bulletin-gauge">
+                      <span>{t("plant.suction")}</span>
+                      <strong>
+                        {activePlant.suctionBar == null
+                          ? "—"
+                          : formatBar(activePlant.suctionBar)}
+                      </strong>
+                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
+                    </p>
+                    <p className="service-bulletin-gauge service-bulletin-gauge-hp">
+                      <span>{t("plant.discharge")}</span>
+                      <strong>
+                        {activePlant.dischargeBar == null
+                          ? "—"
+                          : formatBar(activePlant.dischargeBar)}
+                      </strong>
+                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
+                    </p>
+                  </div>
+                ) : (
+                  <p className="service-bulletin-site">Antalya</p>
+                )}
               </header>
               <div className="service-bulletin-body">
                 {message.emergency && (

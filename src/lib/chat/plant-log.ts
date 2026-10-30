@@ -53,6 +53,8 @@ export type PlantCall = {
   refrigerant: PlantGas;
   serial: string;
   observations: PlantObservation[];
+  suctionBar: number | null;
+  dischargeBar: number | null;
 };
 
 export type PlantCallLabels = {
@@ -61,6 +63,8 @@ export type PlantCallLabels = {
   gas?: Record<PlantGas, string>;
   observation?: Record<PlantObservation, string>;
   serial?: (value: string) => string;
+  suction?: (bar: number) => string;
+  discharge?: (bar: number) => string;
 };
 
 export const EMPTY_PLANT_CALL: PlantCall = {
@@ -69,7 +73,37 @@ export const EMPTY_PLANT_CALL: PlantCall = {
   refrigerant: "unknown",
   serial: "",
   observations: [],
+  suctionBar: null,
+  dischargeBar: null,
 };
+
+/** Analog pack gauges and CO2 gas coolers stay inside this window. */
+export const GAUGE_BAR_MAX = 160;
+
+export function formatBar(value: number): string {
+  return Number.isInteger(value) ? String(value) : value.toFixed(1);
+}
+
+export function parseBar(value: unknown): number | null {
+  if (value == null) return null;
+  if (typeof value === "number") {
+    if (!Number.isFinite(value) || value < 0 || value > GAUGE_BAR_MAX) {
+      return null;
+    }
+    return Math.round(value * 10) / 10;
+  }
+  const trimmed = String(value).trim();
+  if (!trimmed) return null;
+  const numeric = Number(trimmed.replace(",", "."));
+  if (!Number.isFinite(numeric) || numeric < 0 || numeric > GAUGE_BAR_MAX) {
+    return null;
+  }
+  return Math.round(numeric * 10) / 10;
+}
+
+export function plantCallHasGauges(plant: PlantCall): boolean {
+  return plant.suctionBar != null || plant.dischargeBar != null;
+}
 
 export const OBSERVATIONS_BY_FAULT: Record<
   PlantFault,
@@ -217,6 +251,8 @@ export function sanitizePlantCall(
     refrigerant: isPlantGas(raw.refrigerant) ? raw.refrigerant : "unknown",
     serial,
     observations,
+    suctionBar: parseBar(raw.suctionBar ?? raw.suction),
+    dischargeBar: parseBar(raw.dischargeBar ?? raw.discharge),
   };
 }
 
@@ -259,6 +295,18 @@ export function describePlantCall(
   for (const observation of plant.observations) {
     parts.push(observationLabels[observation]);
   }
+  if (plant.suctionBar != null) {
+    parts.push(
+      labels?.suction?.(plant.suctionBar) ??
+        `LP ${formatBar(plant.suctionBar)} bar`,
+    );
+  }
+  if (plant.dischargeBar != null) {
+    parts.push(
+      labels?.discharge?.(plant.dischargeBar) ??
+        `HP ${formatBar(plant.dischargeBar)} bar`,
+    );
+  }
   if (plant.serial.trim()) {
     parts.push(serialLabel(plant.serial.trim()));
   }
@@ -281,6 +329,12 @@ export function formatPlantContext(
     resolved.fault ? `Showing: ${FAULT_LABEL[resolved.fault]}` : null,
     `Refrigerant: ${GAS_LABEL[resolved.refrigerant]}`,
     observationLine ? `Seen on plant: ${observationLine}` : null,
+    resolved.suctionBar != null
+      ? `Suction LP: ${formatBar(resolved.suctionBar)} bar (operator gauge, not a documented setpoint)`
+      : null,
+    resolved.dischargeBar != null
+      ? `Discharge HP: ${formatBar(resolved.dischargeBar)} bar (operator gauge, not a documented setpoint)`
+      : null,
     resolved.serial ? `Serial: ${resolved.serial}` : null,
   ].filter(Boolean);
   return lines.join("\n");
@@ -305,6 +359,12 @@ export function composePlantQuery(opts: {
     plant.fault ? FAULT_QUERY[plant.fault] : "",
     GAS_QUERY[plant.refrigerant],
     ...plant.observations.map((observation) => OBSERVATION_QUERY[observation]),
+    plant.suctionBar != null
+      ? `suction pressure P0 LP ${formatBar(plant.suctionBar)} bar`
+      : "",
+    plant.dischargeBar != null
+      ? `discharge pressure Pc HP condensing ${formatBar(plant.dischargeBar)} bar`
+      : "",
     plant.serial ? `serial ${plant.serial}` : "",
     prior,
     lastUser,

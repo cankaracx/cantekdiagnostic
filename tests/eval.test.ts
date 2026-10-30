@@ -4,6 +4,9 @@ import {
   composePlantQuery,
   describePlantCall,
   excerptFrom,
+  formatBar,
+  formatPlantContext,
+  parseBar,
   plantCallHasLookup,
   sanitizePlantCall,
   toggleObservation,
@@ -114,6 +117,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not provide step-by-step instructions/);
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
+    expect(prompt).toMatch(/pack gauge readings/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -156,6 +160,8 @@ describe("plant call retrieval", () => {
         refrigerant: "r744",
         serial: "PK-1842",
         observations: ["fans", "blocked"],
+        suctionBar: 3.4,
+        dischargeBar: 18,
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -171,6 +177,10 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/condenser/i);
     expect(query).toMatch(/fans/i);
     expect(query).toMatch(/blocked/i);
+    expect(query).toMatch(/3\.4/);
+    expect(query).toMatch(/P0/);
+    expect(query).toMatch(/18/);
+    expect(query).toMatch(/Pc/);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
@@ -181,6 +191,8 @@ describe("plant call retrieval", () => {
         refrigerant: "unknown",
         serial: "",
         observations: [],
+        suctionBar: null,
+        dischargeBar: null,
       }),
     ).toBe(true);
     expect(
@@ -190,6 +202,8 @@ describe("plant call retrieval", () => {
         refrigerant: "r717",
         serial: "",
         observations: [],
+        suctionBar: 2,
+        dischargeBar: 16,
       }),
     ).toBe(false);
     expect(describePlantCall({
@@ -198,6 +212,8 @@ describe("plant call retrieval", () => {
       refrigerant: "r404a",
       serial: "BT-9",
       observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
     })).toMatch(/blast freezer/i);
     expect(describePlantCall({
       duty: "blast",
@@ -205,7 +221,27 @@ describe("plant call retrieval", () => {
       refrigerant: "r404a",
       serial: "BT-9",
       observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
     })).toMatch(/warm product/i);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
+    })).toMatch(/LP 1\.8 bar/);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
+    })).toMatch(/HP 16 bar/);
   });
 
   it("keeps only observations that belong to the selected fault", () => {
@@ -215,8 +251,12 @@ describe("plant call retrieval", () => {
       refrigerant: "r744",
       serial: "PK-1",
       observations: ["fans", "door", "blocked", "fans"],
+      suctionBar: "3,4",
+      dischargeBar: 90,
     });
     expect(cleaned.observations).toEqual(["fans", "blocked"]);
+    expect(cleaned.suctionBar).toBe(3.4);
+    expect(cleaned.dischargeBar).toBe(90);
     expect(
       toggleObservation(cleaned, "ambient").observations,
     ).toContain("ambient");
@@ -238,6 +278,8 @@ describe("plant call retrieval", () => {
           refrigerant: "r744",
           serial: "PK-1842",
           observations: ["fans"],
+          suctionBar: 3.4,
+          dischargeBar: null,
         },
         {
           duty: {
@@ -256,7 +298,31 @@ describe("plant call retrieval", () => {
           },
         },
       ),
-    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, serial PK-1842/i);
+    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, LP 3\.4 bar, serial PK-1842/i);
+  });
+
+  it("accepts pack-door gauge readings in bar and rejects out-of-range values", () => {
+    expect(parseBar("3,4")).toBe(3.4);
+    expect(parseBar("18")).toBe(18);
+    expect(parseBar(90)).toBe(90);
+    expect(parseBar("")).toBeNull();
+    expect(parseBar(-1)).toBeNull();
+    expect(parseBar(200)).toBeNull();
+    expect(formatBar(18)).toBe("18");
+    expect(formatBar(3.4)).toBe("3.4");
+
+    const context = formatPlantContext({
+      duty: "chill",
+      fault: "hp",
+      refrigerant: "r744",
+      serial: "PK-1",
+      observations: ["fans"],
+      suctionBar: 32,
+      dischargeBar: 90,
+    });
+    expect(context).toMatch(/Suction LP: 32 bar/);
+    expect(context).toMatch(/Discharge HP: 90 bar/);
+    expect(context).toMatch(/not a documented setpoint/);
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {

@@ -179,6 +179,13 @@
     "asks": "What you can already see",
     "asksHint": "Mark anything you can see on the pack or room, then look it up. Extra detail can go below.",
     "bulletin": "Service bulletin",
+    "gauges": "Pack gauges",
+    "gaugesLead": "Copy LP and HP from the gauges on the pack door. Leave blank if you cannot read them.",
+    "suction": "LP suction",
+    "discharge": "HP discharge",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Condenser fans running",
       "blocked": "Condenser dirty or blocked",

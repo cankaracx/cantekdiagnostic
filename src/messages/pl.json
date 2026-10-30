@@ -179,6 +179,13 @@
     "asks": "Co już widać na obiekcie",
     "asksHint": "Zaznacz, co widać na agregacie lub w komorze, potem szukaj. Szczegóły można dopisać niżej.",
     "bulletin": "Biuletyn serwisowy",
+    "gauges": "Manometry agregatu",
+    "gaugesLead": "Przepisz LP i HP z manometrów na drzwiach agregatu. Zostaw puste, jeśli nie da się odczytać.",
+    "suction": "LP ssanie",
+    "discharge": "HP tłoczenie",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Wentylatory skraplacza pracują",
       "blocked": "Skraplacz brudny lub zatkany",

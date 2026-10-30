@@ -1,8 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import {
+  formatBar,
   OBSERVATIONS_BY_FAULT,
+  parseBar,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
@@ -47,6 +50,117 @@ function OptionRow<T extends string>(props: {
         })}
       </div>
     </fieldset>
+  );
+}
+
+function GaugeBoard(props: {
+  plant: PlantCall;
+  compact?: boolean;
+  onChange: (plant: PlantCall) => void;
+  onSubmit?: () => void;
+}) {
+  const t = useTranslations("plant");
+  const [draft, setDraft] = useState({
+    suction: props.plant.suctionBar == null ? "" : formatBar(props.plant.suctionBar),
+    discharge:
+      props.plant.dischargeBar == null ? "" : formatBar(props.plant.dischargeBar),
+  });
+
+  function isCompleteDraft(raw: string) {
+    const trimmed = raw.trim();
+    if (!trimmed) return true;
+    if (trimmed.endsWith(".") || trimmed.endsWith(",")) return false;
+    return parseBar(trimmed) != null;
+  }
+
+  function commit(field: "suctionBar" | "dischargeBar", raw: string, revert = false) {
+    const parsed = parseBar(raw);
+    if (raw.trim() !== "" && parsed == null) {
+      if (!revert) return;
+      setDraft((current) => ({
+        ...current,
+        [field === "suctionBar" ? "suction" : "discharge"]:
+          props.plant[field] == null ? "" : formatBar(props.plant[field]!),
+      }));
+      return;
+    }
+    if (parsed === props.plant[field]) return;
+    props.onChange({ ...props.plant, [field]: parsed });
+  }
+
+  return (
+    <div
+      className={`pack-gauges ${props.compact ? "pack-gauges-compact" : ""}`}
+      role="group"
+      aria-label={t("gauges")}
+    >
+      {!props.compact && (
+        <div className="pack-gauges-head">
+          <p className="plant-log-legend pack-gauges-legend">{t("gauges")}</p>
+          <p className="pack-gauges-lead">{t("gaugesLead")}</p>
+        </div>
+      )}
+      <div className="pack-gauges-wells">
+        <label
+          className={`pack-gauge ${props.plant.suctionBar != null ? "pack-gauge-lit" : ""}`}
+        >
+          <span className="pack-gauge-lamp" aria-hidden="true" />
+          <span className="pack-gauge-tag">{t("suction")}</span>
+          <input
+            dir="ltr"
+            inputMode="decimal"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label={t("suction")}
+            placeholder={t("suctionHint")}
+            value={draft.suction}
+            onChange={(event) => {
+              const next = event.target.value;
+              setDraft((current) => ({ ...current, suction: next }));
+              if (isCompleteDraft(next)) commit("suctionBar", next);
+            }}
+            onBlur={(event) => commit("suctionBar", event.target.value, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commit("suctionBar", event.currentTarget.value, true);
+                props.onSubmit?.();
+              }
+            }}
+          />
+          <span className="pack-gauge-unit">{t("bar")}</span>
+        </label>
+        <label
+          className={`pack-gauge pack-gauge-hp ${props.plant.dischargeBar != null ? "pack-gauge-lit" : ""}`}
+        >
+          <span className="pack-gauge-lamp" aria-hidden="true" />
+          <span className="pack-gauge-tag">{t("discharge")}</span>
+          <input
+            dir="ltr"
+            inputMode="decimal"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label={t("discharge")}
+            placeholder={t("dischargeHint")}
+            value={draft.discharge}
+            onChange={(event) => {
+              const next = event.target.value;
+              setDraft((current) => ({ ...current, discharge: next }));
+              if (isCompleteDraft(next)) commit("dischargeBar", next);
+            }}
+            onBlur={(event) => commit("dischargeBar", event.target.value, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commit("dischargeBar", event.currentTarget.value, true);
+                props.onSubmit?.();
+              }
+            }}
+          />
+          <span className="pack-gauge-unit">{t("bar")}</span>
+        </label>
+      </div>
+    </div>
   );
 }
 
@@ -117,15 +231,23 @@ export function PlantLog(props: {
 
     return (
       <div className="plant-log plant-log-compact">
-        <div className="min-w-0">
-          <p className="plant-log-kicker">{t("logged")}</p>
-          <p className="plant-log-summary">
-            {summary.length ? summary.join(" — ") : t("title")}
-          </p>
+        <div className="plant-log-compact-head">
+          <div className="min-w-0">
+            <p className="plant-log-kicker">{t("logged")}</p>
+            <p className="plant-log-summary">
+              {summary.length ? summary.join(" — ") : t("title")}
+            </p>
+          </div>
+          <button type="button" className="plant-log-ghost" onClick={props.onNewCall}>
+            {t("newCall")}
+          </button>
         </div>
-        <button type="button" className="plant-log-ghost" onClick={props.onNewCall}>
-          {t("newCall")}
-        </button>
+        <GaugeBoard
+          plant={plant}
+          compact
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
+        />
       </div>
     );
   }
@@ -164,6 +286,11 @@ export function PlantLog(props: {
           onChange={props.onChange}
           legend={t("asks")}
           labelFor={(value) => t(`observations.${value}`)}
+        />
+        <GaugeBoard
+          plant={plant}
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
         />
         <div className="plant-log-split">
           <OptionRow

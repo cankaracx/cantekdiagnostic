@@ -179,6 +179,13 @@
     "asks": "Ce que vous voyez déjà",
     "asksHint": "Cochez ce que vous voyez sur le groupe ou dans la chambre, puis cherchez. Le détail peut aller en dessous.",
     "bulletin": "Bulletin de service",
+    "gauges": "Manomètres du groupe",
+    "gaugesLead": "Relevez LP et HP sur les manomètres de la porte du groupe. Laissez vide s’ils sont illisibles.",
+    "suction": "LP aspiration",
+    "discharge": "HP refoulement",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Ventilateurs condenseur en marche",
       "blocked": "Condenseur sale ou obstrué",

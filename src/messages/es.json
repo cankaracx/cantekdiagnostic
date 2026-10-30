@@ -179,6 +179,13 @@
     "asks": "Lo que ya se ve en planta",
     "asksHint": "Marque lo que ve en el grupo o la cámara y busque. El detalle extra puede ir abajo.",
     "bulletin": "Boletín de servicio",
+    "gauges": "Manómetros del grupo",
+    "gaugesLead": "Copie LP y HP de los manómetros en la puerta del grupo. Déjelo en blanco si no se pueden leer.",
+    "suction": "LP succión",
+    "discharge": "HP descarga",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Ventiladores del condensador en marcha",
       "blocked": "Condensador sucio o tapado",

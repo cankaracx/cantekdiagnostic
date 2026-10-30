@@ -8,8 +8,10 @@
      #0e3a4a rack fascia
      #b3202e stop
      #e8eef0 service-deck paper
+     #102830 LP suction well
+     #2a1418 HP discharge well
      Type: IBM Plex Sans / Condensed — engineering bulletin, not a marketing sans
-     Bold moment: the returned service bulletin, same fascia as the plant-call card */
+     Bold moment: the two pack-door gauge wells (LP suction / HP discharge) */
   --cantek-dark: #323e48;
   --cantek-dark-deep: #27323a;
   --cantek-cyan: #00a0dd;
@@ -715,11 +717,161 @@ textarea {
 }
 
 .plant-log-compact {
+  display: grid;
+  gap: 0;
+  padding: 0;
+}
+
+.plant-log-compact-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  padding: 0.75rem 1.15rem;
+  padding: 0.75rem 1.15rem 0.7rem;
+}
+
+.pack-gauges {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.pack-gauges-legend {
+  margin-bottom: 0.2rem;
+}
+
+.pack-gauges-lead {
+  max-width: 38rem;
+  color: var(--cantek-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.pack-gauges-wells {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  background: var(--rack-fascia);
+  padding: 0.4rem;
+}
+
+.pack-gauge {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  column-gap: 0.45rem;
+  row-gap: 0.15rem;
+  min-height: 4.4rem;
+  padding: 0.65rem 0.75rem 0.55rem 1.15rem;
+  background: #102830;
+  color: #f3fbfd;
+}
+
+.pack-gauge-hp {
+  background: #2a1418;
+  color: #fff6f6;
+}
+
+.pack-gauge-lamp {
+  position: absolute;
+  inset-inline-start: 0.4rem;
+  top: 0.7rem;
+  width: 0.42rem;
+  height: 0.42rem;
+  background: #3d5f6a;
+}
+
+.pack-gauge-hp .pack-gauge-lamp {
+  background: #5a3036;
+}
+
+.pack-gauge-lit .pack-gauge-lamp {
+  background: #00a0dd;
+}
+
+.pack-gauge-hp.pack-gauge-lit .pack-gauge-lamp {
+  background: #e24b57;
+}
+
+.pack-gauge-tag {
+  grid-column: 1 / -1;
+  font-family: var(--font-nameplate);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #b8e4f2;
+}
+
+.pack-gauge-hp .pack-gauge-tag {
+  color: #f0c4c8;
+}
+
+.pack-gauge input {
+  min-width: 0;
+  border: 0;
+  border-bottom: 2px solid #3d6a78;
+  background: transparent;
+  padding: 0.1rem 0 0.15rem;
+  color: inherit;
+  font-family: var(--font-nameplate);
+  font-size: 1.7rem;
+  font-weight: 600;
+  line-height: 1.1;
+  direction: ltr;
+}
+
+.pack-gauge-hp input {
+  border-bottom-color: #7a3a42;
+}
+
+.pack-gauge input::placeholder {
+  color: rgb(255 255 255 / 28%);
+}
+
+.pack-gauge input:focus {
+  border-bottom-color: #00a0dd;
+  outline: none;
+}
+
+.pack-gauge-hp input:focus {
+  border-bottom-color: #e24b57;
+}
+
+.pack-gauge-unit {
+  align-self: end;
+  padding-bottom: 0.28rem;
+  font-family: var(--font-nameplate);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #b8e4f2;
+}
+
+.pack-gauge-hp .pack-gauge-unit {
+  color: #f0c4c8;
+}
+
+.plant-log-compact-head .plant-log-kicker {
+  color: var(--rack-fascia);
+}
+
+.pack-gauges-compact {
+  border-top: 1px solid #c5d0d5;
+  padding: 0.7rem 1.15rem 0.85rem;
+}
+
+.pack-gauges-compact .pack-gauge {
+  min-height: 3.6rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.45rem;
+}
+
+.pack-gauges-compact .pack-gauge input {
+  font-size: 1.35rem;
+}
+
+@media (max-width: 520px) {
+  .pack-gauges-wells {
+    grid-template-columns: 1fr;
+  }
 }
 
 .plant-log-summary {
@@ -810,6 +962,69 @@ textarea {
   font-size: 0.82rem;
   font-weight: 500;
   color: #d5e4ea;
+}
+
+.service-bulletin-gauges {
+  display: flex;
+  flex: none;
+  gap: 0.4rem;
+}
+
+.service-bulletin-gauge {
+  display: grid;
+  min-width: 4.6rem;
+  background: #102830;
+  padding: 0.28rem 0.5rem 0.32rem;
+  color: #f3fbfd;
+  text-align: end;
+}
+
+.service-bulletin-gauge-hp {
+  background: #2a1418;
+  color: #fff6f6;
+}
+
+.service-bulletin-gauge span:first-child {
+  font-family: var(--font-nameplate);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #b8e4f2;
+}
+
+.service-bulletin-gauge-hp span:first-child {
+  color: #f0c4c8;
+}
+
+.service-bulletin-gauge strong {
+  font-family: var(--font-nameplate);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.service-bulletin-gauge-unit {
+  font-family: var(--font-nameplate);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #b8e4f2;
+}
+
+.service-bulletin-gauge-hp .service-bulletin-gauge-unit {
+  color: #f0c4c8;
+}
+
+@media (max-width: 520px) {
+  .service-bulletin-head {
+    flex-wrap: wrap;
+  }
+
+  .service-bulletin-gauges {
+    width: 100%;
+  }
+
+  .service-bulletin-gauge {
+    flex: 1;
+  }
 }
 
 .service-bulletin-body {

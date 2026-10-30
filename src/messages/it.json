@@ -179,6 +179,13 @@
     "asks": "Cosa si vede già in impianto",
     "asksHint": "Segna ciò che vedi sul gruppo o in cella, poi cerca. I dettagli extra possono stare sotto.",
     "bulletin": "Bollettino di servizio",
+    "gauges": "Manometri del gruppo",
+    "gaugesLead": "Copia LP e HP dai manometri sulla porta del gruppo. Lascia vuoto se non si riescono a leggere.",
+    "suction": "LP aspirazione",
+    "discharge": "HP mandata",
+    "bar": "bar",
+    "suctionHint": "P0",
+    "dischargeHint": "Pc",
     "observations": {
       "fans": "Ventole condensatore in marcia",
       "blocked": "Condensatore sporco o ostruito",
