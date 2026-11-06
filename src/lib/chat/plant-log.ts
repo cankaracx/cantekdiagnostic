@@ -55,6 +55,9 @@ export type PlantCall = {
   observations: PlantObservation[];
   suctionBar: number | null;
   dischargeBar: number | null;
+  roomC: number | null;
+  setC: number | null;
+  displayCode: string;
 };
 
 export type PlantCallLabels = {
@@ -65,6 +68,9 @@ export type PlantCallLabels = {
   serial?: (value: string) => string;
   suction?: (bar: number) => string;
   discharge?: (bar: number) => string;
+  room?: (celsius: number) => string;
+  set?: (celsius: number) => string;
+  display?: (code: string) => string;
 };
 
 export const EMPTY_PLANT_CALL: PlantCall = {
@@ -75,19 +81,40 @@ export const EMPTY_PLANT_CALL: PlantCall = {
   observations: [],
   suctionBar: null,
   dischargeBar: null,
+  roomC: null,
+  setC: null,
+  displayCode: "",
 };
 
 /** Analog pack gauges and CO2 gas coolers stay inside this window. */
 export const GAUGE_BAR_MAX = 160;
 
+/** Octosense / Dixell / ERC room faces cover blast through chill, plus a hot pulldown. */
+export const ROOM_C_MIN = -50;
+export const ROOM_C_MAX = 60;
+
 export function formatBar(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
 }
 
+export const formatCelsius = formatBar;
+
 export function parseBar(value: unknown): number | null {
+  return parseDecimal(value, 0, GAUGE_BAR_MAX);
+}
+
+export function parseCelsius(value: unknown): number | null {
+  return parseDecimal(value, ROOM_C_MIN, ROOM_C_MAX);
+}
+
+function parseDecimal(
+  value: unknown,
+  minimum: number,
+  maximum: number,
+): number | null {
   if (value == null) return null;
   if (typeof value === "number") {
-    if (!Number.isFinite(value) || value < 0 || value > GAUGE_BAR_MAX) {
+    if (!Number.isFinite(value) || value < minimum || value > maximum) {
       return null;
     }
     return Math.round(value * 10) / 10;
@@ -95,14 +122,31 @@ export function parseBar(value: unknown): number | null {
   const trimmed = String(value).trim();
   if (!trimmed) return null;
   const numeric = Number(trimmed.replace(",", "."));
-  if (!Number.isFinite(numeric) || numeric < 0 || numeric > GAUGE_BAR_MAX) {
+  if (!Number.isFinite(numeric) || numeric < minimum || numeric > maximum) {
     return null;
   }
   return Math.round(numeric * 10) / 10;
 }
 
+/** Stamp only what a Dixell / Octosense / ERC face actually prints. */
+export function parseDisplayCode(value: unknown): string {
+  if (value == null) return "";
+  const cleaned = String(value)
+    .trim()
+    .toUpperCase()
+    .replace(/[^A-Z0-9-]/g, "")
+    .slice(0, 8);
+  return cleaned;
+}
+
 export function plantCallHasGauges(plant: PlantCall): boolean {
   return plant.suctionBar != null || plant.dischargeBar != null;
+}
+
+export function plantCallHasDisplay(plant: PlantCall): boolean {
+  return (
+    plant.roomC != null || plant.setC != null || Boolean(plant.displayCode)
+  );
 }
 
 export const OBSERVATIONS_BY_FAULT: Record<
@@ -156,6 +200,25 @@ const OBSERVATION_QUERY: Record<PlantObservation, string> = {
   sight: "oil sight glass lubrication level",
   noise: "compressor noise knocking vibration",
   cycling: "short cycling compressor cut-out",
+};
+
+const DISPLAY_CODE_QUERY: Record<string, string> = {
+  HP: "HP high pressure HPS",
+  HPS: "HP high pressure HPS",
+  LP: "LP low pressure LPS",
+  LPS: "LP low pressure LPS",
+  DEF: "defrost DEF evaporator frost",
+  DF: "defrost DEF evaporator frost",
+  E0: "probe failure E0 room probe",
+  E1: "probe failure E1 evaporator probe",
+  P1: "probe P1 thermostat probe",
+  P2: "probe P2 evaporator probe",
+  HA: "high temperature alarm HA",
+  LA: "low temperature alarm LA",
+  CHT: "condenser high temperature CHT",
+  EE: "EEPROM EE controller fault",
+  AH: "high temperature alarm AH",
+  AL: "low temperature alarm AL",
 };
 
 const DUTY_LABEL: Record<PlantDuty, string> = {
@@ -253,6 +316,9 @@ export function sanitizePlantCall(
     observations,
     suctionBar: parseBar(raw.suctionBar ?? raw.suction),
     dischargeBar: parseBar(raw.dischargeBar ?? raw.discharge),
+    roomC: parseCelsius(raw.roomC ?? raw.room),
+    setC: parseCelsius(raw.setC ?? raw.setpoint ?? raw.set),
+    displayCode: parseDisplayCode(raw.displayCode ?? raw.display),
   };
 }
 
@@ -307,6 +373,21 @@ export function describePlantCall(
         `HP ${formatBar(plant.dischargeBar)} bar`,
     );
   }
+  if (plant.roomC != null) {
+    parts.push(
+      labels?.room?.(plant.roomC) ?? `ROOM ${formatCelsius(plant.roomC)} °C`,
+    );
+  }
+  if (plant.setC != null) {
+    parts.push(
+      labels?.set?.(plant.setC) ?? `SET ${formatCelsius(plant.setC)} °C`,
+    );
+  }
+  if (plant.displayCode) {
+    parts.push(
+      labels?.display?.(plant.displayCode) ?? `DISPLAY ${plant.displayCode}`,
+    );
+  }
   if (plant.serial.trim()) {
     parts.push(serialLabel(plant.serial.trim()));
   }
@@ -334,6 +415,15 @@ export function formatPlantContext(
       : null,
     resolved.dischargeBar != null
       ? `Discharge HP: ${formatBar(resolved.dischargeBar)} bar (operator gauge, not a documented setpoint)`
+      : null,
+    resolved.roomC != null
+      ? `ROOM: ${formatCelsius(resolved.roomC)} °C (operator display, not a documented setpoint)`
+      : null,
+    resolved.setC != null
+      ? `SET: ${formatCelsius(resolved.setC)} °C (operator display, not a documented setpoint)`
+      : null,
+    resolved.displayCode
+      ? `DISPLAY: ${resolved.displayCode} (operator display code, not a documented alarm table unless it appears in the passages)`
       : null,
     resolved.serial ? `Serial: ${resolved.serial}` : null,
   ].filter(Boolean);
@@ -364,6 +454,15 @@ export function composePlantQuery(opts: {
       : "",
     plant.dischargeBar != null
       ? `discharge pressure Pc HP condensing ${formatBar(plant.dischargeBar)} bar`
+      : "",
+    plant.roomC != null
+      ? `room temperature ROOM ${formatCelsius(plant.roomC)} C`
+      : "",
+    plant.setC != null
+      ? `setpoint SET ${formatCelsius(plant.setC)} C`
+      : "",
+    plant.displayCode
+      ? `display ${plant.displayCode} ${DISPLAY_CODE_QUERY[plant.displayCode] ?? "controller alarm code"}`
       : "",
     plant.serial ? `serial ${plant.serial}` : "",
     prior,

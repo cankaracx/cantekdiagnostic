@@ -5,8 +5,12 @@ import {
   describePlantCall,
   excerptFrom,
   formatBar,
+  formatCelsius,
   formatPlantContext,
   parseBar,
+  parseCelsius,
+  parseDisplayCode,
+  plantCallHasDisplay,
   plantCallHasLookup,
   sanitizePlantCall,
   toggleObservation,
@@ -118,6 +122,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
     expect(prompt).toMatch(/pack gauge readings/);
+    expect(prompt).toMatch(/controller-face readings/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -162,6 +167,9 @@ describe("plant call retrieval", () => {
         observations: ["fans", "blocked"],
         suctionBar: 3.4,
         dischargeBar: 18,
+        roomC: 8.4,
+        setC: 2,
+        displayCode: "HP",
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -181,6 +189,11 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/P0/);
     expect(query).toMatch(/18/);
     expect(query).toMatch(/Pc/);
+    expect(query).toMatch(/8\.4/);
+    expect(query).toMatch(/ROOM/);
+    expect(query).toMatch(/\bSET\b/);
+    expect(query).toMatch(/\bHP\b/);
+    expect(query).toMatch(/display HP/i);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
@@ -193,6 +206,9 @@ describe("plant call retrieval", () => {
         observations: [],
         suctionBar: null,
         dischargeBar: null,
+        roomC: null,
+        setC: null,
+        displayCode: "",
       }),
     ).toBe(true);
     expect(
@@ -204,6 +220,9 @@ describe("plant call retrieval", () => {
         observations: [],
         suctionBar: 2,
         dischargeBar: 16,
+        roomC: 8.4,
+        setC: 2,
+        displayCode: "HP",
       }),
     ).toBe(false);
     expect(describePlantCall({
@@ -214,6 +233,9 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
     })).toMatch(/blast freezer/i);
     expect(describePlantCall({
       duty: "blast",
@@ -223,6 +245,9 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
     })).toMatch(/warm product/i);
     expect(describePlantCall({
       duty: "blast",
@@ -232,6 +257,9 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
     })).toMatch(/LP 1\.8 bar/);
     expect(describePlantCall({
       duty: "blast",
@@ -241,7 +269,34 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
     })).toMatch(/HP 16 bar/);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
+    })).toMatch(/ROOM -18 °C/);
+    expect(describePlantCall({
+      duty: "blast",
+      fault: "pulldown",
+      refrigerant: "r404a",
+      serial: "BT-9",
+      observations: ["loaded"],
+      suctionBar: 1.8,
+      dischargeBar: 16,
+      roomC: -18,
+      setC: -25,
+      displayCode: "",
+    })).toMatch(/SET -25 °C/);
   });
 
   it("keeps only observations that belong to the selected fault", () => {
@@ -280,6 +335,9 @@ describe("plant call retrieval", () => {
           observations: ["fans"],
           suctionBar: 3.4,
           dischargeBar: null,
+          roomC: 8.4,
+          setC: 2,
+          displayCode: "HP",
         },
         {
           duty: {
@@ -298,7 +356,9 @@ describe("plant call retrieval", () => {
           },
         },
       ),
-    ).toMatch(/soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, LP 3\.4 bar, serial PK-1842/i);
+    ).toMatch(
+      /soğuk oda: HP \/ yüksek basınç, R744, condenser fans running, LP 3\.4 bar, ROOM 8\.4 °C, SET 2 °C, DISPLAY HP, serial PK-1842/i,
+    );
   });
 
   it("accepts pack-door gauge readings in bar and rejects out-of-range values", () => {
@@ -319,10 +379,71 @@ describe("plant call retrieval", () => {
       observations: ["fans"],
       suctionBar: 32,
       dischargeBar: 90,
+      roomC: null,
+      setC: null,
+      displayCode: "",
     });
     expect(context).toMatch(/Suction LP: 32 bar/);
     expect(context).toMatch(/Discharge HP: 90 bar/);
     expect(context).toMatch(/not a documented setpoint/);
+  });
+
+  it("accepts Octosense ROOM/SET/DISPLAY stamps and rejects out-of-range values", () => {
+    expect(parseCelsius("8,4")).toBe(8.4);
+    expect(parseCelsius(-18)).toBe(-18);
+    expect(parseCelsius("2")).toBe(2);
+    expect(parseCelsius("")).toBeNull();
+    expect(parseCelsius(-60)).toBeNull();
+    expect(parseCelsius(80)).toBeNull();
+    expect(formatCelsius(-18)).toBe("-18");
+    expect(formatCelsius(8.4)).toBe("8.4");
+    expect(parseDisplayCode("hp")).toBe("HP");
+    expect(parseDisplayCode(" E0 ")).toBe("E0");
+    expect(parseDisplayCode("dEf-1")).toBe("DEF-1");
+    expect(parseDisplayCode("too-long-code")).toBe("TOO-LONG");
+    expect(parseDisplayCode("HP!")).toBe("HP");
+    expect(
+      plantCallHasDisplay({
+        duty: "chill",
+        fault: "hp",
+        refrigerant: "r744",
+        serial: "",
+        observations: [],
+        suctionBar: null,
+        dischargeBar: null,
+        roomC: 8.4,
+        setC: null,
+        displayCode: "",
+      }),
+    ).toBe(true);
+
+    const cleaned = sanitizePlantCall({
+      duty: "chill",
+      fault: "alarm",
+      roomC: "8,4",
+      setC: 2,
+      display: "hp",
+    });
+    expect(cleaned.roomC).toBe(8.4);
+    expect(cleaned.setC).toBe(2);
+    expect(cleaned.displayCode).toBe("HP");
+
+    const context = formatPlantContext({
+      duty: "chill",
+      fault: "hp",
+      refrigerant: "r744",
+      serial: "PK-1",
+      observations: ["fans"],
+      suctionBar: null,
+      dischargeBar: null,
+      roomC: 8.4,
+      setC: 2,
+      displayCode: "HP",
+    });
+    expect(context).toMatch(/ROOM: 8\.4 °C/);
+    expect(context).toMatch(/SET: 2 °C/);
+    expect(context).toMatch(/DISPLAY: HP/);
+    expect(context).toMatch(/operator display/);
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {
