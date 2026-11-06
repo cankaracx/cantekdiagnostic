@@ -5,11 +5,13 @@ import {
   describePlantCall,
   EMPTY_PLANT_CALL,
   formatBar,
+  formatCelsius,
   OBSERVATIONS_BY_FAULT,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
   PLANT_OBSERVATIONS,
+  plantCallHasDisplay,
   plantCallHasGauges,
   plantCallHasLookup,
   sanitizePlantCall,
@@ -182,6 +184,9 @@ function usePlantLabels(): PlantCallLabels {
     serial: (value) => `${t("serial")} ${value}`,
     suction: (bar) => `${t("suction")} ${formatBar(bar)} ${t("bar")}`,
     discharge: (bar) => `${t("discharge")} ${formatBar(bar)} ${t("bar")}`,
+    room: (celsius) => `${t("room")} ${formatCelsius(celsius)} ${t("celsius")}`,
+    set: (celsius) => `${t("set")} ${formatCelsius(celsius)} ${t("celsius")}`,
+    display: (code) => `${t("display")} ${code}`,
   };
 }
 
@@ -409,26 +414,69 @@ export function ChatPanel(props: {
                     {plantSummary || t("home.workspaceTitle")}
                   </p>
                 </div>
-                {plantCallHasGauges(activePlant) ? (
-                  <div className="service-bulletin-gauges" aria-label={t("plant.gauges")}>
-                    <p className="service-bulletin-gauge">
-                      <span>{t("plant.suction")}</span>
-                      <strong>
-                        {activePlant.suctionBar == null
-                          ? "—"
-                          : formatBar(activePlant.suctionBar)}
-                      </strong>
-                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
-                    </p>
-                    <p className="service-bulletin-gauge service-bulletin-gauge-hp">
-                      <span>{t("plant.discharge")}</span>
-                      <strong>
-                        {activePlant.dischargeBar == null
-                          ? "—"
-                          : formatBar(activePlant.dischargeBar)}
-                      </strong>
-                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
-                    </p>
+                {plantCallHasDisplay(activePlant) ||
+                plantCallHasGauges(activePlant) ? (
+                  <div className="service-bulletin-instruments">
+                    {plantCallHasDisplay(activePlant) && (
+                      <div
+                        className="service-bulletin-face"
+                        aria-label={t("plant.face")}
+                      >
+                        <p className="service-bulletin-face-cell">
+                          <span>{t("plant.room")}</span>
+                          <strong>
+                            {activePlant.roomC == null
+                              ? "—"
+                              : formatCelsius(activePlant.roomC)}
+                          </strong>
+                          <span>{t("plant.celsius")}</span>
+                        </p>
+                        <p className="service-bulletin-face-cell">
+                          <span>{t("plant.set")}</span>
+                          <strong>
+                            {activePlant.setC == null
+                              ? "—"
+                              : formatCelsius(activePlant.setC)}
+                          </strong>
+                          <span>{t("plant.celsius")}</span>
+                        </p>
+                        <p
+                          className={`service-bulletin-face-cell service-bulletin-face-code ${activePlant.displayCode ? "service-bulletin-face-alarm" : ""}`}
+                        >
+                          <span>{t("plant.display")}</span>
+                          <strong>{activePlant.displayCode || "—"}</strong>
+                        </p>
+                      </div>
+                    )}
+                    {plantCallHasGauges(activePlant) && (
+                      <div
+                        className="service-bulletin-gauges"
+                        aria-label={t("plant.gauges")}
+                      >
+                        <p className="service-bulletin-gauge">
+                          <span>{t("plant.suction")}</span>
+                          <strong>
+                            {activePlant.suctionBar == null
+                              ? "—"
+                              : formatBar(activePlant.suctionBar)}
+                          </strong>
+                          <span className="service-bulletin-gauge-unit">
+                            {t("plant.bar")}
+                          </span>
+                        </p>
+                        <p className="service-bulletin-gauge service-bulletin-gauge-hp">
+                          <span>{t("plant.discharge")}</span>
+                          <strong>
+                            {activePlant.dischargeBar == null
+                              ? "—"
+                              : formatBar(activePlant.dischargeBar)}
+                          </strong>
+                          <span className="service-bulletin-gauge-unit">
+                            {t("plant.bar")}
+                          </span>
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <p className="service-bulletin-site">Antalya</p>

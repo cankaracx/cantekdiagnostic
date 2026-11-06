@@ -10,8 +10,13 @@
      #e8eef0 service-deck paper
      #102830 LP suction well
      #2a1418 HP discharge well
+     #2c3236 Octosense ABS housing
+     #10140f controller LCD pit
+     #f0d24a ROOM/SET amber LED
+     #f06a3c DISPLAY alarm LED
      Type: IBM Plex Sans / Condensed — engineering bulletin, not a marketing sans
-     Bold moment: the two pack-door gauge wells (LP suction / HP discharge) */
+     Bold moment: the two pack-door gauge wells (LP suction / HP discharge);
+     the controller face stays a quieter recessed LCD beside them */
   --cantek-dark: #323e48;
   --cantek-dark-deep: #27323a;
   --cantek-cyan: #00a0dd;
@@ -730,6 +735,136 @@ textarea {
   padding: 0.75rem 1.15rem 0.7rem;
 }
 
+.controller-face {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.controller-face-legend {
+  margin-bottom: 0.2rem;
+}
+
+.controller-face-lead {
+  max-width: 38rem;
+  color: var(--cantek-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.controller-face-housing {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.9fr;
+  gap: 2px;
+  background: #2c3236;
+  padding: 0.5rem;
+}
+
+.controller-cell {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  min-height: 4.15rem;
+  padding: 0.45rem 0.6rem 0.4rem;
+  background: #10140f;
+  color: #f0d24a;
+}
+
+.controller-cell-code {
+  background: #140f0d;
+  color: #c4b48a;
+}
+
+.controller-cell-tag {
+  grid-column: 1 / -1;
+  font-family: var(--font-nameplate);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #8a7a3a;
+}
+
+.controller-cell-code .controller-cell-tag {
+  color: #8a5a3a;
+}
+
+.controller-cell input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0.05rem 0 0;
+  color: inherit;
+  font-family: var(--font-nameplate);
+  font-size: 1.65rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+}
+
+.controller-cell-code input {
+  grid-column: 1 / -1;
+  font-size: 1.4rem;
+}
+
+.controller-cell-alarm {
+  color: #f06a3c;
+}
+
+.controller-cell-alarm .controller-cell-tag {
+  color: #c56a48;
+}
+
+.controller-cell input::placeholder {
+  color: rgb(240 210 74 / 22%);
+}
+
+.controller-cell-code input::placeholder {
+  color: rgb(240 106 60 / 28%);
+}
+
+.controller-cell input:focus {
+  outline: none;
+  box-shadow: inset 0 -2px 0 #f0d24a;
+}
+
+.controller-cell-code input:focus {
+  box-shadow: inset 0 -2px 0 #f06a3c;
+}
+
+.controller-cell-unit {
+  align-self: end;
+  padding-bottom: 0.18rem;
+  font-family: var(--font-nameplate);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #8a7a3a;
+}
+
+.controller-face-compact {
+  border-top: 1px solid #c5d0d5;
+  padding: 0.7rem 1.15rem 0.35rem;
+}
+
+.controller-face-compact .controller-cell {
+  min-height: 3.5rem;
+  padding-top: 0.4rem;
+  padding-bottom: 0.35rem;
+}
+
+.controller-face-compact .controller-cell input {
+  font-size: 1.3rem;
+}
+
+@media (max-width: 520px) {
+  .controller-face-housing {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .controller-cell-code {
+    grid-column: 1 / -1;
+  }
+}
+
 .pack-gauges {
   display: grid;
   gap: 0.65rem;
@@ -964,6 +1099,66 @@ textarea {
   color: #d5e4ea;
 }
 
+.service-bulletin-instruments {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.service-bulletin-face {
+  display: flex;
+  gap: 2px;
+  background: #2c3236;
+  padding: 0.28rem;
+}
+
+.service-bulletin-face-cell {
+  display: grid;
+  min-width: 3.5rem;
+  background: #10140f;
+  padding: 0.22rem 0.42rem 0.26rem;
+  color: #f0d24a;
+  text-align: end;
+}
+
+.service-bulletin-face-code {
+  background: #140f0d;
+  color: #c4b48a;
+}
+
+.service-bulletin-face-alarm {
+  color: #f06a3c;
+}
+
+.service-bulletin-face-cell span:first-child {
+  font-family: var(--font-nameplate);
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #8a7a3a;
+}
+
+.service-bulletin-face-code span:first-child {
+  color: #8a5a3a;
+}
+
+.service-bulletin-face-cell strong {
+  font-family: var(--font-nameplate);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.service-bulletin-face-cell span:last-of-type:not(:first-child) {
+  font-family: var(--font-nameplate);
+  font-size: 0.58rem;
+  font-weight: 600;
+  color: #8a7a3a;
+}
+
 .service-bulletin-gauges {
   display: flex;
   flex: none;
@@ -1018,11 +1213,14 @@ textarea {
     flex-wrap: wrap;
   }
 
-  .service-bulletin-gauges {
+  .service-bulletin-instruments,
+  .service-bulletin-gauges,
+  .service-bulletin-face {
     width: 100%;
   }
 
-  .service-bulletin-gauge {
+  .service-bulletin-gauge,
+  .service-bulletin-face-cell {
     flex: 1;
   }
 }

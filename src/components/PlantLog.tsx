@@ -4,8 +4,11 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
   formatBar,
+  formatCelsius,
   OBSERVATIONS_BY_FAULT,
   parseBar,
+  parseCelsius,
+  parseDisplayCode,
   PLANT_DUTIES,
   PLANT_FAULTS,
   PLANT_GASES,
@@ -50,6 +53,157 @@ function OptionRow<T extends string>(props: {
         })}
       </div>
     </fieldset>
+  );
+}
+
+function isCompleteNumericDraft(raw: string) {
+  const trimmed = raw.trim();
+  if (!trimmed) return true;
+  if (trimmed.endsWith(".") || trimmed.endsWith(",")) return false;
+  return true;
+}
+
+function ControllerFace(props: {
+  plant: PlantCall;
+  compact?: boolean;
+  onChange: (plant: PlantCall) => void;
+  onSubmit?: () => void;
+}) {
+  const t = useTranslations("plant");
+  const [draft, setDraft] = useState({
+    room: props.plant.roomC == null ? "" : formatCelsius(props.plant.roomC),
+    set: props.plant.setC == null ? "" : formatCelsius(props.plant.setC),
+    display: props.plant.displayCode,
+  });
+
+  function commitCelsius(
+    field: "roomC" | "setC",
+    raw: string,
+    revert = false,
+  ) {
+    const parsed = parseCelsius(raw);
+    if (raw.trim() !== "" && parsed == null) {
+      if (!revert) return;
+      setDraft((current) => ({
+        ...current,
+        [field === "roomC" ? "room" : "set"]:
+          props.plant[field] == null ? "" : formatCelsius(props.plant[field]!),
+      }));
+      return;
+    }
+    if (parsed === props.plant[field]) return;
+    props.onChange({ ...props.plant, [field]: parsed });
+  }
+
+  function commitDisplay(raw: string) {
+    const parsed = parseDisplayCode(raw);
+    setDraft((current) => ({ ...current, display: parsed }));
+    if (parsed === props.plant.displayCode) return;
+    props.onChange({ ...props.plant, displayCode: parsed });
+  }
+
+  return (
+    <div
+      className={`controller-face ${props.compact ? "controller-face-compact" : ""}`}
+      role="group"
+      aria-label={t("face")}
+    >
+      {!props.compact && (
+        <div className="controller-face-head">
+          <p className="plant-log-legend controller-face-legend">{t("face")}</p>
+          <p className="controller-face-lead">{t("faceLead")}</p>
+        </div>
+      )}
+      <div className="controller-face-housing">
+        <label
+          className={`controller-cell ${props.plant.roomC != null ? "controller-cell-lit" : ""}`}
+        >
+          <span className="controller-cell-tag">{t("room")}</span>
+          <input
+            dir="ltr"
+            inputMode="decimal"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label={t("room")}
+            placeholder={t("roomHint")}
+            value={draft.room}
+            onChange={(event) => {
+              const next = event.target.value;
+              setDraft((current) => ({ ...current, room: next }));
+              if (isCompleteNumericDraft(next) && parseCelsius(next) != null) {
+                commitCelsius("roomC", next);
+              } else if (!next.trim()) {
+                commitCelsius("roomC", next);
+              }
+            }}
+            onBlur={(event) => commitCelsius("roomC", event.target.value, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commitCelsius("roomC", event.currentTarget.value, true);
+                props.onSubmit?.();
+              }
+            }}
+          />
+          <span className="controller-cell-unit">{t("celsius")}</span>
+        </label>
+        <label
+          className={`controller-cell ${props.plant.setC != null ? "controller-cell-lit" : ""}`}
+        >
+          <span className="controller-cell-tag">{t("set")}</span>
+          <input
+            dir="ltr"
+            inputMode="decimal"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label={t("set")}
+            placeholder={t("setHint")}
+            value={draft.set}
+            onChange={(event) => {
+              const next = event.target.value;
+              setDraft((current) => ({ ...current, set: next }));
+              if (isCompleteNumericDraft(next) && parseCelsius(next) != null) {
+                commitCelsius("setC", next);
+              } else if (!next.trim()) {
+                commitCelsius("setC", next);
+              }
+            }}
+            onBlur={(event) => commitCelsius("setC", event.target.value, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commitCelsius("setC", event.currentTarget.value, true);
+                props.onSubmit?.();
+              }
+            }}
+          />
+          <span className="controller-cell-unit">{t("celsius")}</span>
+        </label>
+        <label
+          className={`controller-cell controller-cell-code ${props.plant.displayCode ? "controller-cell-alarm" : ""}`}
+        >
+          <span className="controller-cell-tag">{t("display")}</span>
+          <input
+            dir="ltr"
+            autoComplete="off"
+            spellCheck={false}
+            maxLength={8}
+            aria-label={t("display")}
+            placeholder={t("displayHint")}
+            value={draft.display}
+            onChange={(event) => commitDisplay(event.target.value)}
+            onBlur={(event) => commitDisplay(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                commitDisplay(event.currentTarget.value);
+                props.onSubmit?.();
+              }
+            }}
+          />
+        </label>
+      </div>
+    </div>
   );
 }
 
@@ -242,6 +396,12 @@ export function PlantLog(props: {
             {t("newCall")}
           </button>
         </div>
+        <ControllerFace
+          plant={plant}
+          compact
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
+        />
         <GaugeBoard
           plant={plant}
           compact
@@ -286,6 +446,11 @@ export function PlantLog(props: {
           onChange={props.onChange}
           legend={t("asks")}
           labelFor={(value) => t(`observations.${value}`)}
+        />
+        <ControllerFace
+          plant={plant}
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
         />
         <GaugeBoard
           plant={plant}
