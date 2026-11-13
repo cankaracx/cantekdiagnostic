@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Kod sterownika",
+    "codeLead": "Przepisz kod ze sterownika. Zostaw puste, jeśli drzwi są ciemne.",
+    "codeTag": "Kod",
+    "codeHint": "E0",
     "observations": {
       "fans": "Wentylatory skraplacza pracują",
       "blocked": "Skraplacz brudny lub zatkany",

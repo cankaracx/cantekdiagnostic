@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Code régulateur",
+    "codeLead": "Relevez le code affiché sur le régulateur. Laissez vide si la porte est sombre.",
+    "codeTag": "Code",
+    "codeHint": "E0",
     "observations": {
       "fans": "Ventilateurs condenseur en marche",
       "blocked": "Condenseur sale ou obstrué",

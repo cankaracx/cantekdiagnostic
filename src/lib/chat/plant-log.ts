@@ -55,6 +55,7 @@ export type PlantCall = {
   observations: PlantObservation[];
   suctionBar: number | null;
   dischargeBar: number | null;
+  alarmCode: string;
 };
 
 export type PlantCallLabels = {
@@ -65,6 +66,7 @@ export type PlantCallLabels = {
   serial?: (value: string) => string;
   suction?: (bar: number) => string;
   discharge?: (bar: number) => string;
+  code?: (value: string) => string;
 };
 
 export const EMPTY_PLANT_CALL: PlantCall = {
@@ -75,10 +77,15 @@ export const EMPTY_PLANT_CALL: PlantCall = {
   observations: [],
   suctionBar: null,
   dischargeBar: null,
+  alarmCode: "",
 };
 
 /** Analog pack gauges and CO2 gas coolers stay inside this window. */
 export const GAUGE_BAR_MAX = 160;
+
+/** Octosense / IRS / Carel µRack / pRack style door codes (HP, E0, ALA01). */
+export const ALARM_CODE_MAX = 12;
+const ALARM_CODE_SHAPE = /^[A-Z]{1,6}\d{0,4}(?:-[A-Z0-9]{1,4})?$/;
 
 export function formatBar(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1);
@@ -101,8 +108,21 @@ export function parseBar(value: unknown): number | null {
   return Math.round(numeric * 10) / 10;
 }
 
+export function parseAlarmCode(value: unknown): string {
+  const compact = String(value ?? "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9\-]/g, "")
+    .slice(0, ALARM_CODE_MAX);
+  if (!ALARM_CODE_SHAPE.test(compact)) return "";
+  return compact;
+}
+
 export function plantCallHasGauges(plant: PlantCall): boolean {
   return plant.suctionBar != null || plant.dischargeBar != null;
+}
+
+export function plantCallHasCode(plant: PlantCall): boolean {
+  return Boolean(plant.alarmCode);
 }
 
 export const OBSERVATIONS_BY_FAULT: Record<
@@ -236,6 +256,7 @@ export function sanitizePlantCall(
     .slice(0, 160);
   const fault = isPlantFault(raw.fault) ? raw.fault : null;
   const allowed = observationsForFault(fault);
+  const alarmCode = parseAlarmCode(raw.alarmCode ?? raw.code);
   const observations = Array.isArray(raw.observations)
     ? raw.observations
         .filter(
@@ -245,6 +266,13 @@ export function sanitizePlantCall(
         .filter((value, index, list) => list.indexOf(value) === index)
         .slice(0, 6)
     : [];
+  if (
+    alarmCode &&
+    allowed.includes("code") &&
+    !observations.includes("code")
+  ) {
+    observations.push("code");
+  }
   return {
     duty: isPlantDuty(raw.duty) ? raw.duty : null,
     fault,
@@ -253,6 +281,7 @@ export function sanitizePlantCall(
     observations,
     suctionBar: parseBar(raw.suctionBar ?? raw.suction),
     dischargeBar: parseBar(raw.dischargeBar ?? raw.discharge),
+    alarmCode,
   };
 }
 
@@ -289,10 +318,16 @@ export function describePlantCall(
   if (plant.fault) {
     parts.push(faultLabels[plant.fault]);
   }
+  if (plant.alarmCode) {
+    parts.push(
+      labels?.code?.(plant.alarmCode) ?? `controller ${plant.alarmCode}`,
+    );
+  }
   if (plant.refrigerant !== "unknown") {
     parts.push(gasLabels[plant.refrigerant]);
   }
   for (const observation of plant.observations) {
+    if (observation === "code" && plant.alarmCode) continue;
     parts.push(observationLabels[observation]);
   }
   if (plant.suctionBar != null) {
@@ -327,6 +362,9 @@ export function formatPlantContext(
   const lines = [
     resolved.duty ? `Duty: ${DUTY_LABEL[resolved.duty]}` : null,
     resolved.fault ? `Showing: ${FAULT_LABEL[resolved.fault]}` : null,
+    resolved.alarmCode
+      ? `Controller alarm code: ${resolved.alarmCode} (operator copy from the door, not a documented setpoint)`
+      : null,
     `Refrigerant: ${GAS_LABEL[resolved.refrigerant]}`,
     observationLine ? `Seen on plant: ${observationLine}` : null,
     resolved.suctionBar != null
@@ -357,6 +395,9 @@ export function composePlantQuery(opts: {
   const tokens = [
     plant.duty ? DUTY_QUERY[plant.duty] : "",
     plant.fault ? FAULT_QUERY[plant.fault] : "",
+    plant.alarmCode
+      ? `controller alarm code ${plant.alarmCode}`
+      : "",
     GAS_QUERY[plant.refrigerant],
     ...plant.observations.map((observation) => OBSERVATION_QUERY[observation]),
     plant.suctionBar != null

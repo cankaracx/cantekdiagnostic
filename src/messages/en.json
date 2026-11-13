@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Controller code",
+    "codeLead": "Copy the code on the controller. Leave blank if the door is dark.",
+    "codeTag": "Code",
+    "codeHint": "E0",
     "observations": {
       "fans": "Condenser fans running",
       "blocked": "Condenser dirty or blocked",

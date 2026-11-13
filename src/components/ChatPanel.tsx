@@ -10,6 +10,7 @@ import {
   PLANT_FAULTS,
   PLANT_GASES,
   PLANT_OBSERVATIONS,
+  plantCallHasCode,
   plantCallHasGauges,
   plantCallHasLookup,
   sanitizePlantCall,
@@ -182,6 +183,7 @@ function usePlantLabels(): PlantCallLabels {
     serial: (value) => `${t("serial")} ${value}`,
     suction: (bar) => `${t("suction")} ${formatBar(bar)} ${t("bar")}`,
     discharge: (bar) => `${t("discharge")} ${formatBar(bar)} ${t("bar")}`,
+    code: (value) => `${t("codePlate")} ${value}`,
   };
 }
 
@@ -305,6 +307,18 @@ export function ChatPanel(props: {
   }
 
   function sendObservation(observation: PlantObservation) {
+    if (observation === "code") {
+      const field = document.getElementById("plant-alarm-code");
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      field?.focus();
+      field?.scrollIntoView({
+        block: "nearest",
+        behavior: reduceMotion ? "auto" : "smooth",
+      });
+      return;
+    }
     const nextPlant = toggleObservation(activePlant, observation);
     setPlant(nextPlant);
     void send(t(`plant.observations.${observation}`), nextPlant);
@@ -409,26 +423,46 @@ export function ChatPanel(props: {
                     {plantSummary || t("home.workspaceTitle")}
                   </p>
                 </div>
-                {plantCallHasGauges(activePlant) ? (
-                  <div className="service-bulletin-gauges" aria-label={t("plant.gauges")}>
-                    <p className="service-bulletin-gauge">
-                      <span>{t("plant.suction")}</span>
-                      <strong>
-                        {activePlant.suctionBar == null
-                          ? "—"
-                          : formatBar(activePlant.suctionBar)}
-                      </strong>
-                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
-                    </p>
-                    <p className="service-bulletin-gauge service-bulletin-gauge-hp">
-                      <span>{t("plant.discharge")}</span>
-                      <strong>
-                        {activePlant.dischargeBar == null
-                          ? "—"
-                          : formatBar(activePlant.dischargeBar)}
-                      </strong>
-                      <span className="service-bulletin-gauge-unit">{t("plant.bar")}</span>
-                    </p>
+                {plantCallHasGauges(activePlant) || plantCallHasCode(activePlant) ? (
+                  <div className="service-bulletin-stamps">
+                    {plantCallHasCode(activePlant) ? (
+                      <p
+                        className="service-bulletin-code"
+                        aria-label={t("plant.codePlate")}
+                      >
+                        <span>{t("plant.codeTag")}</span>
+                        <strong>{activePlant.alarmCode}</strong>
+                      </p>
+                    ) : null}
+                    {plantCallHasGauges(activePlant) ? (
+                      <div
+                        className="service-bulletin-gauges"
+                        aria-label={t("plant.gauges")}
+                      >
+                        <p className="service-bulletin-gauge">
+                          <span>{t("plant.suction")}</span>
+                          <strong>
+                            {activePlant.suctionBar == null
+                              ? "—"
+                              : formatBar(activePlant.suctionBar)}
+                          </strong>
+                          <span className="service-bulletin-gauge-unit">
+                            {t("plant.bar")}
+                          </span>
+                        </p>
+                        <p className="service-bulletin-gauge service-bulletin-gauge-hp">
+                          <span>{t("plant.discharge")}</span>
+                          <strong>
+                            {activePlant.dischargeBar == null
+                              ? "—"
+                              : formatBar(activePlant.dischargeBar)}
+                          </strong>
+                          <span className="service-bulletin-gauge-unit">
+                            {t("plant.bar")}
+                          </span>
+                        </p>
+                      </div>
+                    ) : null}
                   </div>
                 ) : (
                   <p className="service-bulletin-site">Antalya</p>
