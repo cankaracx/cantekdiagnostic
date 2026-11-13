@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Kontrolör kodu",
+    "codeLead": "Kontrolördeki kodu yazın. Kapı karanlıksa boş bırakın.",
+    "codeTag": "Kod",
+    "codeHint": "E0",
     "observations": {
       "fans": "Kondenser fanları çalışıyor",
       "blocked": "Kondenser kirli veya tıkalı",

@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Codice controllore",
+    "codeLead": "Copia il codice sul controllore. Lascia vuoto se la porta è spenta.",
+    "codeTag": "Codice",
+    "codeHint": "E0",
     "observations": {
       "fans": "Ventole condensatore in marcia",
       "blocked": "Condensatore sporco o ostruito",

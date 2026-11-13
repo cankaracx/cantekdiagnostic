@@ -186,6 +186,10 @@
     "bar": "bar",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "Steuerungscode",
+    "codeLead": "Den Code an der Steuerung übernehmen. Leer lassen, wenn die Tür dunkel ist.",
+    "codeTag": "Code",
+    "codeHint": "E0",
     "observations": {
       "fans": "Verflüssigerlüfter laufen",
       "blocked": "Verflüssiger schmutzig oder verlegt",

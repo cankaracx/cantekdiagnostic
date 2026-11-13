@@ -6,11 +6,13 @@ import {
   excerptFrom,
   formatBar,
   formatPlantContext,
+  parseAlarmCode,
   parseBar,
   plantCallHasLookup,
   sanitizePlantCall,
   toggleObservation,
 } from "@/lib/chat/plant-log";
+import { extractAlarmTokens } from "@/lib/rag/retrieve";
 import {
   isGeneralConversation,
   staticGeneralAnswer,
@@ -118,6 +120,7 @@ describe("system prompt", () => {
     expect(prompt).toMatch(/Do not invent/);
     expect(prompt).toMatch(/plant call card lists observations/);
     expect(prompt).toMatch(/pack gauge readings/);
+    expect(prompt).toMatch(/controller alarm code/);
     expect(prompt).toMatch(/service bulletin/);
   });
 
@@ -162,6 +165,7 @@ describe("plant call retrieval", () => {
         observations: ["fans", "blocked"],
         suctionBar: 3.4,
         dischargeBar: 18,
+        alarmCode: "HP",
       },
       messages: [
         { role: "user", content: "chill room: HP / high pressure, R744." },
@@ -181,6 +185,7 @@ describe("plant call retrieval", () => {
     expect(query).toMatch(/P0/);
     expect(query).toMatch(/18/);
     expect(query).toMatch(/Pc/);
+    expect(query).toMatch(/alarm code HP/);
   });
 
   it("requires a room and a showing fault before a card-only lookup", () => {
@@ -193,6 +198,7 @@ describe("plant call retrieval", () => {
         observations: [],
         suctionBar: null,
         dischargeBar: null,
+        alarmCode: "",
       }),
     ).toBe(true);
     expect(
@@ -204,6 +210,7 @@ describe("plant call retrieval", () => {
         observations: [],
         suctionBar: 2,
         dischargeBar: 16,
+        alarmCode: "HP",
       }),
     ).toBe(false);
     expect(describePlantCall({
@@ -214,6 +221,7 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      alarmCode: "",
     })).toMatch(/blast freezer/i);
     expect(describePlantCall({
       duty: "blast",
@@ -223,6 +231,7 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      alarmCode: "",
     })).toMatch(/warm product/i);
     expect(describePlantCall({
       duty: "blast",
@@ -232,6 +241,7 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      alarmCode: "",
     })).toMatch(/LP 1\.8 bar/);
     expect(describePlantCall({
       duty: "blast",
@@ -241,6 +251,7 @@ describe("plant call retrieval", () => {
       observations: ["loaded"],
       suctionBar: 1.8,
       dischargeBar: 16,
+      alarmCode: "",
     })).toMatch(/HP 16 bar/);
   });
 
@@ -280,6 +291,7 @@ describe("plant call retrieval", () => {
           observations: ["fans"],
           suctionBar: 3.4,
           dischargeBar: null,
+          alarmCode: "",
         },
         {
           duty: {
@@ -319,10 +331,48 @@ describe("plant call retrieval", () => {
       observations: ["fans"],
       suctionBar: 32,
       dischargeBar: 90,
+      alarmCode: "",
     });
     expect(context).toMatch(/Suction LP: 32 bar/);
     expect(context).toMatch(/Discharge HP: 90 bar/);
     expect(context).toMatch(/not a documented setpoint/);
+  });
+
+  it("stamps a controller door code into retrieval and rejects prose", () => {
+    expect(parseAlarmCode("e0")).toBe("E0");
+    expect(parseAlarmCode("HP")).toBe("HP");
+    expect(parseAlarmCode("ala01")).toBe("ALA01");
+    expect(parseAlarmCode("AtH")).toBe("ATH");
+    expect(parseAlarmCode("high pressure switch")).toBe("");
+    expect(parseAlarmCode("")).toBe("");
+
+    const cleaned = sanitizePlantCall({
+      duty: "chill",
+      fault: "alarm",
+      refrigerant: "r744",
+      alarmCode: "e0",
+    });
+    expect(cleaned.alarmCode).toBe("E0");
+    expect(cleaned.observations).toContain("code");
+
+    const query = composePlantQuery({
+      plant: cleaned,
+      messages: [{ role: "user", content: "controller alarm" }],
+    });
+    expect(query).toMatch(/alarm code E0/);
+
+    const context = formatPlantContext(cleaned);
+    expect(context).toMatch(/Controller alarm code: E0/);
+    expect(describePlantCall(cleaned)).toMatch(/controller E0/);
+
+    expect(extractAlarmTokens("HP alarm on the rack")).toContain("HP");
+    expect(extractAlarmTokens("controller alarm code ALA01")).toEqual(
+      expect.arrayContaining(["ALA01"]),
+    );
+    expect(extractAlarmTokens("DEF overdue on the evaporator")).toContain("DEF");
+    expect(extractAlarmTokens("what about the condenser fans?")).not.toContain(
+      "AT",
+    );
   });
 
   it("keeps a short inspectable excerpt from a retrieved passage", () => {

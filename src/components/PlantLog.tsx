@@ -3,8 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import {
+  ALARM_CODE_MAX,
   formatBar,
   OBSERVATIONS_BY_FAULT,
+  parseAlarmCode,
   parseBar,
   PLANT_DUTIES,
   PLANT_FAULTS,
@@ -164,15 +166,83 @@ function GaugeBoard(props: {
   );
 }
 
+function AlarmPlate(props: {
+  plant: PlantCall;
+  compact?: boolean;
+  onChange: (plant: PlantCall) => void;
+  onSubmit?: () => void;
+}) {
+  const t = useTranslations("plant");
+  const [draft, setDraft] = useState(props.plant.alarmCode);
+
+  function commit(raw: string, revert = false) {
+    const parsed = parseAlarmCode(raw);
+    if (raw.trim() !== "" && parsed === "" && !revert) return;
+    setDraft(parsed);
+    if (parsed === props.plant.alarmCode) return;
+    props.onChange({ ...props.plant, alarmCode: parsed });
+  }
+
+  return (
+    <div
+      className={`alarm-plate ${props.compact ? "alarm-plate-compact" : ""}`}
+      role="group"
+      aria-label={t("codePlate")}
+    >
+      {!props.compact && (
+        <div className="alarm-plate-head">
+          <p className="plant-log-legend alarm-plate-legend">{t("codePlate")}</p>
+          <p className="alarm-plate-lead">{t("codeLead")}</p>
+        </div>
+      )}
+      <label
+        className={`alarm-plate-well ${props.plant.alarmCode ? "alarm-plate-lit" : ""}`}
+      >
+        <span className="alarm-plate-lamp" aria-hidden="true" />
+        <span className="alarm-plate-tag">{t("codeTag")}</span>
+        <input
+          id="plant-alarm-code"
+          dir="ltr"
+          autoComplete="off"
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          maxLength={ALARM_CODE_MAX}
+          aria-label={t("codePlate")}
+          placeholder={t("codeHint")}
+          value={draft}
+          onChange={(event) => {
+            const next = event.target.value
+              .toUpperCase()
+              .replace(/[^A-Z0-9\-]/g, "")
+              .slice(0, ALARM_CODE_MAX);
+            setDraft(next);
+            const parsed = parseAlarmCode(next);
+            if (parsed === next || next === "") commit(next);
+          }}
+          onBlur={(event) => commit(event.target.value, true)}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commit(event.currentTarget.value, true);
+              props.onSubmit?.();
+            }
+          }}
+        />
+      </label>
+    </div>
+  );
+}
+
 function ObservationRow(props: {
   plant: PlantCall;
   onChange: (plant: PlantCall) => void;
   legend: string;
   labelFor: (value: PlantObservation) => string;
 }) {
-  const options = props.plant.fault
-    ? OBSERVATIONS_BY_FAULT[props.plant.fault]
-    : [];
+  const options = (
+    props.plant.fault ? OBSERVATIONS_BY_FAULT[props.plant.fault] : []
+  ).filter((option) => option !== "code");
   if (!options.length) return null;
 
   return (
@@ -242,6 +312,12 @@ export function PlantLog(props: {
             {t("newCall")}
           </button>
         </div>
+        <AlarmPlate
+          plant={plant}
+          compact
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
+        />
         <GaugeBoard
           plant={plant}
           compact
@@ -286,6 +362,11 @@ export function PlantLog(props: {
           onChange={props.onChange}
           legend={t("asks")}
           labelFor={(value) => t(`observations.${value}`)}
+        />
+        <AlarmPlate
+          plant={plant}
+          onChange={props.onChange}
+          onSubmit={canLookup ? props.onLookup : undefined}
         />
         <GaugeBoard
           plant={plant}

@@ -10,8 +10,10 @@
      #e8eef0 service-deck paper
      #102830 LP suction well
      #2a1418 HP discharge well
+     #1c2418 controller alarm plate
+     #e8a317 alarm lamp
      Type: IBM Plex Sans / Condensed — engineering bulletin, not a marketing sans
-     Bold moment: the two pack-door gauge wells (LP suction / HP discharge) */
+     Bold moment: the controller-door alarm code plate (amber lamp, stamped code) */
   --cantek-dark: #323e48;
   --cantek-dark-deep: #27323a;
   --cantek-cyan: #00a0dd;
@@ -868,6 +870,97 @@ textarea {
   font-size: 1.35rem;
 }
 
+.alarm-plate {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.alarm-plate-legend {
+  margin-bottom: 0.2rem;
+}
+
+.alarm-plate-lead {
+  max-width: 38rem;
+  color: var(--cantek-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.alarm-plate-well {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 0.12rem;
+  min-height: 4.6rem;
+  padding: 0.7rem 0.9rem 0.55rem 1.35rem;
+  background: #1c2418;
+  color: #f7f1dc;
+}
+
+.alarm-plate-lamp {
+  position: absolute;
+  inset-inline-start: 0.45rem;
+  top: 0.75rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #5c5338;
+}
+
+.alarm-plate-lit .alarm-plate-lamp {
+  background: #e8a317;
+}
+
+.alarm-plate-tag {
+  font-family: var(--font-nameplate);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #e8d5a3;
+}
+
+.alarm-plate-well input {
+  min-width: 0;
+  border: 0;
+  border-bottom: 2px solid #6a6248;
+  background: transparent;
+  padding: 0.05rem 0 0.12rem;
+  color: inherit;
+  font-family: var(--font-nameplate);
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.05;
+  direction: ltr;
+}
+
+.alarm-plate-well input::placeholder {
+  color: rgb(247 241 220 / 28%);
+}
+
+.alarm-plate-well input:focus {
+  border-bottom-color: #e8a317;
+  outline: none;
+}
+
+.alarm-plate-compact {
+  border-top: 1px solid #c5d0d5;
+  padding: 0.7rem 1.15rem 0;
+}
+
+.alarm-plate-compact .alarm-plate-well {
+  min-height: 3.7rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.4rem;
+}
+
+.alarm-plate-compact .alarm-plate-well input {
+  font-size: 1.45rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alarm-plate-lamp {
+    transition: none;
+  }
+}
+
 @media (max-width: 520px) {
   .pack-gauges-wells {
     grid-template-columns: 1fr;
@@ -964,6 +1057,38 @@ textarea {
   color: #d5e4ea;
 }
 
+.service-bulletin-stamps {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+.service-bulletin-code {
+  display: grid;
+  min-width: 5.4rem;
+  background: #1c2418;
+  padding: 0.28rem 0.55rem 0.32rem;
+  color: #f7f1dc;
+  text-align: end;
+}
+
+.service-bulletin-code span:first-child {
+  font-family: var(--font-nameplate);
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: #e8d5a3;
+}
+
+.service-bulletin-code strong {
+  font-family: var(--font-nameplate);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
 .service-bulletin-gauges {
   display: flex;
   flex: none;
@@ -1018,10 +1143,12 @@ textarea {
     flex-wrap: wrap;
   }
 
+  .service-bulletin-stamps,
   .service-bulletin-gauges {
     width: 100%;
   }
 
+  .service-bulletin-code,
   .service-bulletin-gauge {
     flex: 1;
   }

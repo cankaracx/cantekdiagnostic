@@ -186,6 +186,10 @@
     "bar": "بار",
     "suctionHint": "P0",
     "dischargeHint": "Pc",
+    "codePlate": "رمز المتحكم",
+    "codeLead": "انسخ الرمز الظاهر على المتحكم. اتركه فارغاً إن كان الباب مظلماً.",
+    "codeTag": "رمز",
+    "codeHint": "E0",
     "observations": {
       "fans": "مراوح المكثف تعمل",
       "blocked": "المكثف متسخ أو مسدود",
